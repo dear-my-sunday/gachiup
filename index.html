@@ -101,6 +101,7 @@ html,body{background:#EEF1F4;min-height:100vh}
 .tc-val{font-weight:400;font-size:20px;line-height:29px;color:#202528}
 .tc-val.miss{color:#FF404D}
 .tc-val.delv{color:#FF404D}
+.tc-val.ph{color:#848D95}
 .gps-btn{display:none;width:24px;height:24px;border-radius:8px;background:#F3F5F7;align-items:center;justify-content:center;flex:none}
 .dim.show-gps .gps-btn{display:flex}
 .nextday{display:none;font-weight:400;font-size:15px;line-height:24px;color:#848D95;flex:none}
@@ -183,10 +184,12 @@ html,body{background:#EEF1F4;min-height:100vh}
     var del = cfg.delBtn ? '<div class="del-btn"><span class="del-btn-text">기록 삭제</span></div>' : '';
     var radio = cfg.radio ? '<div class="opt-radio"><div class="opt-gtitle">요청</div><div class="radio-row rr-edit"><div class="radio on"></div><span>수정 요청</span></div><div class="radio-row rr-del"><div class="radio"></div><span>삭제 요청</span></div></div>' : '';
     var rmax = cfg.reasonMax ? '<div class="opt"><span class="opt-t">사유 텍스트 max</span><div class="sw sw-reasonmax"><i></i></div></div>' : '';
+    var dataOpts = cfg.dataToggles ? '<div class="opt"><span class="opt-t">출근 데이터 있음</span><div class="sw sw-workdata on"><i></i></div></div><div class="opt"><span class="opt-t">퇴근 데이터 있음</span><div class="sw sw-homedata on"><i></i></div></div>' : '';
     var subActive = cfg.submitActive ? ' active' : '';
     var editCls = cfg.noPicker ? 'tcard' : 'tcard edit';
-    var pf0 = cfg.prefill?cfg.prefill[0]:'';
-    var pf1 = cfg.prefill?cfg.prefill[1]:'';
+    var slot0, slot1;
+    if(cfg.ghost){slot0='<span class="tc-val ph" data-slot>09:00</span>';slot1='<span class="tc-val ph" data-slot>18:00</span>';}
+    else{slot0='<span class="tc-val" data-slot>'+(cfg.prefill?cfg.prefill[0]:'')+'</span>';slot1='<span class="tc-val" data-slot>'+(cfg.prefill?cfg.prefill[1]:'')+'</span>';}
     return ''+
     '<div class="page"><div class="left">'+
       crumbsHTML(cfg.crumbs)+
@@ -195,7 +198,7 @@ html,body{background:#EEF1F4;min-height:100vh}
         '<div class="opt"><span class="opt-t">퇴근 누락</span><div class="sw sw-miss"><i></i></div></div>'+
         '<div class="opt"><span class="opt-t">영업용 직원</span><div class="sw sw-gps"><i></i></div></div>'+
         '<div class="opt"><span class="opt-t">익일</span><div class="sw sw-next"><i></i></div></div>'+
-        rmax+
+        dataOpts+rmax+
       '</div></div>'+
       '<div class="iphone"><div class="screen"><div class="bgapp"></div><div class="di"></div>'+
         '<div class="statusbar"><span class="sb-time">9:41</span>'+IC.sb+'</div>'+
@@ -213,11 +216,11 @@ html,body{background:#EEF1F4;min-height:100vh}
                 cbx+
               '</div>'+
               '<div class="timearea"><div class="tcol">'+
-                '<div class="tcard"><div class="tc-head">'+IC.gowork+'<span class="tc-lbl">출근</span></div><div class="tc-body"><span class="gps-btn">'+IC.gps+'</span><span class="tc-val">09:00</span></div></div>'+
+                '<div class="tcard"><div class="tc-head">'+IC.gowork+'<span class="tc-lbl">출근</span></div><div class="tc-body"><span class="gps-btn">'+IC.gps+'</span><span class="tc-val rtGowork">09:00</span></div></div>'+
                 '<div class="tcard"><div class="tc-head">'+IC.home+'<span class="tc-lbl">퇴근</span></div><div class="tc-body"><span class="gps-btn">'+IC.gps+'</span><span class="nextday">익일</span><span class="tc-val rtGohome">18:00</span></div></div>'+
               '</div><div class="tcol">'+
-                '<div class="'+editCls+' cardGowork" data-kind="gowork" data-def="09:00"><div class="tc-head"><span class="tc-lbl edit-lbl">'+cfg.editLabel+'</span></div><div class="tc-body"><span class="tc-val" data-slot>'+pf0+'</span></div></div>'+
-                '<div class="'+editCls+' cardGohome" data-kind="gohome" data-def="18:00"><div class="tc-head"><span class="tc-lbl edit-lbl">'+cfg.editLabel+'</span></div><div class="tc-body"><span class="tc-val" data-slot>'+pf1+'</span></div></div>'+
+                '<div class="'+editCls+' cardGowork" data-kind="gowork" data-def="09:00"><div class="tc-head"><span class="tc-lbl edit-lbl">'+cfg.editLabel+'</span></div><div class="tc-body">'+slot0+'</div></div>'+
+                '<div class="'+editCls+' cardGohome" data-kind="gohome" data-def="18:00"><div class="tc-head"><span class="tc-lbl edit-lbl">'+cfg.editLabel+'</span></div><div class="tc-body">'+slot1+'</div></div>'+
               '</div></div>'+
             '</div>'+
           '</div>'+
@@ -245,10 +248,20 @@ html,body{background:#EEF1F4;min-height:100vh}
     function setIdx(el,i){el.scrollTop=i*ITEM;mark(el);}
     function valOf(el,arr){return arr[Math.max(0,Math.min(arr.length-1,idxOf(el)))];}
     var state={selected:null};
+    var rtGw=$('.rtGowork'),rtGh=$('.rtGohome'),slotGw=$('.cardGowork [data-slot]'),slotGh=$('.cardGohome [data-slot]');
+    var workDataOn=true,homeDataOn=true,missState=false;
+    function refresh(){
+      rtGw.textContent=workDataOn?'09:00':'';
+      if(missState){rtGh.textContent='퇴근누락';rtGh.classList.add('miss');}
+      else if(!homeDataOn){rtGh.textContent='';rtGh.classList.remove('miss');}
+      else{rtGh.textContent='18:00';rtGh.classList.remove('miss');}
+      if(slotGw.classList.contains('ph'))slotGw.textContent=workDataOn?'09:00':'--:--';
+      if(slotGh.classList.contains('ph'))slotGh.textContent=(homeDataOn&&!missState)?'18:00':'--:--';
+    }
     function to24(){var ap=valOf(wA,ampm),hh=parseInt(valOf(wH,hours),10),mm=valOf(wM,mins);if(ap==='오전'){if(hh===12)hh=0;}else{if(hh!==12)hh+=12;}return ('0'+hh).slice(-2)+':'+mm;}
     function from24(t){var p=t.split(':'),H=parseInt(p[0],10),M=p[1];var ap=H<12?'오전':'오후';var h12=H%12;if(h12===0)h12=12;return{ap:ap,h:String(h12),m:M};}
     var submit=$('.cta-submit');
-    function applyPicked(){if(!state.selected)return;$('.card'+state.selected).querySelector('[data-slot]').textContent=to24();submit.classList.add('active');}
+    function applyPicked(){if(!state.selected)return;var s=$('.card'+state.selected+' [data-slot]');s.textContent=to24();s.classList.remove('ph');submit.classList.add('active');}
     [wA,wH,wM].forEach(function(w){var t;w.addEventListener('scroll',function(){mark(w);clearTimeout(t);t=setTimeout(applyPicked,100);});});
     var kb=$('.kb'),keys=$('.kb-keys');
     var rows=[['q','w','e','r','t','y','u','i','o','p'],['a','s','d','f','g','h','j','k','l'],['z','x','c','v','b','n','m']];
@@ -300,8 +313,8 @@ html,body{background:#EEF1F4;min-height:100vh}
       $('.cardgowork').classList.toggle('selected',kind==='gowork');
       $('.cardgohome').classList.toggle('selected',kind==='gohome');
       $('.timepicker').classList.add('open');
-      var card=$('.card'+kind);
-      var base=card.querySelector('[data-slot]').textContent.trim()||card.getAttribute('data-def');
+      var card=$('.card'+kind),slot=card.querySelector('[data-slot]');
+      var base=slot.classList.contains('ph')?card.getAttribute('data-def'):(slot.textContent.trim()||card.getAttribute('data-def'));
       var v=from24(base);
       requestAnimationFrame(function(){requestAnimationFrame(function(){
         setIdx(wA,Math.max(0,ampm.indexOf(v.ap)));setIdx(wH,Math.max(0,hours.indexOf(v.h)));setIdx(wM,Math.max(0,mins.indexOf(v.m)));
@@ -317,8 +330,8 @@ html,body{background:#EEF1F4;min-height:100vh}
     $('.cta-cancel').addEventListener('click',function(){
       if(cfg.noPicker)return;
       state.selected=null;$('.timepicker').classList.remove('open');
-      ['gowork','gohome'].forEach(function(k){var c=$('.card'+k);c.classList.remove('selected');c.querySelector('[data-slot]').textContent='';});
-      submit.classList.remove('active');
+      ['gowork','gohome'].forEach(function(k){var c=$('.card'+k);c.classList.remove('selected');c.querySelector('[data-slot]').classList.add('ph');});
+      refresh();submit.classList.remove('active');
     });
     setIdx(wA,0);setIdx(wH,8);setIdx(wM,0);
 
@@ -343,21 +356,24 @@ html,body{background:#EEF1F4;min-height:100vh}
     var swReasonMax=$('.sw-reasonmax');
     if(swReasonMax){swReasonMax.addEventListener('click',function(){reasonMaxOn=this.classList.toggle('on');setReason();});}
 
-    var dim=$('.dim'),screen=$('.screen'),iphone=root.querySelector('.iphone'),rtHome=$('.rtGohome');
+    var dim=$('.dim'),screen=$('.screen'),iphone=root.querySelector('.iphone');
     var swSmall=$('.sw-small'),swMiss=$('.sw-miss'),swGps=$('.sw-gps'),swNext=$('.sw-next');
-    function setMiss(on){swMiss.classList.toggle('on',on);if(on){rtHome.textContent='퇴근누락';rtHome.classList.add('miss');}else{rtHome.textContent='18:00';rtHome.classList.remove('miss');}}
+    function setMiss(on){missState=on;swMiss.classList.toggle('on',on);refresh();}
     function setGps(on){swGps.classList.toggle('on',on);dim.classList.toggle('show-gps',on);}
     function setNext(on){swNext.classList.toggle('on',on);dim.classList.toggle('show-next',on);}
     swSmall.addEventListener('click',function(){var on=this.classList.toggle('on');screen.classList.toggle('small',on);iphone.classList.toggle('small',on);});
     swMiss.addEventListener('click',function(){var on=!swMiss.classList.contains('on');setMiss(on);if(on){setGps(false);setNext(false);}});
     swGps.addEventListener('click',function(){var on=!swGps.classList.contains('on');setGps(on);if(on)setMiss(false);});
     swNext.addEventListener('click',function(){var on=!swNext.classList.contains('on');setNext(on);if(on)setMiss(false);});
+    var swWork=$('.sw-workdata'),swHome=$('.sw-homedata');
+    if(swWork)swWork.addEventListener('click',function(){workDataOn=this.classList.toggle('on');refresh();});
+    if(swHome)swHome.addEventListener('click',function(){homeDataOn=this.classList.toggle('on');refresh();});
   }
 
   var cfgs={
-    work:{crumbs:[['워크모드','홈','내 기록','근무기록']],title:'근무기록 수정 요청',delBtn:true,checkbox:false,radio:false,noPicker:false,submitActive:false,cancel:'취소',submit:'수정 요청',editLabel:'수정 요청',infoRows:[['근무 날짜','2024/10/17 (목)']]},
-    admedit:{crumbs:[['관리자모드','홈','직원 리스트','근무기록 수정'],['관리자모드','홈','직원 관리','근무기록','근무기록 수정']],title:'근무기록 수정',delBtn:true,checkbox:true,radio:false,noPicker:false,submitActive:false,cancel:'취소',submit:'저장',editLabel:'수정시간',infoRows:[['직원 명','홍길동'],['근무 날짜','2024/10/17 (목)']]},
-    admappr:{crumbs:[['관리자모드','홈','직원 리스트','근무기록 요청 확인'],['관리자모드','홈','직원 관리','근무기록','근무기록 요청 확인'],['관리자모드','HR 알림','근무기록 요청 확인']],title:'근무기록 수정요청',delBtn:false,checkbox:false,radio:true,noPicker:true,submitActive:true,cancel:'거절',submit:'승인',editLabel:'수정 요청',prefill:['14:25','14:25'],reasonMax:true,infoRows:[['직원 명','홍길동'],['근무 날짜','2024/10/17 (목)'],['사유','출근 시간 정정 요청','reason-val']]}
+    work:{crumbs:[['워크모드','홈','내 기록','근무기록']],title:'근무기록 수정 요청',delBtn:true,checkbox:false,radio:false,noPicker:false,submitActive:false,cancel:'취소',submit:'수정 요청',editLabel:'수정 요청',ghost:true,dataToggles:true,infoRows:[['근무 날짜','2024/10/17 (목)']]},
+    admedit:{crumbs:[['관리자모드','홈','직원 리스트','근무기록 수정'],['관리자모드','홈','직원 관리','근무기록','근무기록 수정']],title:'근무기록 수정',delBtn:true,checkbox:true,radio:false,noPicker:false,submitActive:false,cancel:'취소',submit:'저장',editLabel:'수정시간',ghost:true,dataToggles:true,infoRows:[['직원 명','김가치'],['근무 날짜','2024/10/17 (목)']]},
+    admappr:{crumbs:[['관리자모드','홈','직원 리스트','근무기록 요청 확인'],['관리자모드','홈','직원 관리','근무기록','근무기록 요청 확인'],['관리자모드','HR 알림','근무기록 요청 확인']],title:'근무기록 수정요청',delBtn:false,checkbox:false,radio:true,noPicker:true,submitActive:true,cancel:'거절',submit:'승인',editLabel:'수정 요청',prefill:['14:25','14:25'],reasonMax:true,infoRows:[['직원 명','김가치'],['근무 날짜','2024/10/17 (목)'],['사유','출근 시간 정정 요청','reason-val']]}
   };
   var pans={work:document.getElementById('panel-work'),admedit:document.getElementById('panel-admedit'),admappr:document.getElementById('panel-admappr')};
   for(var k in cfgs){pans[k].innerHTML=buildScreen(cfgs[k]);initScreen(pans[k].querySelector('.page'),cfgs[k]);}
