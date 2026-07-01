@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:www.bucketplace.com)",
+      "mcp__figma-console__figma_get_component_for_development_deep"
+    ]
+  }
+}

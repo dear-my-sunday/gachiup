@@ -3,14 +3,35 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>근무기록 수정 요청 — 인터랙티브 스펙</title>
+<title>근무기록 인터랙티브 스펙 — 워크/관리자 모드</title>
 <link href="//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css" rel="stylesheet" type="text/css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
 :root{--f:'Spoqa Han Sans Neo','Apple SD Gothic Neo','Noto Sans KR',sans-serif;--primary:#6267E9}
 html,body{background:#EEF1F4;min-height:100vh}
-.page{display:flex;flex-direction:row;align-items:flex-start;justify-content:center;gap:24px;padding:2rem 8px;font-family:var(--f)}
-.opts{display:flex;flex-direction:column;gap:20px;background:#fff;border:1px solid #E1E6EA;border-radius:16px;padding:18px 16px;box-shadow:0 2px 10px rgba(0,0,0,.05);align-self:flex-start;position:sticky;top:16px}
+.app{display:flex;flex-direction:column;align-items:center;font-family:var(--f);padding:1.5rem 8px;gap:20px}
+.tabs{display:flex;gap:2px}
+.tab{appearance:none;border:none;outline:none;-webkit-tap-highlight-color:transparent;background:none;padding:12px 18px;font-family:var(--f);font-size:15px;font-weight:600;color:#8B95A1;cursor:pointer;white-space:nowrap;position:relative;transition:color .15s}
+.tab:focus,.tab:focus-visible,.tab:active{outline:none;box-shadow:none}
+.tab .tm{color:#B0B8C1;font-weight:600;margin-right:5px}
+.tab.active{color:#191F28;font-weight:700}
+.tab.active .tm{color:#8B95A1}
+.tab.active::after{content:'';position:absolute;left:14px;right:14px;bottom:0;height:2px;background:#191F28;border-radius:2px}
+.panel{width:100%;display:flex;justify-content:center}
+.panel.hidden{display:none}
+.page{display:flex;flex-direction:row;align-items:flex-start;justify-content:center;gap:24px;font-family:var(--f)}
+.left{display:flex;flex-direction:column;gap:12px;align-self:flex-start;position:sticky;top:16px}
+.crumbs{display:flex;flex-direction:column;gap:4px}
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:12px;color:#8B95A1;flex-wrap:wrap;padding:0 4px}
+.bc-sep{color:#C2C8CE;font-size:11px}
+.opts{display:flex;flex-direction:column;gap:20px;background:#fff;border:1px solid #E1E6EA;border-radius:16px;padding:18px 16px;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+.opt-radio{display:flex;flex-direction:column;gap:12px;padding-bottom:18px;border-bottom:1px solid #F1F3F5}
+.opt-gtitle{font-size:12px;font-weight:700;color:#8B95A1}
+.radio-row{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+.radio{width:20px;height:20px;border-radius:50%;border:2px solid #D5DAE0;flex:none;display:flex;align-items:center;justify-content:center;transition:.15s}
+.radio.on{border-color:var(--primary)}
+.radio.on::after{content:'';width:10px;height:10px;border-radius:50%;background:var(--primary)}
+.radio-row span{font-size:13px;font-weight:700;color:#202528}
 .opt{display:flex;align-items:center;justify-content:space-between;gap:18px}
 .opt-t{font-size:13px;font-weight:700;color:#202528;white-space:nowrap}
 .sw{width:46px;height:28px;border-radius:14px;background:#E1E6EA;position:relative;transition:background .2s;cursor:pointer;flex:none}
@@ -39,27 +60,36 @@ html,body{background:#EEF1F4;min-height:100vh}
 .del-btn-text{font-weight:700;font-size:14px;line-height:22px;color:#FF404D;white-space:nowrap}
 .body{display:flex;flex-direction:column;align-items:stretch;padding:16px;gap:20px;flex:1 1 auto;min-height:0;overflow-y:auto;scroll-behavior:smooth}
 .info{display:flex;flex-direction:column;padding:12px;gap:4px;background:#F3F5F7;border:1px solid #E1E6EA;border-radius:16px;flex:none}
-.info-list{display:flex;gap:12px;height:24px}
-.info-label{font-weight:700;font-size:15px;line-height:24px;color:#202528}
-.info-date{font-weight:400;font-size:15px;line-height:24px;color:#465159}
+.info-list{display:flex;gap:12px;align-items:flex-start;min-height:24px}
+.info-label{font-weight:700;font-size:15px;line-height:24px;color:#202528;width:60px;flex:none}
+.info-date{font-weight:400;font-size:15px;line-height:24px;color:#465159;flex:1;min-width:0}
 .maincontents{display:flex;flex-direction:column;gap:32px}
 .memo-wrap{display:flex;flex-direction:column;gap:4px}
 .memo-label{font-weight:700;font-size:14px;line-height:22px;color:#202528}
 .memo-row{display:flex;align-items:flex-start;gap:8px;height:48px}
 .memo-input{display:flex;align-items:center;padding:12px;gap:8px;flex:1;height:48px;background:#F3F5F7;border:1px solid #E1E6EA;border-radius:12px;cursor:text}
-.memo-input.focused{border-color:var(--primary);background:#fff}
 .memo-field{flex:1;min-width:0;appearance:none;-webkit-appearance:none;border:none !important;outline:none !important;background:transparent !important;box-shadow:none !important;border-radius:0 !important;padding:0 !important;margin:0 !important;height:24px;font-family:var(--f);font-weight:400;font-size:16px;line-height:24px;color:#202528}
 .memo-field::placeholder{color:#848D95;opacity:1}
 .send-btn{display:flex;justify-content:center;align-items:center;width:48px;height:48px;flex-shrink:0;background:#E1E6EA;border-radius:12px;cursor:default;transition:background .15s}
 .send-btn.active{background:var(--primary);cursor:pointer}
-.memo-done{display:none;align-items:flex-start;gap:8px}
+.memo-done{display:none;align-items:center;gap:8px}
 .memo-done.show{display:flex}
-.md-date{font-weight:400;font-size:14px;line-height:22px;color:#848D95;white-space:nowrap;flex:none}
-.md-text{flex:1;font-weight:400;font-size:16px;line-height:24px;color:#202528;word-break:break-all}
+.md-textarea{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.md-top{display:flex;align-items:center;gap:8px}
+.md-date{font-weight:400;font-size:14px;line-height:22px;color:#848D95;white-space:nowrap}
+.md-edited{display:none;font-weight:400;font-size:14px;line-height:22px;color:#465159;white-space:nowrap}
+.md-edited.show{display:inline}
+.md-text{font-weight:400;font-size:16px;line-height:24px;color:#202528;word-break:break-all}
 .md-btns{display:flex;gap:4px;flex:none}
 .sbtn{display:inline-flex;justify-content:center;align-items:center;padding:4px 8px;height:30px;border-radius:8px;cursor:pointer;font-weight:700;font-size:14px;line-height:22px;white-space:nowrap}
 .sbtn.red{background:#FFF3EE;color:#FF404D}
 .sbtn.gray{background:#F3F5F7;color:#465159}
+.cbx-row{display:flex;align-items:center;gap:8px;padding-top:4px}
+.checkbox{width:24px;height:24px;border-radius:8px;border:2px solid #EAEDEE;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none;transition:.15s}
+.checkbox.on{background:var(--primary);border-color:var(--primary)}
+.checkbox svg{opacity:0;transition:opacity .12s}
+.checkbox.on svg{opacity:1}
+.cbx-label{font-size:14px;font-weight:400;line-height:22px;color:#465159;cursor:pointer;user-select:none}
 .timearea{display:flex;align-items:flex-start;gap:12px}
 .tcol{display:flex;flex-direction:column;gap:12px;flex:1}
 .tcard{display:flex;flex-direction:column;border:1px solid #E1E6EA;border-radius:16px;overflow:hidden}
@@ -70,6 +100,7 @@ html,body{background:#EEF1F4;min-height:100vh}
 .tc-body{display:flex;align-items:center;padding:16px;gap:8px;height:61px}
 .tc-val{font-weight:400;font-size:20px;line-height:29px;color:#202528}
 .tc-val.miss{color:#FF404D}
+.tc-val.delv{color:#FF404D}
 .gps-btn{display:none;width:24px;height:24px;border-radius:8px;background:#F3F5F7;align-items:center;justify-content:center;flex:none}
 .dim.show-gps .gps-btn{display:flex}
 .nextday{display:none;font-weight:400;font-size:15px;line-height:24px;color:#848D95;flex:none}
@@ -122,226 +153,220 @@ html,body{background:#EEF1F4;min-height:100vh}
 </style>
 </head>
 <body>
-<div class="page">
-  <div class="opts">
-    <div class="opt"><span class="opt-t">작은 디바이스</span><div class="sw" id="swSmall"><i></i></div></div>
-    <div class="opt"><span class="opt-t">퇴근 누락</span><div class="sw" id="swMiss"><i></i></div></div>
-    <div class="opt"><span class="opt-t">위치보기</span><div class="sw" id="swGps"><i></i></div></div>
-    <div class="opt"><span class="opt-t">익일</span><div class="sw" id="swNext"><i></i></div></div>
+<div class="app">
+  <div class="tabs" id="tabs">
+    <button class="tab active" data-tab="work"><span class="tm">워크모드</span>근무기록 수정 요청</button>
+    <button class="tab" data-tab="admedit"><span class="tm">관리자모드</span>근무기록 수정</button>
+    <button class="tab" data-tab="admappr"><span class="tm">관리자모드</span>근무기록 요청 승인</button>
   </div>
-
-  <div class="iphone" id="iphone">
-    <div class="screen" id="screen">
-      <div class="bgapp"></div>
-      <div class="di"></div>
-      <div class="statusbar">
-        <span class="sb-time">9:41</span>
-        <div class="sb-icons">
-          <svg width="17" height="12" viewBox="0 0 17 12" fill="white"><rect x="0" y="5" width="3" height="7" rx="0.8" opacity="0.4"/><rect x="4.5" y="3.5" width="3" height="8.5" rx="0.8" opacity="0.6"/><rect x="9" y="1.5" width="3" height="10.5" rx="0.8"/><rect x="13.5" y="0" width="3" height="12" rx="0.8"/></svg>
-          <svg width="16" height="12" viewBox="0 0 16 12" fill="white"><path d="M8 9.5a1.5 1.5 0 100 3 1.5 1.5 0 000-3z"/><path d="M3.5 6.5C4.9 5.1 6.8 4.2 8 4.2s3.1.9 4.5 2.3l1.4-1.4C12.1 3.3 10.2 2.2 8 2.2S3.9 3.3 2.1 5.1l1.4 1.4z" opacity="0.6"/><path d="M1 3.5C2.9 1.6 5.3.5 8 .5s5.1 1.1 7 3l1-1C13.8.4 11-.5 8-.5S2.2.4 0 2.5L1 3.5z" opacity="0.3"/></svg>
-          <svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x="0.5" y="0.5" width="22" height="11" rx="3.5" stroke="white" stroke-opacity="0.35"/><rect x="2" y="2" width="18" height="8" rx="2" fill="white"/><path d="M24 4v4c.8-.4.8-3.6 0-4z" fill="white" opacity="0.4"/></svg>
-        </div>
-      </div>
-      <div class="design">
-        <div class="dim" id="dim">
-          <div class="bs">
-            <div class="handle"><div class="hbar"></div></div>
-            <div class="stitle">
-              <span class="stitle-text">근무기록 수정 요청</span>
-              <div class="del-btn"><span class="del-btn-text">기록 삭제</span></div>
-            </div>
-            <div class="body" id="bodyScroll">
-              <div class="info">
-                <div class="info-list">
-                  <span class="info-label">근무 날짜</span>
-                  <span class="info-date">2024/10/17 (목)</span>
-                </div>
-              </div>
-              <div class="maincontents">
-                <div class="memo-wrap">
-                  <span class="memo-label">메모</span>
-                  <div class="memo-row" id="memoRow">
-                    <label class="memo-input" id="memoBox" for="memoField">
-                      <input class="memo-field" id="memoField" type="text" maxlength="40" placeholder="최대 40자까지 입력가능합니다." />
-                    </label>
-                    <div class="send-btn" id="sendBtn">
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><mask id="ms" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="2" y="2" width="20" height="20"><rect x="2" y="2" width="20" height="20" fill="#D9D9D9"/></mask><g mask="url(#ms)"><path fill-rule="evenodd" clip-rule="evenodd" d="M6.33815 2.31436L20.3382 9.31597H20.3478C20.8445 9.56581 21.262 9.94881 21.5538 10.4222C21.8455 10.8956 22 11.4408 22 11.9969C22 12.5531 21.8455 13.0982 21.5538 13.5717C21.262 14.0451 20.8445 14.4281 20.3478 14.6779L6.34895 21.6795C5.92849 21.8857 5.46723 21.9952 4.99898 22C4.49906 21.9998 4.0071 21.8747 3.56782 21.636C3.12853 21.3973 2.75586 21.0525 2.48366 20.633C2.21146 20.2136 2.04838 19.7327 2.00922 19.2342C1.97006 18.7356 2.05607 18.2352 2.25944 17.7784L4.39539 12.9974H13.4588C13.724 12.9974 13.9784 12.892 14.166 12.7044C14.3536 12.5168 14.459 12.2623 14.459 11.9969C14.459 11.7316 14.3536 11.4771 14.166 11.2895C13.9784 11.1019 13.724 10.9964 13.4588 10.9964H4.39539L2.25824 6.21548C2.00845 5.65097 1.93878 5.02313 2.05874 4.41757C2.1787 3.81201 2.48244 3.25819 2.92856 2.83162C3.37468 2.40506 3.94146 2.1265 4.55162 2.03393C5.16179 1.94136 5.78565 2.03929 6.33815 2.31436Z" fill="white"/></g></svg>
-                    </div>
-                  </div>
-                  <div class="memo-done" id="memoDone">
-                    <span class="md-date" id="mdDate">26.06.30</span>
-                    <span class="md-text" id="mdText"></span>
-                    <div class="md-btns">
-                      <div class="sbtn red" id="mdDel">삭제</div>
-                      <div class="sbtn gray" id="mdEdit">수정</div>
-                    </div>
-                  </div>
-                </div>
-                <div class="timearea">
-                  <div class="tcol">
-                    <div class="tcard">
-                      <div class="tc-head">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><mask id="mg" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="1" y="1" width="18" height="18"><rect x="1.667" y="1.668" width="16.667" height="16.667" fill="#D9D9D9"/></mask><g mask="url(#mg)"><path d="M18.333 7.1875C18.333 9.77633 16.2343 11.875 13.6455 11.875C11.0567 11.875 8.95801 9.77633 8.95801 7.1875C8.95801 4.59867 11.0567 2.5 13.6455 2.5C16.2343 2.5 18.333 4.59867 18.333 7.1875Z" fill="white"/><path d="M17.2913 7.1875C17.2913 5.17396 15.659 3.54167 13.6455 3.54167C11.632 3.54167 9.99967 5.17396 9.99967 7.1875C9.99967 9.20104 11.632 10.8333 13.6455 10.8333V11.875C11.0567 11.875 8.95801 9.77633 8.95801 7.1875C8.95801 4.59867 11.0567 2.5 13.6455 2.5C16.2343 2.5 18.333 4.59867 18.333 7.1875C18.333 9.77633 16.2343 11.875 13.6455 11.875V10.8333C15.659 10.8333 17.2913 9.20104 17.2913 7.1875Z" fill="#CDD5DB"/><path d="M1.667 9.10677C1.667 8.22585 2.381 7.51172 3.262 7.51172H12.832C13.713 7.51172 14.427 8.22585 14.427 9.10677V15.487C14.427 16.3679 13.713 17.082 12.832 17.082H3.262C2.381 17.082 1.667 16.3679 1.667 15.487V9.10677Z" fill="#89746C"/><path d="M1.667 9.10677C1.667 8.22585 2.381 7.51172 3.262 7.51172H12.832C13.713 7.51172 14.427 8.22585 14.427 9.10677V9.9043C14.427 10.7852 13.713 11.4993 12.832 11.4993H3.262C2.381 11.4993 1.667 10.7852 1.667 9.9043V9.10677Z" fill="#5B4A43"/><path d="M6.452 11.5007C6.452 11.0602 6.809 10.7031 7.25 10.7031H8.845C9.285 10.7031 9.642 11.0602 9.642 11.5007C9.642 11.9411 9.285 12.2982 8.845 12.2982H7.25C6.809 12.2982 6.452 11.9411 6.452 11.5007Z" fill="#FFDB49"/><path d="M9.6416 7.51367V6.71615H6.4515V7.51367C6.4515 7.95413 6.09443 8.3112 5.65397 8.3112C5.21351 8.3112 4.85645 7.95413 4.85645 7.51367V6.71615C4.85645 5.83522 5.57057 5.12109 6.4515 5.12109H9.6416L9.80438 5.12966C10.6088 5.21122 11.2367 5.89019 11.2367 6.71615V7.51367C11.2367 7.95413 10.8796 8.3112 10.4391 8.3112C9.99867 8.3112 9.6416 7.95413 9.6416 7.51367Z" fill="#5B4A43"/><path d="M13.125 6.14453V5.10286C13.125 4.81522 13.3582 4.58203 13.6458 4.58203C13.9335 4.58203 14.1667 4.81522 14.1667 5.10286V6.14453C14.1667 6.43218 14.3999 6.66536 14.6875 6.66536H15.7292C16.0168 6.66536 16.25 6.89855 16.25 7.1862C16.25 7.47385 16.0168 7.70703 15.7292 7.70703H14.6875C13.8246 7.70703 13.125 7.00748 13.125 6.14453Z" fill="#626E76"/></g></svg>
-                        <span class="tc-lbl">출근</span>
-                      </div>
-                      <div class="tc-body">
-                        <span class="gps-btn"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><mask id="mgps1" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="1" y="1" width="14" height="14"><rect x="1.333" y="1.332" width="13.333" height="13.333" fill="#D9D9D9"/></mask><g mask="url(#mgps1)"><path d="M8 1.33203C10.7613 1.33203 12.9997 3.58998 13 6.375C13 8.68108 10.429 12.3544 8.83496 14.2656L8.74805 14.3594C8.29439 14.7965 7.58169 14.7652 7.16504 14.2656C5.57104 12.3544 3 8.68108 3 6.375C3.00025 3.58998 5.23873 1.33203 8 1.33203ZM8 4.66602C7.07963 4.66602 6.33318 5.41171 6.33301 6.33203C6.33301 7.25251 7.07953 7.99902 8 7.99902C8.92047 7.99902 9.66699 7.25251 9.66699 6.33203C9.66682 5.41171 8.92037 4.66602 8 4.66602Z" fill="#848D95"/></g></svg></span>
-                        <span class="tc-val">09:00</span>
-                      </div>
-                    </div>
-                    <div class="tcard">
-                      <div class="tc-head">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><mask id="mh" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="1" y="1" width="18" height="18"><rect x="1.667" y="1.668" width="16.667" height="16.667" fill="#D9D9D9"/></mask><g mask="url(#mh)"><path d="M3.421 8.41283C3.421 6.95945 4.599 5.78125 6.052 5.78125H13.947C15.401 5.78125 16.579 6.95945 16.579 8.41283V14.5532C16.579 16.0066 15.401 17.1848 13.947 17.1848H6.052C4.599 17.1848 3.421 16.0066 3.421 14.5532V8.41283Z" fill="#D1ECFF"/><path d="M7.807 14.553C7.807 14.0685 8.199 13.6758 8.684 13.6758H11.315C11.8 13.6758 12.193 14.0685 12.193 14.553V17.1846H7.807V14.553Z" fill="#465159"/><path d="M1.667 7.62779C1.667 7.03128 1.997 6.48387 2.525 6.20605L9.183 2.7019C9.695 2.4327 10.306 2.4327 10.817 2.7019L17.475 6.20605C18.003 6.48387 18.334 7.03128 18.334 7.62779C18.334 8.80724 17.105 9.58466 16.039 9.07976L10.751 6.57496C10.276 6.34979 9.725 6.34979 9.249 6.57496L3.961 9.07976C2.896 9.58466 1.667 8.80724 1.667 7.62779Z" fill="#75BCFF"/></g></svg>
-                        <span class="tc-lbl">퇴근</span>
-                      </div>
-                      <div class="tc-body">
-                        <span class="gps-btn"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><mask id="mgps2" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="1" y="1" width="14" height="14"><rect x="1.333" y="1.332" width="13.333" height="13.333" fill="#D9D9D9"/></mask><g mask="url(#mgps2)"><path d="M8 1.33203C10.7613 1.33203 12.9997 3.58998 13 6.375C13 8.68108 10.429 12.3544 8.83496 14.2656L8.74805 14.3594C8.29439 14.7965 7.58169 14.7652 7.16504 14.2656C5.57104 12.3544 3 8.68108 3 6.375C3.00025 3.58998 5.23873 1.33203 8 1.33203ZM8 4.66602C7.07963 4.66602 6.33318 5.41171 6.33301 6.33203C6.33301 7.25251 7.07953 7.99902 8 7.99902C8.92047 7.99902 9.66699 7.25251 9.66699 6.33203C9.66682 5.41171 8.92037 4.66602 8 4.66602Z" fill="#848D95"/></g></svg></span>
-                        <span class="nextday">익일</span>
-                        <span class="tc-val" id="rtGohome">18:00</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="tcol">
-                    <div class="tcard edit" id="cardGowork" data-kind="gowork" data-def="09:00">
-                      <div class="tc-head"><span class="tc-lbl">수정 요청</span></div>
-                      <div class="tc-body"><span class="tc-val" data-slot></span></div>
-                    </div>
-                    <div class="tcard edit" id="cardGohome" data-kind="gohome" data-def="18:00">
-                      <div class="tc-head"><span class="tc-lbl">수정 요청</span></div>
-                      <div class="tc-body"><span class="tc-val" data-slot></span></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="timepicker" id="timepicker">
-              <div class="tp-inner">
-                <div class="tp-band"></div>
-                <div class="wheel w-ampm" id="wAmpm"></div>
-                <div class="wheel w-num" id="wHour"></div>
-                <div class="tp-colon">:</div>
-                <div class="wheel w-num" id="wMin"></div>
-              </div>
-            </div>
-            <div class="cta">
-              <div class="cta-cancel" id="btnCancel"><span>취소</span></div>
-              <div class="cta-submit" id="btnSubmit"><span>수정 요청</span></div>
-            </div>
-          </div>
-          <div class="kb" id="kb">
-            <div class="kb-acc">
-              <div class="kb-sug">“야근”</div>
-              <div class="kb-sug q">야근했음</div>
-              <div class="kb-sug">야근</div>
-            </div>
-            <div class="kb-keys" id="kbKeys"></div>
-            <div class="kb-home"><i></i></div>
-          </div>
-          <div class="confirm" id="confirm">
-            <div class="cf-card">
-              <div class="cf-body">
-                <div class="cf-title">근무기록 메모를 삭제하시겠습니까?</div>
-                <div class="cf-msg">삭제 후에도 내 메모에서 작성이력을 확인할 수 있습니다.</div>
-              </div>
-              <div class="cf-btns">
-                <div class="cf-btn cancel" id="cfCancel">취소</div>
-                <div class="cf-btn del" id="cfDel">삭제</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <div class="panel" id="panel-work"></div>
+  <div class="panel hidden" id="panel-admedit"></div>
+  <div class="panel hidden" id="panel-admappr"></div>
 </div>
 
 <script>
 (function(){
-  var ITEM=40,ampm=['오전','오후'],hours=[],mins=[];
-  for(var h=1;h<=12;h++)hours.push(String(h));
-  for(var m=0;m<60;m++)mins.push(('0'+m).slice(-2));
-  function fill(el,arr){var s='<div class="pad"></div>';for(var i=0;i<arr.length;i++)s+='<div class="it">'+arr[i]+'</div>';s+='<div class="pad"></div>';el.innerHTML=s;}
-  var wA=document.getElementById('wAmpm'),wH=document.getElementById('wHour'),wM=document.getElementById('wMin');
-  fill(wA,ampm);fill(wH,hours);fill(wM,mins);
-  function its(el){return el.querySelectorAll('.it');}
-  function idxOf(el){return Math.round(el.scrollTop/ITEM);}
-  function mark(el){var i=idxOf(el),a=its(el);for(var k=0;k<a.length;k++)a[k].classList.toggle('on',k===i);}
-  function setIdx(el,i){el.scrollTop=i*ITEM;mark(el);}
-  function valOf(el,arr){return arr[Math.max(0,Math.min(arr.length-1,idxOf(el)))];}
-  var state={selected:null};
-  function to24(){var ap=valOf(wA,ampm),hh=parseInt(valOf(wH,hours),10),mm=valOf(wM,mins);if(ap==='오전'){if(hh===12)hh=0;}else{if(hh!==12)hh+=12;}return ('0'+hh).slice(-2)+':'+mm;}
-  function from24(t){var p=t.split(':'),H=parseInt(p[0],10),M=p[1];var ap=H<12?'오전':'오후';var h12=H%12;if(h12===0)h12=12;return{ap:ap,h:String(h12),m:M};}
-  function applyPicked(){if(!state.selected)return;document.getElementById(state.selected==='gowork'?'cardGowork':'cardGohome').querySelector('[data-slot]').textContent=to24();document.getElementById('btnSubmit').classList.add('active');}
-  [[wA,ampm],[wH,hours],[wM,mins]].forEach(function(w){var t;w[0].addEventListener('scroll',function(){mark(w[0]);clearTimeout(t);t=setTimeout(applyPicked,100);});});
+  var IC={
+    gowork:'<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><mask id="MASK-mg" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="1" y="1" width="18" height="18"><rect x="1.667" y="1.668" width="16.667" height="16.667" fill="#D9D9D9"/></mask><g mask="url(#MASK-mg)"><path d="M18.333 7.1875C18.333 9.77633 16.2343 11.875 13.6455 11.875C11.0567 11.875 8.95801 9.77633 8.95801 7.1875C8.95801 4.59867 11.0567 2.5 13.6455 2.5C16.2343 2.5 18.333 4.59867 18.333 7.1875Z" fill="white"/><path d="M17.2913 7.1875C17.2913 5.17396 15.659 3.54167 13.6455 3.54167C11.632 3.54167 9.99967 5.17396 9.99967 7.1875C9.99967 9.20104 11.632 10.8333 13.6455 10.8333V11.875C11.0567 11.875 8.95801 9.77633 8.95801 7.1875C8.95801 4.59867 11.0567 2.5 13.6455 2.5C16.2343 2.5 18.333 4.59867 18.333 7.1875C18.333 9.77633 16.2343 11.875 13.6455 11.875V10.8333C15.659 10.8333 17.2913 9.20104 17.2913 7.1875Z" fill="#CDD5DB"/><path d="M1.667 9.10677C1.667 8.22585 2.381 7.51172 3.262 7.51172H12.832C13.713 7.51172 14.427 8.22585 14.427 9.10677V15.487C14.427 16.3679 13.713 17.082 12.832 17.082H3.262C2.381 17.082 1.667 16.3679 1.667 15.487V9.10677Z" fill="#89746C"/><path d="M1.667 9.10677C1.667 8.22585 2.381 7.51172 3.262 7.51172H12.832C13.713 7.51172 14.427 8.22585 14.427 9.10677V9.9043C14.427 10.7852 13.713 11.4993 12.832 11.4993H3.262C2.381 11.4993 1.667 10.7852 1.667 9.9043V9.10677Z" fill="#5B4A43"/><path d="M6.452 11.5007C6.452 11.0602 6.809 10.7031 7.25 10.7031H8.845C9.285 10.7031 9.642 11.0602 9.642 11.5007C9.642 11.9411 9.285 12.2982 8.845 12.2982H7.25C6.809 12.2982 6.452 11.9411 6.452 11.5007Z" fill="#FFDB49"/><path d="M9.6416 7.51367V6.71615H6.4515V7.51367C6.4515 7.95413 6.09443 8.3112 5.65397 8.3112C5.21351 8.3112 4.85645 7.95413 4.85645 7.51367V6.71615C4.85645 5.83522 5.57057 5.12109 6.4515 5.12109H9.6416L9.80438 5.12966C10.6088 5.21122 11.2367 5.89019 11.2367 6.71615V7.51367C11.2367 7.95413 10.8796 8.3112 10.4391 8.3112C9.99867 8.3112 9.6416 7.95413 9.6416 7.51367Z" fill="#5B4A43"/><path d="M13.125 6.14453V5.10286C13.125 4.81522 13.3582 4.58203 13.6458 4.58203C13.9335 4.58203 14.1667 4.81522 14.1667 5.10286V6.14453C14.1667 6.43218 14.3999 6.66536 14.6875 6.66536H15.7292C16.0168 6.66536 16.25 6.89855 16.25 7.1862C16.25 7.47385 16.0168 7.70703 15.7292 7.70703H14.6875C13.8246 7.70703 13.125 7.00748 13.125 6.14453Z" fill="#626E76"/></g></svg>',
+    home:'<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><mask id="MASK-mh" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="1" y="1" width="18" height="18"><rect x="1.667" y="1.668" width="16.667" height="16.667" fill="#D9D9D9"/></mask><g mask="url(#MASK-mh)"><path d="M3.421 8.41283C3.421 6.95945 4.599 5.78125 6.052 5.78125H13.947C15.401 5.78125 16.579 6.95945 16.579 8.41283V14.5532C16.579 16.0066 15.401 17.1848 13.947 17.1848H6.052C4.599 17.1848 3.421 16.0066 3.421 14.5532V8.41283Z" fill="#D1ECFF"/><path d="M7.807 14.553C7.807 14.0685 8.199 13.6758 8.684 13.6758H11.315C11.8 13.6758 12.193 14.0685 12.193 14.553V17.1846H7.807V14.553Z" fill="#465159"/><path d="M1.667 7.62779C1.667 7.03128 1.997 6.48387 2.525 6.20605L9.183 2.7019C9.695 2.4327 10.306 2.4327 10.817 2.7019L17.475 6.20605C18.003 6.48387 18.334 7.03128 18.334 7.62779C18.334 8.80724 17.105 9.58466 16.039 9.07976L10.751 6.57496C10.276 6.34979 9.725 6.34979 9.249 6.57496L3.961 9.07976C2.896 9.58466 1.667 8.80724 1.667 7.62779Z" fill="#75BCFF"/></g></svg>',
+    send:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><mask id="MASK-ms" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="2" y="2" width="20" height="20"><rect x="2" y="2" width="20" height="20" fill="#D9D9D9"/></mask><g mask="url(#MASK-ms)"><path fill-rule="evenodd" clip-rule="evenodd" d="M6.33815 2.31436L20.3382 9.31597H20.3478C20.8445 9.56581 21.262 9.94881 21.5538 10.4222C21.8455 10.8956 22 11.4408 22 11.9969C22 12.5531 21.8455 13.0982 21.5538 13.5717C21.262 14.0451 20.8445 14.4281 20.3478 14.6779L6.34895 21.6795C5.92849 21.8857 5.46723 21.9952 4.99898 22C4.49906 21.9998 4.0071 21.8747 3.56782 21.636C3.12853 21.3973 2.75586 21.0525 2.48366 20.633C2.21146 20.2136 2.04838 19.7327 2.00922 19.2342C1.97006 18.7356 2.05607 18.2352 2.25944 17.7784L4.39539 12.9974H13.4588C13.724 12.9974 13.9784 12.892 14.166 12.7044C14.3536 12.5168 14.459 12.2623 14.459 11.9969C14.459 11.7316 14.3536 11.4771 14.166 11.2895C13.9784 11.1019 13.724 10.9964 13.4588 10.9964H4.39539L2.25824 6.21548C2.00845 5.65097 1.93878 5.02313 2.05874 4.41757C2.1787 3.81201 2.48244 3.25819 2.92856 2.83162C3.37468 2.40506 3.94146 2.1265 4.55162 2.03393C5.16179 1.94136 5.78565 2.03929 6.33815 2.31436Z" fill="white"/></g></svg>',
+    gps:'<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><mask id="MASK-gp" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="1" y="1" width="14" height="14"><rect x="1.333" y="1.332" width="13.333" height="13.333" fill="#D9D9D9"/></mask><g mask="url(#MASK-gp)"><path d="M8 1.33203C10.7613 1.33203 12.9997 3.58998 13 6.375C13 8.68108 10.429 12.3544 8.83496 14.2656L8.74805 14.3594C8.29439 14.7965 7.58169 14.7652 7.16504 14.2656C5.57104 12.3544 3 8.68108 3 6.375C3.00025 3.58998 5.23873 1.33203 8 1.33203ZM8 4.66602C7.07963 4.66602 6.33318 5.41171 6.33301 6.33203C6.33301 7.25251 7.07953 7.99902 8 7.99902C8.92047 7.99902 9.66699 7.25251 9.66699 6.33203C9.66682 5.41171 8.92037 4.66602 8 4.66602Z" fill="#848D95"/></g></svg>',
+    check:'<svg width="14" height="12" viewBox="0 0 14 12" fill="none"><path d="M1.5 6.3L5 9.8L12.5 1.8" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    sb:'<div class="sb-icons"><svg width="17" height="12" viewBox="0 0 17 12" fill="white"><rect x="0" y="5" width="3" height="7" rx="0.8" opacity="0.4"/><rect x="4.5" y="3.5" width="3" height="8.5" rx="0.8" opacity="0.6"/><rect x="9" y="1.5" width="3" height="10.5" rx="0.8"/><rect x="13.5" y="0" width="3" height="12" rx="0.8"/></svg><svg width="16" height="12" viewBox="0 0 16 12" fill="white"><path d="M8 9.5a1.5 1.5 0 100 3 1.5 1.5 0 000-3z"/><path d="M3.5 6.5C4.9 5.1 6.8 4.2 8 4.2s3.1.9 4.5 2.3l1.4-1.4C12.1 3.3 10.2 2.2 8 2.2S3.9 3.3 2.1 5.1l1.4 1.4z" opacity="0.6"/><path d="M1 3.5C2.9 1.6 5.3.5 8 .5s5.1 1.1 7 3l1-1C13.8.4 11-.5 8-.5S2.2.4 0 2.5L1 3.5z" opacity="0.3"/></svg><svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x="0.5" y="0.5" width="22" height="11" rx="3.5" stroke="white" stroke-opacity="0.35"/><rect x="2" y="2" width="18" height="8" rx="2" fill="white"/><path d="M24 4v4c.8-.4.8-3.6 0-4z" fill="white" opacity="0.4"/></svg></div>'
+  };
+  function crumb1(a){var s='';for(var i=0;i<a.length;i++){if(i)s+='<span class="bc-sep">›</span>';s+='<span>'+a[i]+'</span>';}return s;}
+  function crumbsHTML(p){var s='<div class="crumbs">';for(var i=0;i<p.length;i++)s+='<div class="breadcrumb">'+crumb1(p[i])+'</div>';return s+'</div>';}
+  function infoHTML(rows){var s='';for(var i=0;i<rows.length;i++)s+='<div class="info-list"><span class="info-label">'+rows[i][0]+'</span><span class="info-date '+(rows[i][2]||'')+'">'+rows[i][1]+'</span></div>';return s;}
 
-  var kb=document.getElementById('kb'),keys=document.getElementById('kbKeys');
-  var rows=[['q','w','e','r','t','y','u','i','o','p'],['a','s','d','f','g','h','j','k','l'],['z','x','c','v','b','n','m']];
-  function K(label,cls){return '<div class="key '+(cls||'')+'">'+label+'</div>';}
-  var html='<div class="kb-row">';rows[0].forEach(function(c){html+=K(c);});html+='</div>';
-  html+='<div class="kb-row kb-r2">';rows[1].forEach(function(c){html+=K(c);});html+='</div>';
-  html+='<div class="kb-row">'+K('⇧','fn wide kb-shift');rows[2].forEach(function(c){html+=K(c);});html+=K('⌫','fn wide kb-del')+'</div>';
-  html+='<div class="kb-row">'+K('123','fn wide')+K('🌐','fn')+K('space','space kb-space')+K('return','fn ret kb-ret')+'</div>';
-  keys.innerHTML=html;
-  var field=document.getElementById('memoField');
-  function showKb(){kb.classList.add('show');}
-  function hideKb(){kb.classList.remove('show');}
-  keys.addEventListener('mousedown',function(e){if(e.target.closest('.key'))e.preventDefault();});
-  keys.addEventListener('click',function(e){
-    var key=e.target.closest('.key');if(!key)return;
-    if(key.classList.contains('kb-del'))field.value=field.value.slice(0,-1);
-    else if(key.classList.contains('kb-ret')){hideKb();field.blur();return;}
-    else if(key.classList.contains('kb-shift')||key.textContent==='123'||key.textContent==='🌐'){}
-    else if(key.classList.contains('kb-space')){if(field.value.length<40)field.value+=' ';}
-    else{if(field.value.length<40)field.value+=key.textContent;}
-    field.dispatchEvent(new Event('input'));
-  });
-
-  var send=document.getElementById('sendBtn'),row=document.getElementById('memoRow'),done=document.getElementById('memoDone'),mdText=document.getElementById('mdText'),box=document.getElementById('memoBox');
-  field.addEventListener('input',function(){send.classList.toggle('active',field.value.trim().length>0);});
-  field.addEventListener('focus',function(){box.classList.add('focused');showKb();});
-  field.addEventListener('blur',function(){box.classList.remove('focused');});
-  send.addEventListener('click',function(){if(!send.classList.contains('active'))return;mdText.textContent=field.value.trim();row.style.display='none';done.classList.add('show');hideKb();});
-  document.getElementById('mdEdit').addEventListener('click',function(){done.classList.remove('show');row.style.display='flex';field.value=mdText.textContent;send.classList.add('active');field.focus();});
-
-  var confirmEl=document.getElementById('confirm');
-  function doDelete(){done.classList.remove('show');row.style.display='flex';field.value='';mdText.textContent='';send.classList.remove('active');}
-  document.getElementById('mdDel').addEventListener('click',function(){confirmEl.classList.add('show');});
-  document.getElementById('cfCancel').addEventListener('click',function(){confirmEl.classList.remove('show');});
-  document.getElementById('cfDel').addEventListener('click',function(){confirmEl.classList.remove('show');doDelete();});
-
-  var bodyScroll=document.getElementById('bodyScroll');
-  function selectCard(kind){
-    hideKb();field.blur();
-    state.selected=kind;
-    document.getElementById('cardGowork').classList.toggle('selected',kind==='gowork');
-    document.getElementById('cardGohome').classList.toggle('selected',kind==='gohome');
-    document.getElementById('timepicker').classList.add('open');
-    var card=document.getElementById(kind==='gowork'?'cardGowork':'cardGohome');
-    var base=card.querySelector('[data-slot]').textContent.trim()||card.getAttribute('data-def');
-    var v=from24(base);
-    requestAnimationFrame(function(){requestAnimationFrame(function(){
-      setIdx(wA,Math.max(0,ampm.indexOf(v.ap)));setIdx(wH,Math.max(0,hours.indexOf(v.h)));setIdx(wM,Math.max(0,mins.indexOf(v.m)));
-    });});
-    setTimeout(function(){bodyScroll.scrollTop=bodyScroll.scrollHeight;},300);
+  function buildScreen(cfg){
+    var cbx = cfg.checkbox ? '<div class="cbx-row"><div class="checkbox"></div><span class="cbx-label">관리자 DM으로도 전송</span></div>' : '';
+    var del = cfg.delBtn ? '<div class="del-btn"><span class="del-btn-text">기록 삭제</span></div>' : '';
+    var radio = cfg.radio ? '<div class="opt-radio"><div class="opt-gtitle">요청</div><div class="radio-row rr-edit"><div class="radio on"></div><span>수정 요청</span></div><div class="radio-row rr-del"><div class="radio"></div><span>삭제 요청</span></div></div>' : '';
+    var rmax = cfg.reasonMax ? '<div class="opt"><span class="opt-t">사유 텍스트 max</span><div class="sw sw-reasonmax"><i></i></div></div>' : '';
+    var subActive = cfg.submitActive ? ' active' : '';
+    var editCls = cfg.noPicker ? 'tcard' : 'tcard edit';
+    var pf0 = cfg.prefill?cfg.prefill[0]:'';
+    var pf1 = cfg.prefill?cfg.prefill[1]:'';
+    return ''+
+    '<div class="page"><div class="left">'+
+      crumbsHTML(cfg.crumbs)+
+      '<div class="opts">'+radio+
+        '<div class="opt"><span class="opt-t">작은 디바이스</span><div class="sw sw-small"><i></i></div></div>'+
+        '<div class="opt"><span class="opt-t">퇴근 누락</span><div class="sw sw-miss"><i></i></div></div>'+
+        '<div class="opt"><span class="opt-t">영업용 직원</span><div class="sw sw-gps"><i></i></div></div>'+
+        '<div class="opt"><span class="opt-t">익일</span><div class="sw sw-next"><i></i></div></div>'+
+        rmax+
+      '</div></div>'+
+      '<div class="iphone"><div class="screen"><div class="bgapp"></div><div class="di"></div>'+
+        '<div class="statusbar"><span class="sb-time">9:41</span>'+IC.sb+'</div>'+
+        '<div class="design"><div class="dim"><div class="bs">'+
+          '<div class="handle"><div class="hbar"></div></div>'+
+          '<div class="stitle"><span class="stitle-text">'+cfg.title+'</span>'+del+'</div>'+
+          '<div class="body bodyScroll">'+
+            '<div class="info">'+infoHTML(cfg.infoRows)+'</div>'+
+            '<div class="maincontents">'+
+              '<div class="memo-wrap"><span class="memo-label">메모</span>'+
+                '<div class="memo-row"><label class="memo-input"><input class="memo-field" type="text" maxlength="40" placeholder="최대 40자까지 입력가능합니다." /></label>'+
+                  '<div class="send-btn">'+IC.send+'</div></div>'+
+                '<div class="memo-done"><div class="md-textarea"><div class="md-top"><span class="md-date">26.06.30</span><span class="md-edited">편집됨</span></div><span class="md-text"></span></div>'+
+                  '<div class="md-btns"><div class="sbtn red md-del">삭제</div><div class="sbtn gray md-edit">수정</div></div></div>'+
+                cbx+
+              '</div>'+
+              '<div class="timearea"><div class="tcol">'+
+                '<div class="tcard"><div class="tc-head">'+IC.gowork+'<span class="tc-lbl">출근</span></div><div class="tc-body"><span class="gps-btn">'+IC.gps+'</span><span class="tc-val">09:00</span></div></div>'+
+                '<div class="tcard"><div class="tc-head">'+IC.home+'<span class="tc-lbl">퇴근</span></div><div class="tc-body"><span class="gps-btn">'+IC.gps+'</span><span class="nextday">익일</span><span class="tc-val rtGohome">18:00</span></div></div>'+
+              '</div><div class="tcol">'+
+                '<div class="'+editCls+' cardGowork" data-kind="gowork" data-def="09:00"><div class="tc-head"><span class="tc-lbl edit-lbl">'+cfg.editLabel+'</span></div><div class="tc-body"><span class="tc-val" data-slot>'+pf0+'</span></div></div>'+
+                '<div class="'+editCls+' cardGohome" data-kind="gohome" data-def="18:00"><div class="tc-head"><span class="tc-lbl edit-lbl">'+cfg.editLabel+'</span></div><div class="tc-body"><span class="tc-val" data-slot>'+pf1+'</span></div></div>'+
+              '</div></div>'+
+            '</div>'+
+          '</div>'+
+          '<div class="timepicker"><div class="tp-inner"><div class="tp-band"></div><div class="wheel w-ampm"></div><div class="wheel w-num w-hour"></div><div class="tp-colon">:</div><div class="wheel w-num w-min"></div></div></div>'+
+          '<div class="cta"><div class="cta-cancel"><span>'+cfg.cancel+'</span></div><div class="cta-submit'+subActive+'"><span>'+cfg.submit+'</span></div></div>'+
+        '</div>'+
+        '<div class="kb"><div class="kb-acc"><div class="kb-sug">“야근”</div><div class="kb-sug q">야근했음</div><div class="kb-sug">야근</div></div><div class="kb-keys"></div><div class="kb-home"><i></i></div></div>'+
+        '<div class="confirm"><div class="cf-card"><div class="cf-body"><div class="cf-title">근무기록 메모를 삭제하시겠습니까?</div><div class="cf-msg">삭제 후에도 내 메모에서 작성이력을 확인할 수 있습니다.</div></div><div class="cf-btns"><div class="cf-btn cancel cf-cancel">취소</div><div class="cf-btn del cf-del">삭제</div></div></div></div>'+
+        '</div></div>'+
+      '</div></div>'+
+    '</div>';
   }
-  document.getElementById('cardGowork').addEventListener('click',function(){selectCard('gowork');});
-  document.getElementById('cardGohome').addEventListener('click',function(){selectCard('gohome');});
-  document.getElementById('btnCancel').addEventListener('click',function(){
-    state.selected=null;document.getElementById('timepicker').classList.remove('open');
-    ['cardGowork','cardGohome'].forEach(function(id){var c=document.getElementById(id);c.classList.remove('selected');c.querySelector('[data-slot]').textContent='';});
-    document.getElementById('btnSubmit').classList.remove('active');
-  });
-  setIdx(wA,0);setIdx(wH,8);setIdx(wM,0);
 
-  var dim=document.getElementById('dim'),screen=document.getElementById('screen'),iphone=document.getElementById('iphone'),rtHome=document.getElementById('rtGohome');
-  var swSmall=document.getElementById('swSmall'),swMiss=document.getElementById('swMiss'),swGps=document.getElementById('swGps'),swNext=document.getElementById('swNext');
-  function setMiss(on){swMiss.classList.toggle('on',on);if(on){rtHome.textContent='퇴근누락';rtHome.classList.add('miss');}else{rtHome.textContent='18:00';rtHome.classList.remove('miss');}}
-  function setGps(on){swGps.classList.toggle('on',on);dim.classList.toggle('show-gps',on);}
-  function setNext(on){swNext.classList.toggle('on',on);dim.classList.toggle('show-next',on);}
-  swSmall.addEventListener('click',function(){var on=this.classList.toggle('on');screen.classList.toggle('small',on);iphone.classList.toggle('small',on);});
-  swMiss.addEventListener('click',function(){var on=!swMiss.classList.contains('on');setMiss(on);if(on){setGps(false);setNext(false);}});
-  swGps.addEventListener('click',function(){var on=!swGps.classList.contains('on');setGps(on);if(on)setMiss(false);});
-  swNext.addEventListener('click',function(){var on=!swNext.classList.contains('on');setNext(on);if(on)setMiss(false);});
+  function initScreen(root,cfg){
+    var $=function(s){return root.querySelector(s);};
+    var ITEM=40,ampm=['오전','오후'],hours=[],mins=[];
+    for(var h=1;h<=12;h++)hours.push(String(h));
+    for(var m=0;m<60;m++)mins.push(('0'+m).slice(-2));
+    function fill(el,arr){var s='<div class="pad"></div>';for(var i=0;i<arr.length;i++)s+='<div class="it">'+arr[i]+'</div>';s+='<div class="pad"></div>';el.innerHTML=s;}
+    var wA=$('.w-ampm'),wH=$('.w-hour'),wM=$('.w-min');
+    fill(wA,ampm);fill(wH,hours);fill(wM,mins);
+    function its(el){return el.querySelectorAll('.it');}
+    function idxOf(el){return Math.round(el.scrollTop/ITEM);}
+    function mark(el){var i=idxOf(el),a=its(el);for(var k=0;k<a.length;k++)a[k].classList.toggle('on',k===i);}
+    function setIdx(el,i){el.scrollTop=i*ITEM;mark(el);}
+    function valOf(el,arr){return arr[Math.max(0,Math.min(arr.length-1,idxOf(el)))];}
+    var state={selected:null};
+    function to24(){var ap=valOf(wA,ampm),hh=parseInt(valOf(wH,hours),10),mm=valOf(wM,mins);if(ap==='오전'){if(hh===12)hh=0;}else{if(hh!==12)hh+=12;}return ('0'+hh).slice(-2)+':'+mm;}
+    function from24(t){var p=t.split(':'),H=parseInt(p[0],10),M=p[1];var ap=H<12?'오전':'오후';var h12=H%12;if(h12===0)h12=12;return{ap:ap,h:String(h12),m:M};}
+    var submit=$('.cta-submit');
+    function applyPicked(){if(!state.selected)return;$('.card'+state.selected).querySelector('[data-slot]').textContent=to24();submit.classList.add('active');}
+    [wA,wH,wM].forEach(function(w){var t;w.addEventListener('scroll',function(){mark(w);clearTimeout(t);t=setTimeout(applyPicked,100);});});
+    var kb=$('.kb'),keys=$('.kb-keys');
+    var rows=[['q','w','e','r','t','y','u','i','o','p'],['a','s','d','f','g','h','j','k','l'],['z','x','c','v','b','n','m']];
+    function K(l,c){return '<div class="key '+(c||'')+'">'+l+'</div>';}
+    var html='<div class="kb-row">';rows[0].forEach(function(c){html+=K(c);});html+='</div>';
+    html+='<div class="kb-row kb-r2">';rows[1].forEach(function(c){html+=K(c);});html+='</div>';
+    html+='<div class="kb-row">'+K('⇧','fn wide kb-shift');rows[2].forEach(function(c){html+=K(c);});html+=K('⌫','fn wide kb-del')+'</div>';
+    html+='<div class="kb-row">'+K('123','fn wide')+K('🌐','fn')+K('space','space kb-space')+K('return','fn ret kb-ret')+'</div>';
+    keys.innerHTML=html;
+    var field=$('.memo-field');
+    function showKb(){kb.classList.add('show');}
+    function hideKb(){kb.classList.remove('show');}
+    keys.addEventListener('mousedown',function(e){if(e.target.closest('.key'))e.preventDefault();});
+    keys.addEventListener('click',function(e){
+      var key=e.target.closest('.key');if(!key)return;
+      if(key.classList.contains('kb-del'))field.value=field.value.slice(0,-1);
+      else if(key.classList.contains('kb-ret')){hideKb();field.blur();return;}
+      else if(key.classList.contains('kb-shift')||key.textContent==='123'||key.textContent==='🌐'){}
+      else if(key.classList.contains('kb-space')){if(field.value.length<40)field.value+=' ';}
+      else{if(field.value.length<40)field.value+=key.textContent;}
+      field.dispatchEvent(new Event('input'));
+    });
+    var send=$('.send-btn'),row=$('.memo-row'),done=$('.memo-done'),mdText=$('.md-text'),box=$('.memo-input'),mdEdited=$('.md-edited'),cbxRow=$('.cbx-row');
+    var edited=false,editing=false;
+    field.addEventListener('input',function(){send.classList.toggle('active',field.value.trim().length>0);});
+    field.addEventListener('focus',function(){box.classList.add('focused');showKb();});
+    field.addEventListener('blur',function(){box.classList.remove('focused');});
+    send.addEventListener('click',function(){
+      if(!send.classList.contains('active'))return;
+      mdText.textContent=field.value.trim();
+      if(editing){edited=true;editing=false;}
+      mdEdited.classList.toggle('show',edited);
+      row.style.display='none';done.classList.add('show');
+      if(cbxRow)cbxRow.style.display='none';
+      hideKb();
+    });
+    $('.md-edit').addEventListener('click',function(){editing=true;done.classList.remove('show');row.style.display='flex';if(cbxRow)cbxRow.style.display='flex';field.value=mdText.textContent;send.classList.add('active');field.focus();});
+    var confirmEl=$('.confirm');
+    function doDelete(){edited=false;editing=false;mdEdited.classList.remove('show');done.classList.remove('show');row.style.display='flex';if(cbxRow)cbxRow.style.display='flex';field.value='';mdText.textContent='';send.classList.remove('active');}
+    $('.md-del').addEventListener('click',function(){confirmEl.classList.add('show');});
+    $('.cf-cancel').addEventListener('click',function(){confirmEl.classList.remove('show');});
+    $('.cf-del').addEventListener('click',function(){confirmEl.classList.remove('show');doDelete();});
+    var cbx=$('.checkbox');
+    if(cbx){cbx.innerHTML=IC.check;var lbl=$('.cbx-label');var tog=function(){cbx.classList.toggle('on');};cbx.addEventListener('click',tog);lbl.addEventListener('click',tog);}
+    var bodyScroll=$('.bodyScroll');
+    function selectCard(kind){
+      hideKb();field.blur();
+      state.selected=kind;
+      $('.cardgowork').classList.toggle('selected',kind==='gowork');
+      $('.cardgohome').classList.toggle('selected',kind==='gohome');
+      $('.timepicker').classList.add('open');
+      var card=$('.card'+kind);
+      var base=card.querySelector('[data-slot]').textContent.trim()||card.getAttribute('data-def');
+      var v=from24(base);
+      requestAnimationFrame(function(){requestAnimationFrame(function(){
+        setIdx(wA,Math.max(0,ampm.indexOf(v.ap)));setIdx(wH,Math.max(0,hours.indexOf(v.h)));setIdx(wM,Math.max(0,mins.indexOf(v.m)));
+      });});
+      setTimeout(function(){bodyScroll.scrollTop=bodyScroll.scrollHeight;},300);
+    }
+    $('.cardGowork').classList.add('cardgowork');
+    $('.cardGohome').classList.add('cardgohome');
+    if(!cfg.noPicker){
+      $('.cardGowork').addEventListener('click',function(){selectCard('gowork');});
+      $('.cardGohome').addEventListener('click',function(){selectCard('gohome');});
+    }
+    $('.cta-cancel').addEventListener('click',function(){
+      if(cfg.noPicker)return;
+      state.selected=null;$('.timepicker').classList.remove('open');
+      ['gowork','gohome'].forEach(function(k){var c=$('.card'+k);c.classList.remove('selected');c.querySelector('[data-slot]').textContent='';});
+      submit.classList.remove('active');
+    });
+    setIdx(wA,0);setIdx(wH,8);setIdx(wM,0);
+
+    var reason=$('.reason-val'),reqMode='edit',reasonMaxOn=false;
+    var LONG='사유 텍스트 넘칠 경우 줄넘김 합니다. 사유 텍스트 넘칠 경우 줄넘김 합니다. ';
+    function setReason(){if(!reason)return;reason.textContent=reasonMaxOn?LONG:(reqMode==='edit'?'출근 시간 정정 요청':'중복 근무기록 삭제 요청');}
+    if(cfg.radio){
+      var rEdit=$('.rr-edit'),rDel=$('.rr-del'),title=$('.stitle-text');
+      var editLbls=root.querySelectorAll('.edit-lbl'),editVals=root.querySelectorAll('[data-slot]');
+      function setReq(mode){
+        reqMode=mode;
+        rEdit.querySelector('.radio').classList.toggle('on',mode==='edit');
+        rDel.querySelector('.radio').classList.toggle('on',mode==='del');
+        title.textContent=mode==='edit'?'근무기록 수정요청':'근무기록 삭제요청';
+        for(var i=0;i<editLbls.length;i++)editLbls[i].textContent=mode==='edit'?'수정 요청':'삭제요청';
+        for(var j=0;j<editVals.length;j++){if(mode==='edit'){editVals[j].textContent='14:25';editVals[j].classList.remove('delv');}else{editVals[j].textContent='삭제';editVals[j].classList.add('delv');}}
+        setReason();
+      }
+      rEdit.addEventListener('click',function(){setReq('edit');});
+      rDel.addEventListener('click',function(){setReq('del');});
+    }
+    var swReasonMax=$('.sw-reasonmax');
+    if(swReasonMax){swReasonMax.addEventListener('click',function(){reasonMaxOn=this.classList.toggle('on');setReason();});}
+
+    var dim=$('.dim'),screen=$('.screen'),iphone=root.querySelector('.iphone'),rtHome=$('.rtGohome');
+    var swSmall=$('.sw-small'),swMiss=$('.sw-miss'),swGps=$('.sw-gps'),swNext=$('.sw-next');
+    function setMiss(on){swMiss.classList.toggle('on',on);if(on){rtHome.textContent='퇴근누락';rtHome.classList.add('miss');}else{rtHome.textContent='18:00';rtHome.classList.remove('miss');}}
+    function setGps(on){swGps.classList.toggle('on',on);dim.classList.toggle('show-gps',on);}
+    function setNext(on){swNext.classList.toggle('on',on);dim.classList.toggle('show-next',on);}
+    swSmall.addEventListener('click',function(){var on=this.classList.toggle('on');screen.classList.toggle('small',on);iphone.classList.toggle('small',on);});
+    swMiss.addEventListener('click',function(){var on=!swMiss.classList.contains('on');setMiss(on);if(on){setGps(false);setNext(false);}});
+    swGps.addEventListener('click',function(){var on=!swGps.classList.contains('on');setGps(on);if(on)setMiss(false);});
+    swNext.addEventListener('click',function(){var on=!swNext.classList.contains('on');setNext(on);if(on)setMiss(false);});
+  }
+
+  var cfgs={
+    work:{crumbs:[['워크모드','홈','내 기록','근무기록']],title:'근무기록 수정 요청',delBtn:true,checkbox:false,radio:false,noPicker:false,submitActive:false,cancel:'취소',submit:'수정 요청',editLabel:'수정 요청',infoRows:[['근무 날짜','2024/10/17 (목)']]},
+    admedit:{crumbs:[['관리자모드','홈','직원 리스트','근무기록 수정'],['관리자모드','홈','직원 관리','근무기록','근무기록 수정']],title:'근무기록 수정',delBtn:true,checkbox:true,radio:false,noPicker:false,submitActive:false,cancel:'취소',submit:'저장',editLabel:'수정시간',infoRows:[['직원 명','홍길동'],['근무 날짜','2024/10/17 (목)']]},
+    admappr:{crumbs:[['관리자모드','홈','직원 리스트','근무기록 요청 확인'],['관리자모드','홈','직원 관리','근무기록','근무기록 요청 확인'],['관리자모드','HR 알림','근무기록 요청 확인']],title:'근무기록 수정요청',delBtn:false,checkbox:false,radio:true,noPicker:true,submitActive:true,cancel:'거절',submit:'승인',editLabel:'수정 요청',prefill:['14:25','14:25'],reasonMax:true,infoRows:[['직원 명','홍길동'],['근무 날짜','2024/10/17 (목)'],['사유','출근 시간 정정 요청','reason-val']]}
+  };
+  var pans={work:document.getElementById('panel-work'),admedit:document.getElementById('panel-admedit'),admappr:document.getElementById('panel-admappr')};
+  for(var k in cfgs){pans[k].innerHTML=buildScreen(cfgs[k]);initScreen(pans[k].querySelector('.page'),cfgs[k]);}
+  var tabs=document.getElementById('tabs');
+  tabs.addEventListener('click',function(e){
+    var t=e.target.closest('.tab');if(!t)return;var id=t.getAttribute('data-tab');
+    tabs.querySelectorAll('.tab').forEach(function(x){x.classList.toggle('active',x===t);});
+    for(var kk in pans)pans[kk].classList.toggle('hidden',kk!==id);
+  });
 })();
 </script>
 </body>
