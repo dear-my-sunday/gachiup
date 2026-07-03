@@ -18,6 +18,7 @@ html,body{background:#EEF1F4;min-height:100vh;overscroll-behavior:none}
 .opt-radio{display:flex;flex-direction:column;gap:12px}
 .opts .opt-radio:not(:last-child){padding-bottom:20px;border-bottom:1px solid #F1F3F5}
 .opt-gtitle{font-size:12px;font-weight:700;color:#8B95A1}
+.opt-note{font-size:12px;line-height:18px;color:#8B95A1}
 .radio-row{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
 .radio{width:20px;height:20px;border-radius:50%;border:2px solid #D5DAE0;flex:none;display:flex;align-items:center;justify-content:center;transition:.15s}
 .radio.on{border-color:var(--primary)}
@@ -60,9 +61,9 @@ html,body{background:#EEF1F4;min-height:100vh;overscroll-behavior:none}
 
 /* table (좌측 고정 + 가로/세로 스크롤) */
 .table{flex:1 1 auto;min-height:0;display:flex;gap:1px;align-items:flex-start;background:#fff;overflow:auto;overscroll-behavior:none;-webkit-overflow-scrolling:touch}
-.tbl-left{position:sticky;left:0;z-index:3;flex:none;display:flex;flex-direction:column;border-right:1px solid #CDD5DB;background:#fff}
+.tbl-left{position:sticky;left:0;z-index:3;flex:none;display:flex;flex-direction:column;min-height:100%;border-right:1px solid #CDD5DB;background:#fff}
 .tbl-right{flex:none;display:flex;flex-direction:column;background:#fff}
-.tbl-left.scrollpad,.tbl-right.scrollpad{padding-bottom:140px}
+.tbl-left.scrollpad,.tbl-right.scrollpad{padding-bottom:100px}
 .th-name{position:sticky;top:0;z-index:2;width:92px;height:77px;flex:none;display:flex;align-items:center;justify-content:center;padding:12px;background:#F9FAFB;border-bottom:1px solid #465159}
 .th-name span{font-weight:400;font-size:14px;line-height:22px;color:#465159}
 .emp{width:92px;height:64px;flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px;border-bottom:1px solid #F3F5F7;background:#fff}
@@ -70,8 +71,8 @@ html,body{background:#EEF1F4;min-height:100vh;overscroll-behavior:none}
 .emp-name span{flex:0 1 auto;min-width:0;font-weight:400;font-size:12px;line-height:18px;color:#202528;text-align:center;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:break-all}
 .emp-name .mgr{flex:none}
 
-.th-week{position:sticky;top:0;z-index:1;height:77px;display:flex;background:#F9FAFB;width:max-content}
-.th-day{width:56px;height:77px;flex:none;display:flex;flex-direction:column;gap:2px;align-items:center;justify-content:center;padding:12px;border-right:1px solid #F3F5F7;border-bottom:1px solid #465159;color:#202528}
+.th-week{position:sticky;top:0;z-index:1;height:77px;display:flex;background:#F9FAFB;border-bottom:1px solid #465159;width:max-content}
+.th-day{width:56px;height:76px;flex:none;display:flex;flex-direction:column;gap:2px;align-items:center;justify-content:center;padding:12px;border-right:1px solid #F3F5F7;color:#202528}
 .th-day.sat{color:#1A7CFF}.th-day.sun{color:#FF404D}
 .th-dow{font-weight:400;font-size:13px;line-height:22px}
 .th-daybox{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center}
@@ -80,9 +81,21 @@ html,body{background:#EEF1F4;min-height:100vh;overscroll-behavior:none}
 .drow{display:flex;align-items:stretch}
 .dcell{width:56px;height:64px;flex:none;display:flex;flex-direction:column;gap:4px;align-items:center;justify-content:center;padding:12px;border-right:1px solid #F3F5F7;border-bottom:1px solid #F3F5F7}
 .dcell span{font-weight:400;font-size:12px;line-height:18px;color:#202528}
+/* 일(day) 뷰 타임라인 */
+.table.day .th-name{height:47px}
+.table.day .emp{height:60px}
+.dhead{position:sticky;top:0;z-index:1;display:flex;height:47px;background:#F9FAFB;border-bottom:1px solid #465159;width:max-content}
+.dhour{width:48px;height:46px;flex:none;display:flex;align-items:center;justify-content:center;border-right:1px solid #F3F5F7;font-weight:400;font-size:13px;line-height:22px;color:#202528}
+.dbody{display:flex;flex-direction:column}
+.dgrid{position:relative;height:60px;border-bottom:1px solid #F3F5F7;background-image:repeating-linear-gradient(to right,transparent 0,transparent 47px,#F3F5F7 47px,#F3F5F7 48px)}
+.dbar{position:absolute;top:7px;height:46px;box-sizing:border-box;display:flex;flex-direction:column;gap:2px;padding:4px 8px;background:#F3F5F7;border:1px solid #E1E6EA;border-radius:12px;overflow:hidden}
+.dbar span{font-weight:400;font-size:12px;line-height:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dbar-t{color:#202528}
+.dbar-b{color:#848D95}
+.dbar.lead{border-radius:0 12px 12px 0}
 
 /* floating buttons */
-.floatingarea{position:absolute;left:0;bottom:0;width:402px;display:flex;gap:10px;align-items:center;justify-content:center;padding:0 16px 20px 16px;pointer-events:none}
+.floatingarea{position:absolute;left:0;bottom:0;width:402px;z-index:20;display:flex;gap:10px;align-items:center;justify-content:center;padding:0 16px 20px 16px;pointer-events:none}
 .fbtn{width:119px;background:#fff;border:1px solid #E1E6EA;border-radius:32px;padding:12px 16px;display:flex;align-items:center;justify-content:center;filter:drop-shadow(2px 2px 4px rgba(0,0,0,0.16));cursor:pointer;pointer-events:auto}
 .fbtn span{font-weight:700;font-size:18px;line-height:26px;color:#202528;white-space:nowrap}
 </style>
@@ -97,12 +110,13 @@ html,body{background:#EEF1F4;min-height:100vh;overscroll-behavior:none}
           <div class="radio-row" data-group="mode" data-val="min"><div class="radio on"></div><span>최소 데이터</span></div>
           <div class="radio-row" data-group="mode" data-val="max"><div class="radio"></div><span>최대 데이터</span></div>
         </div>
-        <div class="opt-radio">
+        <div class="opt-radio" id="optToday">
           <div class="opt-gtitle">투데이</div>
           <div class="radio-row" data-group="today" data-val="3"><div class="radio on"></div><span>평일</span></div>
           <div class="radio-row" data-group="today" data-val="5"><div class="radio"></div><span>토요일</span></div>
           <div class="radio-row" data-group="today" data-val="6"><div class="radio"></div><span>일요일</span></div>
         </div>
+        <div class="opt-note">주/일 탭을 선택하면 뷰 전환이 가능합니다.</div>
       </div>
     </div>
     <div class="iphone"><div class="screen"><div class="di"></div>
@@ -137,7 +151,8 @@ html,body{background:#EEF1F4;min-height:100vh;overscroll-behavior:none}
     min:{
       navShare:false, selDay:3, cols:7,
       employees:[{name:'김관리',mgr:true}],
-      grid:[[1,1,0,1,1,0,0]]
+      grid:[[1,1,0,1,1,0,0]],
+      dayShifts:[{s:'06:00',e:'07:00',brk:'휴게 30분'}]
     },
     max:{
       navShare:false, selDay:3, cols:7,
@@ -164,6 +179,18 @@ html,body{background:#EEF1F4;min-height:100vh;overscroll-behavior:none}
         [1,1,0,1,1,0,1],
         [1,1,1,0,1,0,1],
         [0,1,1,1,1,0,1]
+      ],
+      dayShifts:[
+        {s:'06:00',e:'07:00',brk:'휴게 30분'},
+        {s:'08:00',e:'10:00',brk:'휴게 30분'},
+        {s:'11:00',e:'15:00',brk:'휴게 30분'},
+        {s:'06:00',e:'19:00',brk:'휴게 30분'},
+        {leadEmpty:true},
+        {s:'13:00',e:'22:00',brk:'휴게 30분'},
+        {s:'09:30',e:'22:12',brk:''},
+        {s:'08:00',e:'10:00',brk:'휴게 30분'},
+        {s:'14:00',e:'23:00',brk:'휴게 30분'},
+        {s:'06:00',e:'07:00',brk:'휴게 30분'}
       ]
     }
   };
@@ -183,19 +210,51 @@ html,body{background:#EEF1F4;min-height:100vh;overscroll-behavior:none}
     DATA[m].grid=DATA[m].grid.map(function(row){return row.map(function(v){return v?randTime():0;});});
   });
 
-  function render(mode,today){
+  function chrome(view){
+    return '<div class="statusbar"><span class="sb-time">9:41</span>'+IC.sb+'</div>'+
+    '<div class="nav-top"><div class="nav-side"><div class="icon-btn">'+IC.back+'</div></div>'+
+      '<div class="nav-title">근무 스케줄</div>'+
+      '<div class="nav-side right"></div></div>'+
+    '<div class="tabbar"><div class="tab">월</div>'+
+      '<div class="tab'+(view==='week'?' active':'')+'" data-view="week">주</div>'+
+      '<div class="tab'+(view==='day'?' active':'')+'" data-view="day">일</div></div>';
+  }
+  var FLOATING='<div class="floatingarea"><div class="fbtn"><span>확정&공유</span></div><div class="fbtn"><span>스케줄 생성</span></div></div>';
+  function timeToH(t){var p=t.split(':');return (+p[0])+(+p[1])/60;}
+  function renderDay(mode,today){
+    var d=DATA[mode],HW=48,LEAD=48,START=6,END=30,W=LEAD+HW*(END-START);
+    var head='<div class="dhour"></div>';// 6시 앞 빈 칸
+    for(var h=START;h<END;h++){head+='<div class="dhour">'+(h<=24?h:h-24)+'</div>';}
+    var left='';for(var i=0;i<d.employees.length;i++)left+=emp(d.employees[i],i);
+    var body='';
+    for(i=0;i<d.employees.length;i++){
+      var sh=d.dayShifts[i],bar='';
+      if(sh&&sh.leadEmpty){
+        bar='<div class="dbar lead" style="left:0px;width:'+LEAD+'px"></div>';
+      }else if(sh){
+        var l=LEAD+(timeToH(sh.s)-START)*HW,w=(timeToH(sh.e)-timeToH(sh.s))*HW;
+        bar='<div class="dbar" style="left:'+l+'px;width:'+w+'px"><span class="dbar-t">'+sh.s+'~'+sh.e+'</span>'+(sh.brk?'<span class="dbar-b">'+sh.brk+'</span>':'')+'</div>';
+      }
+      body+='<div class="dgrid" style="width:'+W+'px">'+bar+'</div>';
+    }
+    var dow=DAYS[today].dow,num=DAYS[today].num;
+    return chrome('day')+
+    '<div class="contents">'+
+      '<div class="top"><div class="weekpicker"><div class="icon-btn">'+IC.back+'</div><div class="wp-title">2026.06.'+num+' ('+dow+')</div><div class="icon-btn">'+IC.right+'</div></div></div>'+
+      '<div class="table day"><div class="tbl-left"><div class="th-name"><span>직원명</span></div>'+left+'</div>'+
+        '<div class="tbl-right"><div class="dhead">'+head+'</div><div class="dbody">'+body+'</div></div>'+
+      '</div>'+
+      FLOATING+
+    '</div>';
+  }
+  function render(mode,today,view){
+    if(view==='day') return renderDay(mode,today);
     var d=DATA[mode];
     var hdr='';for(var i=0;i<d.cols;i++)hdr+=thday(DAYS[i],i===today);
     var left='';for(i=0;i<d.employees.length;i++)left+=emp(d.employees[i],i);
     var rows='';
     for(var r=0;r<d.grid.length;r++){var row='<div class="drow">';for(var c=0;c<d.cols;c++)row+=cell(d.grid[r][c]);rows+=row+'</div>';}
-    var share=d.navShare?'<div class="nav-share"><span>확정&공유</span></div>':'';
-    return ''+
-    '<div class="statusbar"><span class="sb-time">9:41</span>'+IC.sb+'</div>'+
-    '<div class="nav-top"><div class="nav-side"><div class="icon-btn">'+IC.back+'</div></div>'+
-      '<div class="nav-title">근무 스케줄</div>'+
-      '<div class="nav-side right">'+share+'</div></div>'+
-    '<div class="tabbar"><div class="tab">월</div><div class="tab active">주</div><div class="tab">일</div></div>'+
+    return chrome(view)+
     '<div class="contents">'+
       '<div class="top">'+
         '<div class="weekpicker"><div class="icon-btn">'+IC.back+'</div><div class="wp-title">2026.06.22 ~ 06.28</div><div class="icon-btn">'+IC.right+'</div></div>'+
@@ -208,21 +267,31 @@ html,body{background:#EEF1F4;min-height:100vh;overscroll-behavior:none}
   }
 
   var design=document.getElementById('design');
-  var state={mode:'min',today:3};
+  var state={mode:'min',today:3,view:'week'};
   function apply(){
-    design.innerHTML=render(state.mode,state.today);
+    design.innerHTML=render(state.mode,state.today,state.view);
+    document.getElementById('optToday').style.display=state.view==='day'?'none':'flex';
     document.querySelectorAll('.radio-row').forEach(function(rr){
       var g=rr.getAttribute('data-group'),v=rr.getAttribute('data-val');
       var on=(g==='mode'&&v===state.mode)||(g==='today'&&+v===state.today);
       rr.querySelector('.radio').classList.toggle('on',on);
     });
-    // 데이터가 화면을 넘쳐 스크롤이 생길 때만 하단 여백(플로팅 버튼 가림 방지) 부여
+    // 데이터가 플로팅 버튼(약 90px) 영역까지 차면 하단 여백 부여(버튼 가림 방지)
     var table=design.querySelector('.table');
-    var l=design.querySelector('.tbl-left'),r=design.querySelector('.tbl-right');
-    var overflow=table.scrollHeight>table.clientHeight+1;
-    l.classList.toggle('scrollpad',overflow);
-    r.classList.toggle('scrollpad',overflow);
+    if(table){
+      var l=design.querySelector('.tbl-left'),r=design.querySelector('.tbl-right');
+      l.classList.remove('scrollpad');r.classList.remove('scrollpad');
+      var contentH=Math.max(l.offsetHeight,r.offsetHeight);
+      var need=contentH>table.clientHeight-90;
+      l.classList.toggle('scrollpad',need);
+      r.classList.toggle('scrollpad',need);
+    }
   }
+  // 탭(주/일) 클릭 시 뷰 전환 (design innerHTML 교체되므로 위임)
+  design.addEventListener('click',function(e){
+    var tab=e.target.closest('.tab');
+    if(tab&&tab.getAttribute('data-view')){state.view=tab.getAttribute('data-view');apply();}
+  });
   document.querySelectorAll('.radio-row').forEach(function(rr){
     rr.addEventListener('click',function(){
       var g=rr.getAttribute('data-group'),v=rr.getAttribute('data-val');
