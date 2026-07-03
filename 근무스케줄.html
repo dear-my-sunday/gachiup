@@ -16,6 +16,7 @@ html,body{background:#EEF1F4;min-height:100vh;overscroll-behavior:none}
 .left{display:flex;flex-direction:column;gap:12px;align-self:flex-start;position:sticky;top:16px}
 .opts{display:flex;flex-direction:column;gap:20px;background:#fff;border:1px solid #E1E6EA;border-radius:16px;padding:18px 16px;box-shadow:0 2px 10px rgba(0,0,0,.05)}
 .opt-radio{display:flex;flex-direction:column;gap:12px}
+.opts .opt-radio:not(:last-child){padding-bottom:20px;border-bottom:1px solid #F1F3F5}
 .opt-gtitle{font-size:12px;font-weight:700;color:#8B95A1}
 .radio-row{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
 .radio{width:20px;height:20px;border-radius:50%;border:2px solid #D5DAE0;flex:none;display:flex;align-items:center;justify-content:center;transition:.15s}
@@ -50,47 +51,39 @@ html,body{background:#EEF1F4;min-height:100vh;overscroll-behavior:none}
 .tab.active::after{content:'';position:absolute;left:0;right:0;bottom:-2px;height:2px;background:#202528}
 
 /* contents */
-.contents{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;gap:4px;background:#F3F5F7;overflow:hidden;position:relative}
+.contents{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;gap:0;background:#F3F5F7;overflow:hidden;position:relative}
 
 /* week picker + week strip */
 .top{background:#fff;display:flex;flex-direction:column;flex:none}
 .weekpicker{display:flex;gap:8px;align-items:center;justify-content:center;padding:12px 16px}
 .wp-title{font-weight:700;font-size:20px;line-height:29px;color:#202528;white-space:nowrap}
-.week{display:flex;align-items:flex-start}
-.wcol{flex:1;display:flex;flex-direction:column;gap:8px;align-items:center;padding:8px 12px;cursor:pointer}
-.wc-dow{font-weight:400;font-size:12px;line-height:18px;color:#202528}
-.wc-dow.sat{color:#1A7CFF}.wc-dow.sun{color:#FF404D}
-.wc-daybox{width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:8px}
-.wc-day{font-weight:700;font-size:15px;line-height:24px;color:#202528}
-.wc-day.sat{color:#1A7CFF}.wc-day.sun{color:#FF404D}
-.wcol.on .wc-daybox{background:#F1F2FF}
-.wcol.on .wc-day{color:#6267E9}
-.wc-cnt{font-weight:400;font-size:13px;line-height:22px;color:#465159;white-space:nowrap}
 
 /* table (좌측 고정 + 가로/세로 스크롤) */
 .table{flex:1 1 auto;min-height:0;display:flex;gap:1px;align-items:flex-start;background:#fff;overflow:auto;overscroll-behavior:none;-webkit-overflow-scrolling:touch}
 .tbl-left{position:sticky;left:0;z-index:3;flex:none;display:flex;flex-direction:column;border-right:1px solid #CDD5DB;background:#fff}
 .tbl-right{flex:none;display:flex;flex-direction:column;background:#fff}
 .tbl-left.scrollpad,.tbl-right.scrollpad{padding-bottom:140px}
-.th-name{position:sticky;top:0;z-index:2;width:92px;height:71px;flex:none;display:flex;align-items:center;justify-content:center;padding:12px;background:#F9FAFB;border-bottom:1px solid #465159}
+.th-name{position:sticky;top:0;z-index:2;width:92px;height:77px;flex:none;display:flex;align-items:center;justify-content:center;padding:12px;background:#F9FAFB;border-bottom:1px solid #465159}
 .th-name span{font-weight:400;font-size:14px;line-height:22px;color:#465159}
 .emp{width:92px;height:64px;flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px;border-bottom:1px solid #F3F5F7;background:#fff}
 .emp-name{display:flex;gap:2px;align-items:flex-start;justify-content:center;width:100%}
 .emp-name span{flex:0 1 auto;min-width:0;font-weight:400;font-size:12px;line-height:18px;color:#202528;text-align:center;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:break-all}
 .emp-name .mgr{flex:none}
 
-.th-week{position:sticky;top:0;z-index:1;height:71px;display:flex;background:#F9FAFB;width:max-content}
-.th-day{width:56px;height:71px;flex:none;display:flex;flex-direction:column;gap:2px;align-items:center;justify-content:center;padding:12px;border-right:1px solid #F3F5F7;border-bottom:1px solid #465159;color:#202528}
+.th-week{position:sticky;top:0;z-index:1;height:77px;display:flex;background:#F9FAFB;width:max-content}
+.th-day{width:56px;height:77px;flex:none;display:flex;flex-direction:column;gap:2px;align-items:center;justify-content:center;padding:12px;border-right:1px solid #F3F5F7;border-bottom:1px solid #465159;color:#202528}
 .th-day.sat{color:#1A7CFF}.th-day.sun{color:#FF404D}
-.th-day .dow{font-weight:400;font-size:13px;line-height:22px}
-.th-day .dnum{font-weight:400;font-size:14px;line-height:22px}
+.th-dow{font-weight:400;font-size:13px;line-height:22px}
+.th-daybox{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center}
+.th-daybox.today{background:#E1E6EA}
+.th-dnum{font-weight:400;font-size:15px;line-height:24px}
 .drow{display:flex;align-items:stretch}
 .dcell{width:56px;height:64px;flex:none;display:flex;flex-direction:column;gap:4px;align-items:center;justify-content:center;padding:12px;border-right:1px solid #F3F5F7;border-bottom:1px solid #F3F5F7}
 .dcell span{font-weight:400;font-size:12px;line-height:18px;color:#202528}
 
 /* floating buttons */
-.floatingarea{position:absolute;left:0;bottom:0;width:402px;display:flex;gap:10px;align-items:center;justify-content:center;padding:0 16px 20px 0;pointer-events:none}
-.fbtn{background:#fff;border:1px solid #E1E6EA;border-radius:32px;padding:12px 16px;display:flex;align-items:center;justify-content:center;filter:drop-shadow(2px 2px 4px rgba(0,0,0,0.16));cursor:pointer;pointer-events:auto}
+.floatingarea{position:absolute;left:0;bottom:0;width:402px;display:flex;gap:10px;align-items:center;justify-content:center;padding:0 16px 20px 16px;pointer-events:none}
+.fbtn{width:119px;background:#fff;border:1px solid #E1E6EA;border-radius:32px;padding:12px 16px;display:flex;align-items:center;justify-content:center;filter:drop-shadow(2px 2px 4px rgba(0,0,0,0.16));cursor:pointer;pointer-events:auto}
 .fbtn span{font-weight:700;font-size:18px;line-height:26px;color:#202528;white-space:nowrap}
 </style>
 </head>
@@ -101,8 +94,14 @@ html,body{background:#EEF1F4;min-height:100vh;overscroll-behavior:none}
       <div class="opts">
         <div class="opt-radio">
           <div class="opt-gtitle">데이터</div>
-          <div class="radio-row" data-mode="min"><div class="radio on"></div><span>최소 데이터</span></div>
-          <div class="radio-row" data-mode="max"><div class="radio"></div><span>최대 데이터</span></div>
+          <div class="radio-row" data-group="mode" data-val="min"><div class="radio on"></div><span>최소 데이터</span></div>
+          <div class="radio-row" data-group="mode" data-val="max"><div class="radio"></div><span>최대 데이터</span></div>
+        </div>
+        <div class="opt-radio">
+          <div class="opt-gtitle">투데이</div>
+          <div class="radio-row" data-group="today" data-val="3"><div class="radio on"></div><span>평일</span></div>
+          <div class="radio-row" data-group="today" data-val="5"><div class="radio"></div><span>토요일</span></div>
+          <div class="radio-row" data-group="today" data-val="6"><div class="radio"></div><span>일요일</span></div>
         </div>
       </div>
     </div>
@@ -169,13 +168,7 @@ html,body{background:#EEF1F4;min-height:100vh;overscroll-behavior:none}
     }
   };
 
-  function wcol(d,i,sel){
-    var on=i===sel?' on':'';
-    var c=d.color?' '+d.color:'';
-    var cnt=d.cnt?'<div class="wc-cnt">'+d.cnt+'</div>':'';
-    return '<div class="wcol'+on+'"><div class="wc-dow'+c+'">'+d.dow+'</div><div class="wc-daybox"><span class="wc-day'+c+'">'+d.num+'</span></div>'+cnt+'</div>';
-  }
-  function thday(d){var c=d.color?' '+d.color:'';return '<div class="th-day'+c+'"><span class="dow">'+d.dow+'</span><span class="dnum">'+d.num+'</span></div>';}
+  function thday(d,isToday){var c=d.color?' '+d.color:'';return '<div class="th-day'+c+'"><span class="th-dow">'+d.dow+'</span><div class="th-daybox'+(isToday?' today':'')+'"><span class="th-dnum">'+d.num+'</span></div></div>';}
   function emp(e,i){return '<div class="emp"><div class="emp-name"><span>'+e.name+'</span>'+(e.mgr?IC.mgr:'')+'</div></div>';}
   function cell(v){return v?'<div class="dcell"><span>'+v[0]+'</span><span>'+v[1]+'</span></div>':'<div class="dcell empty"></div>';}
 
@@ -190,10 +183,9 @@ html,body{background:#EEF1F4;min-height:100vh;overscroll-behavior:none}
     DATA[m].grid=DATA[m].grid.map(function(row){return row.map(function(v){return v?randTime():0;});});
   });
 
-  function render(mode){
+  function render(mode,today){
     var d=DATA[mode];
-    var strip='';for(var i=0;i<DAYS.length;i++)strip+=wcol(DAYS[i],i,d.selDay);
-    var hdr='';for(i=0;i<d.cols;i++)hdr+=thday(DAYS[i]);
+    var hdr='';for(var i=0;i<d.cols;i++)hdr+=thday(DAYS[i],i===today);
     var left='';for(i=0;i<d.employees.length;i++)left+=emp(d.employees[i],i);
     var rows='';
     for(var r=0;r<d.grid.length;r++){var row='<div class="drow">';for(var c=0;c<d.cols;c++)row+=cell(d.grid[r][c]);rows+=row+'</div>';}
@@ -207,7 +199,6 @@ html,body{background:#EEF1F4;min-height:100vh;overscroll-behavior:none}
     '<div class="contents">'+
       '<div class="top">'+
         '<div class="weekpicker"><div class="icon-btn">'+IC.back+'</div><div class="wp-title">2026.06.22 ~ 06.28</div><div class="icon-btn">'+IC.right+'</div></div>'+
-        '<div class="week">'+strip+'</div>'+
       '</div>'+
       '<div class="table"><div class="tbl-left"><div class="th-name"><span>직원명</span></div>'+left+'</div>'+
         '<div class="tbl-right"><div class="th-week">'+hdr+'</div>'+rows+'</div>'+
@@ -217,10 +208,13 @@ html,body{background:#EEF1F4;min-height:100vh;overscroll-behavior:none}
   }
 
   var design=document.getElementById('design');
-  function setMode(mode){
-    design.innerHTML=render(mode);
+  var state={mode:'min',today:3};
+  function apply(){
+    design.innerHTML=render(state.mode,state.today);
     document.querySelectorAll('.radio-row').forEach(function(rr){
-      rr.querySelector('.radio').classList.toggle('on',rr.getAttribute('data-mode')===mode);
+      var g=rr.getAttribute('data-group'),v=rr.getAttribute('data-val');
+      var on=(g==='mode'&&v===state.mode)||(g==='today'&&+v===state.today);
+      rr.querySelector('.radio').classList.toggle('on',on);
     });
     // 데이터가 화면을 넘쳐 스크롤이 생길 때만 하단 여백(플로팅 버튼 가림 방지) 부여
     var table=design.querySelector('.table');
@@ -230,9 +224,13 @@ html,body{background:#EEF1F4;min-height:100vh;overscroll-behavior:none}
     r.classList.toggle('scrollpad',overflow);
   }
   document.querySelectorAll('.radio-row').forEach(function(rr){
-    rr.addEventListener('click',function(){setMode(rr.getAttribute('data-mode'));});
+    rr.addEventListener('click',function(){
+      var g=rr.getAttribute('data-group'),v=rr.getAttribute('data-val');
+      if(g==='mode')state.mode=v;else state.today=+v;
+      apply();
+    });
   });
-  setMode('min');
+  apply();
 })();
 </script>
 </body>
