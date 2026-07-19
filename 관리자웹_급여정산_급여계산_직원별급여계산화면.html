@@ -135,7 +135,7 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
 .allow-desc{font-size:16px;line-height:24px;color:#999;white-space:nowrap}
 .gray-ic .icbox{background:#F2F2F2}
 .gray-ic .icbox img{filter:grayscale(1) opacity(.75)}
-.toggle{width:60px;height:32px;border-radius:16px;background:#E5E5E5;position:relative;cursor:pointer;flex:none;transition:background .18s}
+.toggle{width:60px;height:32px;border-radius:16px;background:#E5E5E5;position:relative;cursor:default;flex:none;transition:background .18s}
 .toggle.on{background:#6267E9}
 .toggle::after{content:'';position:absolute;top:4px;left:4px;width:24px;height:24px;border-radius:50%;background:#fff;transition:transform .18s}
 .toggle.on::after{transform:translateX(28px)}
@@ -151,9 +151,9 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
 
 /* ===== bottom: table + right ===== */
 .bottom{display:flex;align-items:stretch}
-.bleft{flex:1;min-width:0;display:flex;flex-direction:column}
-.bmain{padding:32px 50px}
-.btnbar{border-top:1px solid #E5E5E5;background:#fff;padding:20px 50px;display:flex;gap:20px;align-items:flex-start;margin-top:auto}
+.bleft{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start}
+.bmain{padding:32px 50px;width:100%}
+.btnbar{border-top:1px solid #E5E5E5;background:#fff;padding:20px 50px;display:flex;gap:20px;align-items:flex-start;width:100%}
 .btn-lg{flex:1;min-width:0;padding:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer}
 .btn-lg>div{height:28px;display:flex;gap:12px;align-items:center}
 .btn-lg p{font-size:20px;line-height:28px;text-align:center;white-space:nowrap}
@@ -644,7 +644,6 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
     page.onclick=function(e){
       var t;
       if(e.target.closest('#foldToggle')){toggleFold();return;}
-      if((t=e.target.closest('.toggle'))){t.classList.toggle('on');return;}
       if((t=e.target.closest('[data-seg]'))){
         page.querySelectorAll('[data-seg]').forEach(function(s){s.classList.remove('on');});
         t.classList.add('on');return;
