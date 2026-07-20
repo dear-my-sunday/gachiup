@@ -433,13 +433,9 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
       '</div>';
   }
   function foldClosedHTML(full){
-    var name=full?'김가치김가치김가치김가치':'김가치';
     var ins=full?'<div class="mf-field"><p class="l">4대보험</p><p class="v">연금, 건강, 요양, 고용</p></div>'
                 :'<div class="mf-field"><p class="l">4대보험</p></div>';
     return '<div class="mf-top wrap">'+
-      '<div class="mf-field"><p class="l">이름</p><p class="v">'+name+'</p></div>'+
-      '<div class="mf-field"><p class="l">생년월일</p><p class="v">03년 1월 2일</p></div>'+
-      '<div class="mf-field"><p class="l">근무 시작일</p><p class="v">26년 3월 1일</p></div>'+
       '<div class="mf-field"><p class="l">세금유형</p><p class="v">근로소득</p></div>'+
       ins+
       '<div class="mf-field"><p class="l">세금</p><p class="v">공제</p><p class="sub">(국세청 간이세액표 기준 적용)</p></div>'+
