@@ -394,8 +394,9 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
       '<div class="toggle'+(on?' on':'')+'"></div>'+
     '</div>';
   }
+  function insuranceText(full){return full?'연금, 건강, 요양, 고용':'미공제';}
   function foldOpenHTML(full){
-    var insVal=full?'<p class="v">연금, 건강, 요양, 고용</p>':'';
+    var insVal='<p class="v">'+insuranceText(full)+'</p>';
     var gray=!full;
     return '<div class="mf-top">'+
         '<div class="mf-field"><p class="l">세금유형</p><p class="v">근로소득</p><div class="btn-set"><div><p>설정</p></div></div></div>'+
@@ -433,8 +434,7 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
       '</div>';
   }
   function foldClosedHTML(full){
-    var ins=full?'<div class="mf-field"><p class="l">4대보험</p><p class="v">연금, 건강, 요양, 고용</p></div>'
-                :'<div class="mf-field"><p class="l">4대보험</p></div>';
+    var ins='<div class="mf-field"><p class="l">4대보험</p><p class="v">'+insuranceText(full)+'</p></div>';
     return '<div class="mf-top wrap">'+
       '<div class="mf-field"><p class="l">세금유형</p><p class="v">근로소득</p></div>'+
       ins+
