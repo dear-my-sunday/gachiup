@@ -566,10 +566,15 @@ ul.note li{list-style:disc}
   }
   function foldClosedHTML(full){
     var ins='<div class="mf-field"><p class="l">4대보험</p><p class="v">'+insuranceText(full)+'</p></div>';
+    function fld(l,v){return '<div class="mf-field"><p class="l">'+l+'</p><p class="v">'+v+'</p></div>';}
     return '<div class="mf-top wrap">'+
       '<div class="mf-field"><p class="l">세금유형</p><p class="v">근로소득</p></div>'+
       ins+
       '<div class="mf-field"><p class="l">세금</p><p class="v">공제</p><p class="sub">(국세청 간이세액표 기준 적용)</p></div>'+
+      fld('주휴수당',full?'계산':'미계산')+
+      fld('연장수당',full?'50%':'미적용')+
+      fld('야간수당',full?'50%':'미적용')+
+      fld('휴일수당',full?'50%':'미적용')+
     '</div>';
   }
   function foldContent(full){return state.folded?foldClosedHTML(full):foldOpenHTML(full);}
