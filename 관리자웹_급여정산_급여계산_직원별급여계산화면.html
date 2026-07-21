@@ -38,6 +38,9 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:#6267E9;border:none;cursor:pointer}
 .slider-ticks{display:flex;justify-content:space-between;font-size:10px;color:#ccc}
 .note{font-size:11px;line-height:16px;color:#999}
+.note-black{color:#333}
+ul.note{margin:0;padding-left:16px;display:flex;flex-direction:column;gap:6px}
+ul.note li{list-style:disc}
 .stage{flex:1;min-width:0;overflow:auto;max-height:calc(100vh - 48px);padding-bottom:8px}
 .page{background:#fff;box-shadow:0 4px 24px rgba(0,0,0,.08)}
 
@@ -272,13 +275,133 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
 .btn-apply{background:#6267E9;padding:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;cursor:pointer}
 .btn-apply>div{height:24px;display:flex;align-items:center}
 .btn-apply p{font-size:16px;line-height:24px;color:#fff;text-align:center;white-space:nowrap}
+
+/* ===== 옵션: 팝업 확인 모드 ===== */
+.opt-btn{width:100%;padding:11px;border-radius:8px;border:1px solid #6267E9;background:#fff;color:#6267E9;font-family:var(--f);font-size:13px;font-weight:700;cursor:pointer;transition:.15s}
+.opt-btn.on{background:#6267E9;color:#fff}
+.grp.disabled{opacity:.4;pointer-events:none}
+
+/* 팝업 확인 모드: 클릭 가능 영역을 아주 옅게(≈10%) 상시 표시 */
+.pmode [data-popup]{cursor:pointer;position:relative;box-shadow:inset 0 0 0 9999px rgba(98,103,233,.10)}
+.pmode [data-popup]:hover{box-shadow:inset 0 0 0 9999px rgba(98,103,233,.16),0 0 0 2px rgba(98,103,233,.5)}
+.pmode [data-popup].tr-cell{z-index:1}
+.pmode [data-popup].tr-cell:hover{z-index:4}
+/* 작은/컬러 요소: 4px 바깥 여백까지 넓게 표기 */
+.pmode [data-popup].hot-pad{box-shadow:inset 0 0 0 9999px rgba(98,103,233,.10),0 0 0 4px rgba(98,103,233,.10)}
+.pmode [data-popup].hot-pad:hover{box-shadow:inset 0 0 0 9999px rgba(98,103,233,.16),0 0 0 4px rgba(98,103,233,.5)}
+/* 팝업 내부 클릭영역 표기 */
+.pop .hotspot{position:relative;box-shadow:inset 0 0 0 9999px rgba(98,103,233,.10)}
+.pop .hotspot.hot-pad{box-shadow:inset 0 0 0 9999px rgba(98,103,233,.10),0 0 0 4px rgba(98,103,233,.10)}
+/* dim 위 프로토타입 분기 버튼 */
+.dim-branch{margin-bottom:40px;display:flex;gap:8px;z-index:2}
+.dim-branch button{background:rgba(0,0,0,.55);border:1px dashed rgba(255,255,255,.6);color:#fff;font-family:var(--f);font-size:13px;font-weight:600;padding:8px 14px;border-radius:20px;cursor:pointer}
+.dim-branch button:hover{background:rgba(0,0,0,.78)}
+
+/* ===== 팝업(dim + 카드) : Figma Popup 디자인 시스템 ===== */
+.dim{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1000;animation:dimIn .15s ease}
+@keyframes dimIn{from{opacity:0}to{opacity:1}}
+.pop{background:#fff;width:460px;max-width:calc(100vw - 40px);max-height:calc(100vh - 40px);display:flex;flex-direction:column;filter:drop-shadow(4px 4px 7px rgba(0,0,0,.12));animation:popIn .18s cubic-bezier(.2,.8,.3,1)}
+@keyframes popIn{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:none}}
+.pop-head{background:#EFF0FD;height:48px;flex:none;display:flex;align-items:center;justify-content:center;gap:20px;padding:8px 12px}
+.pop-head .sp{width:32px;height:32px;flex:none;display:flex;align-items:center;justify-content:center}
+.pop-head h3{flex:1;min-width:0;font-size:20px;line-height:28px;font-weight:700;color:#333;text-align:center}
+.pop-x{width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.pop-body{background:#fff;padding:20px;overflow-y:auto;display:flex;flex-direction:column;gap:20px}
+.pop-body.center{align-items:center;justify-content:center;text-align:center;gap:0}
+.pop-txt{font-size:16px;line-height:24px;color:#333;width:100%;text-align:center}
+.pop-gap{height:24px}
+.pop-foot{background:#fff;flex:none;display:flex;gap:12px;padding:12px 20px}
+.pbtn{flex:1;min-width:0;padding:12px;display:flex;align-items:center;justify-content:center;border:none;font-family:var(--f);font-size:16px;line-height:24px;cursor:pointer}
+.pbtn-line{background:#fff;border:1px solid #E5E5E5;color:#333}
+.pbtn-primary{background:#6267E9;color:#fff}
+.pbtn-primary:hover{background:#565bd6}
+.pbtn-line:hover{background:#FAFAFA}
+/* 폼 요소 */
+.pf-note{font-size:16px;line-height:24px;color:#333;width:100%}
+.pf-block{display:flex;flex-direction:column;gap:8px;width:100%}
+.pf-lbl{font-size:16px;line-height:24px;color:#333}
+.pf-lbl-semi{font-size:18px;line-height:26px;font-weight:600;color:#333}
+.pf-sub{font-size:16px;line-height:24px;color:#999}
+.pf-radios{display:flex;gap:32px;align-items:center;flex-wrap:wrap;width:100%}
+.pf-radios.g40{gap:40px}
+.pf-radios.wrap{gap:16px 32px}
+.pf-radios.divide{border-bottom:1px solid #F2F2F2;padding-bottom:16px}
+.pf-radio,.pf-check{display:flex;gap:8px;align-items:center;cursor:pointer;color:#333;white-space:nowrap}
+.pf-radio{font-size:14px;line-height:20px}
+.pf-radio.f16{font-size:16px;line-height:24px}
+.pf-check{font-size:16px;line-height:24px}
+.pf-check.f14{font-size:14px;line-height:20px}
+.pradio{width:20px;height:20px;border-radius:50%;border:1px solid #ccc;position:relative;flex:none;background:#fff}
+.pradio.r24{width:24px;height:24px}
+.pradio.on{border-color:#6267E9}
+.pradio.on::after{content:'';position:absolute;inset:3px;border-radius:50%;background:#6267E9}
+.pradio.r24.on::after{inset:5px}
+.pcheck{width:24px;height:24px;border:1px solid #ccc;background:#fff;position:relative;flex:none}
+.pcheck.sm{width:20px;height:20px}
+.pcheck.on,.pcheck.half{border:none}
+.pcheck.on{background:#6267E9}
+.pcheck.half{background:#C0C2F6}
+.pcheck.on::after,.pcheck.half::after{content:'';position:absolute;left:8px;top:4px;width:6px;height:11px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.pcheck.sm.on::after{left:6px;top:3px;width:5px;height:10px}
+.pf-input{background:#fff;border:1px solid #E5E5E5;padding:12px;display:flex;gap:12px;align-items:center;width:100%}
+.pf-input input{flex:1;min-width:0;border:none;outline:none;background:transparent;font-family:var(--f);font-size:16px;line-height:24px;color:#333}
+.pf-input input::placeholder{color:#999}
+.pf-input .ic{flex:none;width:24px;height:24px;display:block}
+.pf-select{background:#fff;border:1px solid #E5E5E5;padding:12px;display:flex;gap:12px;align-items:center;justify-content:space-between;width:100%;font-size:16px;line-height:24px;color:#333;cursor:pointer}
+.pf-graybox{background:#FAFAFA;padding:20px;display:flex;gap:8px;align-items:flex-start;width:100%}
+.pf-graybox .gl{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;font-size:16px;line-height:24px;color:#666}
+.pf-minibtn{border:1px solid;padding:8px;font-family:var(--f);font-size:12px;line-height:16px;background:#fff;cursor:pointer;white-space:nowrap;flex:none}
+.pf-minibtn.gray{border-color:#E5E5E5;color:#333}
+.pf-minibtn.red{border-color:#FF8C94;background:#FFECED;color:#FF404D}
+.pf-delbtn{border:1px solid #FF8C94;background:#FFECED;color:#FF404D;padding:12px;font-family:var(--f);font-size:16px;line-height:24px;cursor:pointer;flex:none}
+.pf-addbtn{border:1px solid #E5E5E5;background:#fff;padding:12px;display:flex;gap:8px;align-items:center;justify-content:center;width:100%;font-size:16px;line-height:24px;color:#333;cursor:pointer}
+.pf-addbtn .ic{width:24px;height:24px;flex:none}
+.pf-timeline{display:flex;flex-direction:column;gap:20px;width:100%}
+.pf-timerow{display:flex;gap:32px;align-items:center;width:100%}
+.pf-timerow .tl{flex:none;font-size:16px;line-height:24px;color:#999}
+.pf-timeval{flex:1;min-width:0;height:48px;background:#FAFAFA;display:flex;gap:8px;align-items:center;justify-content:center;padding:0 12px;position:relative;overflow:hidden}
+.pf-timeval .big{font-size:24px;line-height:32px;font-weight:700;color:#202528}
+.pf-timeval .nx{font-size:16px;line-height:24px;font-weight:700;color:#999}
+.pf-clear{position:absolute;right:12px;top:8px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.pf-editwrap{display:flex;flex-direction:column;width:100%}
+.pf-edithead{display:flex;gap:20px;align-items:center;padding-left:60px;width:100%}
+.pf-edithead .h1{width:120px;flex:none;text-align:center;padding-bottom:8px;font-size:14px;line-height:20px;color:#333}
+.pf-edithead .h2{flex:1;min-width:0;text-align:center;padding-bottom:8px;font-size:14px;line-height:20px;color:#333}
+.pf-editrow{display:flex;gap:32px;align-items:center;width:100%}
+.pf-editrow .el{flex:none;font-size:16px;line-height:24px;color:#999}
+.pf-editrow .ei{flex:1;min-width:0;display:flex;gap:20px;align-items:center}
+.pf-editrow .ev{width:120px;flex:none;height:48px;background:#FAFAFA;display:flex;align-items:center;justify-content:center;font-size:24px;line-height:32px;font-weight:700;color:#202528}
+.pf-editrow .rt{flex:1;min-width:0;display:flex;gap:4px;align-items:center}
+.pf-dd{flex:1;min-width:0;height:48px;background:#FAFAFA;display:flex;gap:8px;align-items:center;justify-content:flex-end;padding:0 12px;overflow:hidden}
+.pf-dd .v{flex:1;min-width:0;text-align:center;font-size:24px;line-height:32px;font-weight:700;color:#202528}
+.pf-dd .ic{flex:none;width:16px;height:16px}
+.pf-colon{width:2px;height:12px;background:#202528;flex:none}
+.pf-send{display:flex;gap:8px;align-items:flex-start;width:100%}
+.pf-send .pf-input{flex:1}
+.pf-sendbtn{background:#C0C2F6;color:#fff;border:none;padding:12px;font-family:var(--f);font-size:16px;line-height:24px;cursor:default;flex:none}
+.pf-sendbtn.on{background:#6267E9;cursor:pointer}
+.pf-check.nointer{cursor:default}
+.pf-cmptop{border-bottom:1px solid #E5E5E5;padding-bottom:32px;display:flex;flex-direction:column;gap:8px;width:100%}
+.pf-cmpline{display:flex;gap:20px;align-items:center;width:100%}
+.pf-cmpline .cl{width:100px;flex:none;font-size:16px;line-height:24px;font-weight:700;color:#333}
+.pf-cmpline .cv{flex:1;min-width:0;font-size:16px;line-height:24px;color:#333;text-align:right}
+.pf-cmpwrap{display:flex;flex-direction:column;gap:32px;width:100%}
+.pf-cmpbody{display:flex;flex-direction:column;gap:8px;width:100%}
+.pf-cmpsec{font-size:20px;line-height:28px;font-weight:700;color:#333}
+.pf-chips{display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.pf-chip{padding:8px 12px;border:1px solid #6267E9;background:#fff;color:#6267E9;font-size:14px;line-height:20px;cursor:pointer;white-space:nowrap}
+.pf-chip.on{background:#6267E9;color:#fff;font-weight:700}
+.pf-topb{border-bottom:1px solid #E5E5E5;padding-bottom:20px;display:flex;flex-direction:column;gap:12px;width:100%}
+.pf-item{display:flex;gap:8px;align-items:flex-start;width:100%}
+.pf-item .pf-input{flex:1}
+.pf-hint{display:flex;justify-content:space-between;align-items:center;width:100%;font-size:16px;line-height:24px;color:#999}
 </style>
 </head>
 <body>
 <div class="shell">
   <div class="opts">
     <h1>급여계산 상세 · 프로토타입 옵션</h1>
-    <div class="grp">
+    <div class="grp" id="grpData">
       <div class="grp-title">데이터</div>
       <div class="radio-row" data-mode="full"><div class="oradio on"></div><span>full data</span></div>
       <div class="radio-row" data-mode="empty"><div class="oradio"></div><span>no data</span></div>
@@ -290,7 +413,15 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
       <div class="slider-ticks"><span>1440</span><span>1920</span></div>
     </div>
     <div class="grp">
-      <div class="note">가운데 원형 버튼을 누르면 상단 설정/직원 정보 영역이 접힙니다.</div>
+      <div class="grp-title">팝업 정리</div>
+      <button class="opt-btn" id="popToggle">팝업 확인 모드</button>
+      <ul class="note note-black" id="popNote">
+        <li>클릭 가능 영역 (파란 테두리) 을 클릭하면 연결 팝업이 노출 됩니다.</li>
+        <li>디자인은 피그마를 참고해 주세요. 어떤 버튼 선택 시 어떤 팝업이 노출 되는지 플로우만 참고 부탁드립니다.</li>
+      </ul>
+    </div>
+    <div class="grp">
+      <div class="note note-black">가운데 원형 버튼을 누르면 상단 설정/직원 정보 영역이 접힙니다.</div>
     </div>
   </div>
 
@@ -337,13 +468,13 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
 
   var MINI=[['근무','25.0','275,000'],['연장','25.0','137,500'],['야간','2.0','11,000'],['휴일','15.0','33,000'],['주휴','8','88,000']];
 
-  var state={mode:'full',width:1440,folded:false};
+  var state={mode:'full',width:1440,folded:false,popupMode:false};
 
   /* ===== nav ===== */
   function navHTML(){
     return '<div class="nav">'+
       '<div class="nav-logo"><img class="lw" src="'+A+'logo_white.svg" alt="가치UP"><img class="la" src="'+A+'logo_admin.svg" alt="관리자"></div>'+
-      '<div class="nav-menu"><div>이번 달</div><div class="active">급여정산</div><div>근무 스케줄</div><div>직원/휴가</div><div>관리 설정</div></div>'+
+      '<div class="nav-menu"><div data-popup="nav-leave">이번 달</div><div class="active">급여정산</div><div data-popup="nav-leave">근무 스케줄</div><div data-popup="nav-leave">직원/휴가</div><div data-popup="nav-leave">관리 설정</div></div>'+
       '<div class="nav-right">'+
         '<div class="circle-btn"><div class="ic24"><div class="nav-kakao"><img src="'+A+'ic_kakao.png" alt=""></div></div></div>'+
         '<div class="circle-btn"><div class="ic24"><img class="full" src="'+A+'ic_blog.png" alt=""></div></div>'+
@@ -355,7 +486,7 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
 
   /* ===== sidebar ===== */
   function sidebarHTML(){
-    function item(on,label){return '<div class="myinfo"><div class="rl"><div class="radio '+(on?'on':'off')+'"></div><span>'+label+'</span></div></div>';}
+    function item(on,label){return '<div class="myinfo"'+(on?'':' data-popup="nav-leave"')+'><div class="rl"><div class="radio '+(on?'on':'off')+'"></div><span>'+label+'</span></div></div>';}
     return '<div class="sidebar">'+
       '<div class="ws-select"><p>워크스페이스 선택</p></div>'+
       item(true,'가치 카페')+item(false,'가치 피자')+item(false,'가치 소품샵')+
@@ -365,8 +496,8 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
   /* ===== top ===== */
   function topHTML(full){
     var dd=full
-      ? '<div class="dropdown"><div class="badge"><span>저장완료</span></div><p class="txt">김가치김가치김가치김가치김</p><div class="ic24"><img class="full" src="'+A+'ic_chevron_down.svg" alt=""></div></div>'
-      : '<div class="dropdown"><p class="txt">김가치</p><div class="ic24"><img class="full" src="'+A+'ic_chevron_down.svg" alt=""></div></div>';
+      ? '<div class="dropdown" data-popup="nav-leave"><div class="badge"><span>저장완료</span></div><p class="txt">김가치김가치김가치김가치김</p><div class="ic24"><img class="full" src="'+A+'ic_chevron_down.svg" alt=""></div></div>'
+      : '<div class="dropdown" data-popup="nav-leave"><p class="txt">김가치</p><div class="ic24"><img class="full" src="'+A+'ic_chevron_down.svg" alt=""></div></div>';
     var ws=full
       ? '<div class="writestatus"><div class="ws-t"><p>작성현황</p><div class="badge"><span>저장완료</span></div></div>'+
         '<div class="ws-list"><p class="last">마지막 2025. 11. 01</p><p class="btn-text-primary">이력보기</p></div></div>'
@@ -374,7 +505,7 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
     return '<div class="top">'+
       '<div class="top-left"><h2>급여계산</h2>'+
         '<div class="top-row">'+
-          '<div class="dd-btn">'+dd+'<div class="btn-line"><div><p>근로계약서 보기</p></div></div></div>'+
+          '<div class="dd-btn">'+dd+'<div class="btn-line" data-popup="no-contract"><div><p>근로계약서 보기</p></div></div></div>'+
           '<div class="moneytype"><p>급여유형</p><div class="seg"><div class="on" data-seg>시급</div><div data-seg>월급</div></div></div>'+
         '</div>'+
       '</div>'+ws+
@@ -385,13 +516,13 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
   function allowCol(icon,name,desc,on,badge,gray){
     return '<div class="mp-col'+(gray?' gray-ic':'')+'">'+
       '<div class="allow-text">'+
-        '<div class="allow-head"><div class="allow-title">'+
+        '<div class="allow-head"><div class="allow-title" data-popup="overtime">'+
           '<div class="icbox"><div class="ic20"><img src="'+A+icon+'" alt=""></div></div>'+
           '<p>'+name+'</p><div class="ic20"><img src="'+A+'ic_right.svg" alt=""></div>'+
         '</div>'+(badge?'<div class="badge"><span>'+badge+'</span></div>':'')+'</div>'+
         '<p class="allow-desc">'+desc+'</p>'+
       '</div>'+
-      '<div class="toggle'+(on?' on':'')+'"></div>'+
+      '<div class="toggle'+(on?' on':'')+' hot-pad" data-popup="under5"></div>'+
     '</div>';
   }
   function insuranceText(full){return full?'연금, 건강, 요양, 고용':'미공제';}
@@ -399,15 +530,15 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
     var insVal='<p class="v">'+insuranceText(full)+'</p>';
     var gray=!full;
     return '<div class="mf-top">'+
-        '<div class="mf-field"><p class="l">세금유형</p><p class="v">근로소득</p><div class="btn-set"><div><p>설정</p></div></div></div>'+
-        '<div class="mf-field"><p class="l">4대보험</p>'+insVal+'<div class="btn-set"><div><p>설정</p></div></div></div>'+
-        '<div class="mf-field"><p class="l">세금</p><p class="v">공제</p><p class="sub">(국세청 간이세액표 기준 적용)</p><div class="btn-set"><div><p>설정</p></div></div></div>'+
+        '<div class="mf-field"><p class="l">세금유형</p><p class="v">근로소득</p><div class="btn-set" data-popup="tax-type"><div><p>설정</p></div></div></div>'+
+        '<div class="mf-field"><p class="l">4대보험</p>'+insVal+'<div class="btn-set" data-popup="insurance"><div><p>설정</p></div></div></div>'+
+        '<div class="mf-field"><p class="l">세금</p><p class="v">공제</p><p class="sub">(국세청 간이세액표 기준 적용)</p><div class="btn-set" data-popup="tax"><div><p>설정</p></div></div></div>'+
       '</div>'+
       '<div class="mf-summary">'+
         '<div class="mf-card payholiday'+(gray?' gray-ic':'')+'">'+
-          '<div class="mf-title"><p>주휴수당 계산/지급</p><div class="ic16"><img src="'+A+'ic_info.svg" alt=""></div></div>'+
+          '<div class="mf-title"><p>주휴수당 계산/지급</p><div class="ic16 hot-pad" data-popup="holiday-info"><img src="'+A+'ic_info.svg" alt=""></div></div>'+
           '<div class="allow-text" style="width:100%">'+
-            '<div class="allow-head"><div class="allow-title">'+
+            '<div class="allow-head"><div class="allow-title" data-popup="holiday">'+
               '<div class="icbox"><div class="ic20"><img src="'+A+'ic_money.svg" alt=""></div></div>'+
               '<p>주휴수당</p><div class="ic20"><img src="'+A+'ic_right.svg" alt=""></div>'+
             '</div>'+(full?'<div class="badge"><span>일요일</span></div>':'')+'</div>'+
@@ -416,7 +547,7 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
           '<div class="toggle'+(full?' on':'')+'"></div>'+
         '</div>'+
         '<div class="mf-card morepay">'+
-          '<div class="mf-title"><p>가산수당여부</p><div class="ic16"><img src="'+A+'ic_info.svg" alt=""></div></div>'+
+          '<div class="mf-title"><p>가산수당여부</p><div class="ic16 hot-pad" data-popup="bonus-info"><img src="'+A+'ic_info.svg" alt=""></div></div>'+
           '<div class="morepay-cols">'+
             allowCol('ic_time.svg','연장수당','가산 50%',full,null,gray)+
             allowCol('ic_night.svg','야간수당','가산 50%',full,null,gray)+
@@ -427,8 +558,8 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
           '<div class="mf-title"><p>직원 정보</p></div>'+
           '<div class="wi-contents">'+
             '<div class="wi-row"><p class="l">이름</p><p class="v">김가치</p></div>'+
-            '<div class="wi-row"><p class="l">생년월일</p><p class="v">03년 1월 2일</p><p class="btn-text-primary">변경</p></div>'+
-            '<div class="wi-row"><p class="l">근무 시작일</p><p class="v">26년 3월 1일</p><p class="btn-text-primary">변경</p></div>'+
+            '<div class="wi-row"><p class="l">생년월일</p><p class="v">03년 1월 2일</p><p class="btn-text-primary" data-popup="birth">변경</p></div>'+
+            '<div class="wi-row"><p class="l">근무 시작일</p><p class="v">26년 3월 1일</p><p class="btn-text-primary" data-popup="startdate">변경</p></div>'+
           '</div>'+
         '</div>'+
       '</div>';
@@ -491,7 +622,7 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
     for(var i=0;i<N;i++){
       var h=full?HIST[i]:null,end=DAYS[i].end?' wkend':'';
       if(h){
-        s+='<div class="tdc h128'+end+'"><div class="time"><p>'+h[0]+'</p><p>'+h[1]+'</p><p class="brk">'+h[2]+'</p></div><p class="total">'+h[3]+'</p></div>';
+        s+='<div class="tdc h128 tr-cell'+end+'" data-popup="rec-edit"><div class="time"><p>'+h[0]+'</p><p>'+h[1]+'</p><p class="brk">'+h[2]+'</p></div><p class="total">'+h[3]+'</p></div>';
       }else{
         s+='<div class="tdc h128'+end+'"></div>';
       }
@@ -507,7 +638,7 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
         if(v.indexOf('|')>-1){var p=v.split('|');inner='<p class="cmp two">'+p[0]+'<br>'+p[1]+'</p>';}
         else inner='<p class="cmp">'+v+'</p>';
       }
-      s+='<div class="tdc h56'+end+'">'+inner+'</div>';
+      s+='<div class="tdc h56'+(v?' tr-cell':'')+end+'"'+(v?' data-popup="compare"':'')+'>'+inner+'</div>';
     }
     return s+'</div>';
   }
@@ -515,7 +646,7 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
     var s='<div class="trow">'+lblCell('<p>메모</p>');
     for(var i=0;i<N;i++){
       var v=full?MEMO[i]:'',end=DAYS[i].end?' wkend':'';
-      s+='<div class="tdc h36'+end+'"><div class="ic20"><img src="'+A+'ic_edit.svg" alt=""></div>'+(v?'<p class="memo-t">'+v+'</p>':'')+'</div>';
+      s+='<div class="tdc h36 tr-cell'+end+'" data-popup="memo"><div class="ic20"><img src="'+A+'ic_edit.svg" alt=""></div>'+(v?'<p class="memo-t">'+v+'</p>':'')+'</div>';
     }
     return s+'</div>';
   }
@@ -523,7 +654,7 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
     var s='<div class="trow">'+lblCell('<p>근무표</p>');
     for(var i=0;i<N;i++){
       var p=full?PLAN[i]:null,end=DAYS[i].end?' wkend':'';
-      s+='<div class="tdc h56'+end+'">'+(p?'<div class="sched2"><p>'+p[0]+'</p><p>'+p[1]+'</p></div>':'')+'</div>';
+      s+='<div class="tdc h56'+(p?' tr-cell':'')+end+'"'+(p?' data-popup="sched-edit"':'')+'>'+(p?'<div class="sched2"><p>'+p[0]+'</p><p>'+p[1]+'</p></div>':'')+'</div>';
     }
     return s+'</div>';
   }
@@ -538,7 +669,7 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
   function midBar(){
     return '<div class="midbar" id="midbar">'+
       '<div><div class="badge"><span>근무 스케줄</span></div><p class="t14">기준 계산</p></div>'+
-      '<div><div class="btn-tg"><div class="ic20"><img src="'+A+'ic_reset_gray.svg" alt=""></div><p>근무시간 전체 초기화</p></div></div>'+
+      '<div><div class="btn-tg" data-popup="reset-time"><div class="ic20"><img src="'+A+'ic_reset_gray.svg" alt=""></div><p>근무시간 전체 초기화</p></div></div>'+
       '<div><div class="btn-tp"><div class="ic20"><img src="'+A+'ic_plus_primary.svg" alt=""></div><p>스케줄 등록</p></div></div>'+
     '</div>';
   }
@@ -549,7 +680,7 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
       var v=full?arr[i]:'',end=DAYS[i].end?' wkend':'';
       if(v==='ERR'){
         s+='<div class="tdc h52 err-cell'+end+'"><div class="inpwrap"><div class="inp"><input value="5" style="font-size:16px;line-height:24px"></div></div>'+
-           '<div class="icon-btn24"><div style="width:16px;height:16px"><img style="width:100%;height:100%;display:block" src="'+A+'ic_reset_black.svg" alt=""></div></div></div>';
+           '<div class="icon-btn24" data-popup="reset-time"><div style="width:16px;height:16px"><img style="width:100%;height:100%;display:block" src="'+A+'ic_reset_black.svg" alt=""></div></div></div>';
       }else{
         s+='<div class="tdc h52'+end+'"><div class="inpwrap"><div class="inp"><input value="'+v+'"></div></div></div>';
       }
@@ -572,7 +703,7 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
     var v=function(a,b){return full?a:b;};
     return '<div class="money-card">'+
       '<div class="m-row"><p class="l">예상 월 급여</p><p class="v">'+v('456,500','0')+'</p></div>'+
-      '<div class="m-ctrl"><div class="title"><p>급여조정금액</p><div class="icon-btn24"><div class="ic16"><img src="'+A+'ic_info.svg" alt=""></div></div></div>'+
+      '<div class="m-ctrl"><div class="title"><p>급여조정금액</p><div class="icon-btn24" data-popup="adjust-info"><div class="ic16"><img src="'+A+'ic_info.svg" alt=""></div></div></div>'+
         '<div class="m-input"><input value="0"></div></div>'+
       '<div class="m-row"><p class="l">최종 금액</p><p class="v">'+v('420,000','0')+'</p></div>'+
       '<div class="m-row"><p class="l">재세 금액</p><p class="v">'+v('36,500','0')+'</p></div>'+
@@ -589,12 +720,12 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
     }
     var accMore='<div class="acc'+(full?'':' closed')+'" data-acc>'+
       '<div class="acc-title"><p>추가 수당</p><div class="ic24i"><img src="'+A+'ic_up_gray.svg" alt=""></div></div>'+
-      '<div class="acc-body"><div class="btn-manage"><div><p>추가 수당 관리</p></div></div>'+
+      '<div class="acc-body"><div class="btn-manage" data-popup="add-pay"><div><p>추가 수당 관리</p></div></div>'+
         '<div class="tm-row"><p class="l reg">상여금</p><div class="inpwrap"><div class="inp12"><input class="'+(full?'':'gray')+'" value="'+(full?'11,000':'0')+'"></div></div></div>'+
       '</div></div>';
     var accEtc='<div class="acc'+(full?'':' closed')+'" data-acc>'+
       '<div class="acc-title"><p>기타 공제</p><div class="ic24i"><img src="'+A+'ic_up_gray.svg" alt=""></div></div>'+
-      '<div class="acc-body"><div class="btn-manage"><div><p>기타 공제 관리</p></div></div></div></div>';
+      '<div class="acc-body"><div class="btn-manage" data-popup="etc-deduct"><div><p>기타 공제 관리</p></div></div></div></div>';
     return '<div class="bright">'+
       moneyCard(full)+
       '<div class="rcontents">'+
@@ -623,7 +754,7 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
           topHTML(full)+foldHTML(full)+
           '<div class="bottom">'+
             '<div class="bleft"><div class="bmain" id="bmain">'+tableHTML(full)+'</div>'+
-              '<div class="btnbar"><div class="btn-lg gray"><div><p>명세서 미리보기</p></div></div><div class="btn-lg primary"><div><p>급여 계산 저장</p></div></div></div>'+
+              '<div class="btnbar"><div class="btn-lg gray"><div><p>명세서 미리보기</p></div></div><div class="btn-lg primary hot-pad" data-popup="save-done"><div><p>급여 계산 저장</p></div></div></div>'+
             '</div>'+
             rightHTML(full)+
           '</div>'+
@@ -639,6 +770,7 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
     // 클릭 위임 (폴드 콘텐츠가 innerHTML로 교체되므로 위임 방식 사용)
     page.onclick=function(e){
       var t;
+      if(state.popupMode&&(t=e.target.closest('[data-popup]'))){openPopup(t.getAttribute('data-popup'));return;}
       if(e.target.closest('#foldToggle')){toggleFold();return;}
       if((t=e.target.closest('[data-seg]'))){
         page.querySelectorAll('[data-seg]').forEach(function(s){s.classList.remove('on');});
@@ -663,6 +795,192 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
     wVal.textContent=state.width+'px';
     document.getElementById('page').style.width=state.width+'px';
   });
+
+  /* ============================================================
+     팝업 정리: 디자인 시스템(Popup/general) 기반 24종 팝업 정의
+     - 취소/확인/닫기/close(X)/dim 클릭 → 닫힘
+     - data-open 버튼 → 다른 팝업으로 전환(예: 전송→내용 입력 안내)
+  ============================================================ */
+  var X_IC='<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="#333" stroke-width="2" stroke-linecap="round"/></svg>';
+  var CAL_IC='<svg class="ic" width="24" height="24" viewBox="-2 -2 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 0C15.5523 0 16 0.447715 16 1V2H18C19.1046 2 20 2.89543 20 4V18C20 19.0357 19.2128 19.887 18.2041 19.9893L18 20H2L1.7959 19.9893C0.787223 19.887 0 19.0357 0 18V4C0 2.89543 0.895431 2 2 2H4V1C4 0.447715 4.44772 0 5 0C5.55228 0 6 0.447715 6 1V2H14V1C14 0.447715 14.4477 0 15 0ZM1.7998 18C1.7998 18.1105 1.88954 18.2002 2 18.2002H18C18.1105 18.2002 18.2002 18.1105 18.2002 18V6H1.7998V18ZM5.7998 14C5.91026 14 6 14.0897 6 14.2002V15.7998C6 15.9103 5.91026 16 5.7998 16H4.2002C4.08974 16 4 15.9103 4 15.7998V14.2002C4 14.0897 4.08974 14 4.2002 14H5.7998ZM10.7998 14C10.9103 14 11 14.0897 11 14.2002V15.7998C11 15.9103 10.9103 16 10.7998 16H9.2002C9.08974 16 9 15.9103 9 15.7998V14.2002C9 14.0897 9.08974 14 9.2002 14H10.7998ZM15.7998 14C15.9103 14 16 14.0897 16 14.2002V15.7998C16 15.9103 15.9103 16 15.7998 16H14.2002C14.0897 16 14 15.9103 14 15.7998V14.2002C14 14.0897 14.0897 14 14.2002 14H15.7998ZM5.7998 8C5.91026 8 6 8.08974 6 8.2002V9.7998C6 9.91026 5.91026 10 5.7998 10H4.2002C4.08974 10 4 9.91026 4 9.7998V8.2002C4 8.08974 4.08974 8 4.2002 8H5.7998ZM10.7998 8C10.9103 8 11 8.08974 11 8.2002V9.7998C11 9.91026 10.9103 10 10.7998 10H9.2002C9.08974 10 9 9.91026 9 9.7998V8.2002C9 8.08974 9.08974 8 9.2002 8H10.7998ZM15.7998 8C15.9103 8 16 8.08974 16 8.2002V9.7998C16 9.91026 15.9103 10 15.7998 10H14.2002C14.0897 10 14 9.91026 14 9.7998V8.2002C14 8.08974 14.0897 8 14.2002 8H15.7998Z" fill="#333"/></svg>';
+  var CLR_IC='<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#000" fill-opacity="0.28"/><path d="M9 9l6 6M15 9l-6 6" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg>';
+  var CHV16='<svg class="ic" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="#999" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  var CHV24='<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M7 10l5 5 5-5" stroke="#999" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  var PLUS='<svg class="ic" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#333" stroke-width="1.8" stroke-linecap="round"/></svg>';
+
+  function phead(t,close){return '<div class="pop-head"><div class="sp"></div><h3>'+t+'</h3><div class="sp">'+(close?'<span class="pop-x" data-close>'+X_IC+'</span>':'')+'</div></div>';}
+  function pfoot(bs){var h='<div class="pop-foot">';bs.forEach(function(b){var cls='pbtn '+(b.primary?'pbtn-primary':'pbtn-line')+(b.cls?' '+b.cls:'');var attr=b.act?' data-act="'+b.act+'"':(b.open?' data-open="'+b.open+'"':' data-close');h+='<button class="'+cls+'"'+attr+'>'+b.t+'</button>';});return h+'</div>';}
+  function pcenter(h){return '<div class="pop-body center">'+h+'</div>';}
+  function txt(s){return '<p class="pop-txt">'+s+'</p>';}
+  function gap(){return '<div class="pop-gap"></div>';}
+  function graybox(name,date,btns){return '<div class="pf-graybox"><div class="gl"><span>직원명: '+name+'</span><span>근무날짜: '+date+'</span></div>'+(btns?'<div style="display:flex;gap:8px;flex:none">'+btns+'</div>':'')+'</div>';}
+  function timeRow(l,v,nx){return '<div class="pf-timerow"><span class="tl">'+l+'</span><div class="pf-timeval">'+(nx?'<span class="nx">'+nx+'</span>':'')+'<span class="big">'+v+'</span><span class="pf-clear">'+CLR_IC+'</span></div></div>';}
+  function editRow(l,v,h,m){return '<div class="pf-editrow"><span class="el">'+l+'</span><div class="ei"><div class="ev">'+v+'</div><div class="rt"><div class="pf-dd"><span class="v">'+h+'</span>'+CHV16+'</div><span class="pf-colon"></span><div class="pf-dd"><span class="v">'+m+'</span>'+CHV16+'</div></div></div></div>';}
+  function cmpLine(l,v){return '<div class="pf-cmpline"><span class="cl">'+l+'</span>'+(v?'<span class="cv">'+v+'</span>':'')+'</div>';}
+  function chips(arr,on){return arr.map(function(c){return '<div class="pf-chip'+(c===on?' on':'')+'" data-chip>'+c+'</div>';}).join('');}
+  function memoSend(hotInput){return '<div class="pf-send"><div class="pf-input'+(hotInput?' hotspot':'')+'"><input placeholder="최대 40자까지 입력가능합니다."></div><button class="pf-sendbtn">전송</button></div>';}
+  function memoBlock(hotInput){return '<div style="display:flex;flex-direction:column;gap:12px;width:100%"><div style="display:flex;flex-direction:column;gap:8px;width:100%"><p class="pf-lbl-semi">메모</p>'+memoSend(hotInput)+'</div><div class="pf-check f14" data-check><span class="pcheck sm"></span>관리자 DM으로도 전송</div></div>';}
+
+  var POP={
+    /* ── 확인 · 알림 ── */
+    'nav-leave':{label:'미저장 이동 확인',html:function(){return phead('알림')+pcenter(txt('저장되지 않은 급여 정보가 있습니다. 이동 시에는 변경사항이 삭제됩니다.')+gap()+txt('이동하시겠습니까?'))+pfoot([{t:'취소'},{t:'이동하기',primary:1}]);}},
+    'save-done':{label:'급여 저장 완료',dimBtn:{t:'급여 마감 했을 경우',open:'closed-state'},html:function(){return phead('알림')+pcenter(txt('급여 계산 결과가 저장되었습니다.'))+pfoot([{t:'명세서 미리보기'},{t:'닫기',primary:1}]);}},
+    'closed-state':{label:'급여 마감상태',html:function(){return phead('알림')+pcenter(txt('급여 마감상태입니다.<br>급여 마감 상태에서는 수정할 수 없습니다.'))+pfoot([{t:'확인',primary:1}]);}},
+    'saved':{label:'저장되었습니다',html:function(){return phead('알림')+pcenter(txt('저장되었습니다.'))+pfoot([{t:'확인',primary:1}]);}},
+    'reset-time':{label:'자동 계산값 되돌리기',html:function(){return phead('알림')+pcenter(txt('근무 시간을 자동 계산값으로 되돌리시겠습니까?'))+pfoot([{t:'취소'},{t:'되돌리기',primary:1}]);}},
+    'empty-input':{label:'내용 입력 안내',html:function(){return phead('알림')+pcenter(txt('내용을 입력해주세요'))+pfoot([{t:'확인',primary:1}]);}},
+    'no-contract':{label:'근로계약서 없음',html:function(){return phead('알림')+pcenter(txt('작성된 근로계약서가 없습니다.'))+pfoot([{t:'확인',primary:1}]);}},
+    'under5':{label:'5인 미만 가산수당',html:function(){return phead('알림')+pcenter(txt('5인 미만 사업장의 경우 가산 수당 지급의무가 없습니다.<br>가산 수당 계산을 적용하시겠습니까?'))+pfoot([{t:'취소'},{t:'적용',primary:1}]);}},
+    /* ── 설정 ── */
+    'tax-type':{label:'세금유형',html:function(){return phead('세금유형',1)+
+      '<div class="pop-body">'+
+        '<p class="pf-note">근로소득은 국세청 간이세액표 기준으로 세금을 계산하며 사업소득은 과세표준 X 3.3% 입니다.</p>'+
+        '<div class="pf-radios divide">'+
+          '<div class="pf-radio" data-taxtype="근로소득"><span class="pradio on"></span>근로소득</div>'+
+          '<div class="pf-radio hotspot" data-taxtype="사업소득"><span class="pradio"></span>사업소득 (3.3%)</div>'+
+        '</div>'+
+        '<div id="taxExtra" style="display:flex;flex-direction:column;gap:20px;width:100%">'+
+          '<div class="pf-block"><p class="pf-lbl-semi">공제대상 가족 수</p><div class="pf-select">1'+CHV24+'</div><p class="pf-sub">*본인 포함입니다.</p></div>'+
+          '<div class="pf-block"><p class="pf-lbl-semi">20세 이하 자녀 수</p><div class="pf-select">0'+CHV24+'</div></div>'+
+        '</div>'+
+      '</div>'+pfoot([{t:'취소'},{t:'적용',primary:1}]);}},
+    'tax':{label:'세금(공제/미공제)',html:function(){return phead('세금',1)+
+      '<div class="pop-body"><div class="pf-radios">'+
+        '<div class="pf-radio" data-rgroup="tax"><span class="pradio"></span>공제</div>'+
+        '<div class="pf-radio" data-rgroup="tax"><span class="pradio on"></span>미 공제</div>'+
+      '</div></div>'+pfoot([{t:'취소'},{t:'적용',primary:1}]);}},
+    'insurance':{label:'4대 보험',html:function(){return phead('4대 보험',1)+
+      '<div class="pop-body"><div class="pf-radios">'+
+        '<div class="pf-check nointer"><span class="pcheck on"></span>국민연금</div>'+
+        '<div class="pf-check nointer"><span class="pcheck on"></span>건강보험</div>'+
+        '<div class="pf-check nointer"><span class="pcheck half"></span>장기요양보험</div>'+
+        '<div class="pf-check nointer"><span class="pcheck"></span>고용보험</div>'+
+      '</div></div>'+pfoot([{t:'취소'},{t:'적용',primary:1}]);}},
+    'holiday':{label:'주휴수당(주 시작/주휴일)',html:function(){return phead('주휴수당',1)+
+      '<div class="pop-body">'+
+        '<div class="pf-block"><p class="pf-lbl">주 시작 요일</p><div class="pf-radios g40"><div class="pf-radio f16" data-rgroup="wk"><span class="pradio r24 on"></span>일요일</div><div class="pf-radio f16" data-rgroup="wk"><span class="pradio r24"></span>월요일</div></div></div>'+
+        '<div class="pf-block"><p class="pf-lbl">주휴일</p><div class="pf-chips">'+chips(['월','화','수','목','금','토','일'],'월')+'</div></div>'+
+      '</div>'+pfoot([{t:'취소'},{t:'적용',primary:1}]);}},
+    'overtime':{label:'연장수당 가산(가산율)',html:function(){return phead('연장수당 가산',1)+
+      '<div class="pop-body"><div class="pf-block"><p class="pf-lbl">가산율</p>'+
+        '<div class="pf-radios wrap">'+
+          ['50%','60%','70%','80%','90%','100%','직접 입력'].map(function(v,i){return '<div class="pf-radio f16" data-rgroup="ot"><span class="pradio r24'+(i===0?' on':'')+'"></span>'+v+'</div>';}).join('')+
+        '</div>'+
+      '</div></div>'+pfoot([{t:'취소'},{t:'저장',primary:1}]);}},
+    'birth':{label:'생년월일',html:function(){return phead('생년월일')+
+      '<div class="pop-body"><div class="pf-input"><input value="2003.01.02">'+CAL_IC+'</div></div>'+pfoot([{t:'취소'},{t:'저장',primary:1,open:'saved',cls:'hotspot hot-pad'}]);}},
+    'startdate':{label:'근무 시작일',html:function(){return phead('근무 시작일')+
+      '<div class="pop-body"><div class="pf-input"><input value="2026.03.01">'+CAL_IC+'</div></div>'+pfoot([{t:'취소'},{t:'저장',primary:1,open:'saved',cls:'hotspot hot-pad'}]);}},
+    /* ── 근무 기록 ── */
+    'rec-edit':{label:'근무기록 수정',html:function(){return phead('근무기록 수정',1)+
+      '<div class="pop-body">'+
+        graybox('홍길동','2025/03/03(일)','<button class="pf-minibtn red">기록 삭제</button>')+
+        '<div class="pf-editwrap"><div class="pf-edithead"><div class="h1">근무기록</div><div class="h2">수정시간</div></div><div class="pf-timeline">'+editRow('출근','09:46','08','15')+editRow('퇴근','22:00','22','12')+'</div></div>'+
+        memoBlock()+
+      '</div>'+pfoot([{t:'취소'},{t:'저장',primary:1}]);}},
+    'sched-edit':{label:'근무 스케줄 수정',html:function(){return phead('근무 스케줄 수정',1)+
+      '<div class="pop-body">'+
+        graybox('최알바','2026/02/22(일)','<button class="pf-minibtn gray">직원 변경</button><button class="pf-minibtn red">스케줄 삭제</button>')+
+        '<div class="pf-timeline">'+timeRow('출근','09:00')+timeRow('퇴근','18:00','익일')+timeRow('휴게','60')+'</div>'+
+      '</div>'+pfoot([{t:'취소'},{t:'수정',primary:1}]);}},
+    'compare':{label:'비교 내역',html:function(){return phead('비교 내역',1)+
+      '<div class="pop-body">'+
+        graybox('홍길동','2025/03/03(일)')+
+        '<div class="pf-cmpwrap">'+
+          '<div class="pf-cmptop">'+cmpLine('근무표','07:00 ~ 12:00 (휴게 30분)')+cmpLine('가치업 기록','07:00 ~ 12:10 (휴게 30분)')+'</div>'+
+          '<div class="pf-cmpbody"><p class="pf-cmpsec">비교</p>'+cmpLine('근무시간','10분 초과')+cmpLine('결근','')+cmpLine('연차','14:00부터 4시간')+cmpLine('조퇴','14:00부터')+cmpLine('근무표 없음','')+cmpLine('조기출근','10분')+cmpLine('지각','10분')+cmpLine('조기퇴근','10분')+'</div>'+
+        '</div>'+
+      '</div>'+pfoot([{t:'닫기',primary:1}]);}},
+    'memo':{label:'근무기록 메모',html:function(){return phead('근무기록 메모')+
+      '<div class="pop-body">'+
+        graybox('최알바','2026/02/22(일)')+
+        memoBlock(1)+
+      '</div>'+pfoot([{t:'취소'},{t:'저장',primary:1,cls:'hotspot hot-pad',act:'memosave'}]);}},
+    /* ── 정보 ⓘ ── */
+    'holiday-info':{label:'주휴수당 계산/지급 안내',html:function(){return phead('주휴수당 계산/지급')+pcenter(txt('직원이 주 15시간 이상 소정 근무 시 주휴수당을 지급합니다.<br>적용 시 주휴수당을 자동으로 계산하여 월 급여에 합산되며 사용하지 않으면 계산하지 않습니다.'))+pfoot([{t:'확인',primary:1}]);}},
+    'bonus-info':{label:'가산수당 여부 안내',html:function(){return phead('가산수당 여부')+pcenter(txt('적용 시 연장, 야간, 휴일 조건에 해당하는 근무시간에 설정한 가산율만큼 기본 시급에 추가로 지급할 수 있습니다.'))+pfoot([{t:'확인',primary:1}]);}},
+    'adjust-info':{label:'급여조정 안내',html:function(){return phead('급여조정')+pcenter(txt('실 지급금액과 차이가 있는 경우 직접 조정할 수 있습니다.')+gap()+txt('+ 금액을 입력하면 지급항목에 추가되며 - 금액을 입력하면 공제항목에 추가됩니다'))+pfoot([{t:'확인',primary:1}]);}},
+    /* ── 수당 · 공제 관리 ── */
+    'add-pay':{label:'추가 수당 관리',html:function(){return phead('추가 수당 관리',1)+
+      '<div class="pop-body">'+
+        '<div class="pf-topb">'+
+          '<div class="pf-item"><div class="pf-input"><input value="상여금"></div><button class="pf-delbtn">삭제</button></div>'+
+          '<button class="pf-addbtn">항목 추가하기'+PLUS+'</button>'+
+        '</div>'+
+        '<div class="pf-block">'+
+          '<div class="pf-item"><div class="pf-input"><input placeholder="수당명"></div><button class="pf-delbtn">삭제</button></div>'+
+          '<div class="pf-hint"><span></span><span>0/10</span></div>'+
+        '</div>'+
+      '</div>'+pfoot([{t:'취소'},{t:'적용',primary:1}]);}},
+    'etc-deduct':{label:'기타 공제 관리',html:function(){return phead('기타 공제 관리',1)+
+      '<div class="pop-body">'+
+        '<div class="pf-topb">'+
+          '<div class="pf-item"><div class="pf-input"><input value="선지급"></div><button class="pf-delbtn">삭제</button></div>'+
+          '<button class="pf-addbtn">항목 추가하기'+PLUS+'</button>'+
+        '</div>'+
+        '<div class="pf-block">'+
+          '<div class="pf-item"><div class="pf-input"><input placeholder="공제명"></div><button class="pf-delbtn">삭제</button></div>'+
+          '<div class="pf-hint"><span></span><span>0/10</span></div>'+
+        '</div>'+
+      '</div>'+pfoot([{t:'취소'},{t:'적용',primary:1}]);}}
+  };
+
+  function closePopup(){var d=document.getElementById('dimLayer');if(d)d.remove();}
+  function openPopup(id){
+    var def=POP[id];if(!def)return;
+    closePopup();
+    var dim=document.createElement('div');dim.className='dim';dim.id='dimLayer';
+    var branch=def.dimBtn?'<div class="dim-branch"><button data-open="'+def.dimBtn.open+'">'+def.dimBtn.t+'</button></div>':'';
+    dim.innerHTML=branch+'<div class="pop">'+def.html()+'</div>';
+    document.body.appendChild(dim);
+    dim.addEventListener('click',function(e){
+      if(e.target===dim){closePopup();return;}
+      var act=e.target.closest('[data-act]');
+      if(act){handleAct(act.getAttribute('data-act'));return;}
+      var op=e.target.closest('[data-open]');
+      if(op){openPopup(op.getAttribute('data-open'));return;}
+      if(e.target.closest('[data-close]')||e.target.closest('.pop-foot button')){closePopup();return;}
+      popInteract(e);
+    });
+    // 메모 input 입력 시 전송 버튼 활성화(디자인 가이드)
+    dim.addEventListener('input',function(e){
+      if(e.target.closest('.pf-send')&&e.target.tagName==='INPUT'){
+        var btn=e.target.closest('.pf-send').querySelector('.pf-sendbtn');
+        if(btn)btn.classList.toggle('on',e.target.value.trim().length>0);
+      }
+    });
+  }
+  // 팝업 버튼 커스텀 동작
+  function handleAct(a){
+    if(a==='memosave'){
+      var inp=document.querySelector('#dimLayer .pf-send input');
+      if(inp&&inp.value.trim().length>0)closePopup();   // 텍스트 입력 → 저장 후 닫힘
+      else openPopup('empty-input');                    // 미입력 → 내용 입력 안내
+    }
+  }
+  // 팝업 내부 라디오/체크박스/칩/세금유형 전환
+  function popInteract(e){
+    var r=e.target.closest('[data-rgroup]');
+    if(r){var g=r.getAttribute('data-rgroup');r.parentElement.querySelectorAll('[data-rgroup="'+g+'"] .pradio').forEach(function(x){x.classList.remove('on');});r.querySelector('.pradio').classList.add('on');return;}
+    var tt=e.target.closest('[data-taxtype]');
+    if(tt){tt.parentElement.querySelectorAll('[data-taxtype] .pradio').forEach(function(x){x.classList.remove('on');});tt.querySelector('.pradio').classList.add('on');var ex=document.getElementById('taxExtra');if(ex)ex.style.display=(tt.getAttribute('data-taxtype')==='사업소득')?'none':'';return;}
+    var c=e.target.closest('[data-check]');
+    if(c){var pc=c.querySelector('.pcheck');pc.classList.remove('half');pc.classList.toggle('on');return;}
+    var ch=e.target.closest('[data-chip]');
+    if(ch){ch.classList.toggle('on');return;}
+  }
+
+  // 옵션: 팝업 확인 모드 토글 (실제 화면 요소 클릭 → 연결 팝업 노출)
+  var popToggle=document.getElementById('popToggle'),grpData=document.getElementById('grpData');
+  popToggle.addEventListener('click',function(){
+    state.popupMode=!state.popupMode;
+    popToggle.classList.toggle('on',state.popupMode);
+    grpData.classList.toggle('disabled',state.popupMode);
+    document.getElementById('page').classList.toggle('pmode',state.popupMode);
+    popToggle.textContent=state.popupMode?'팝업 확인 모드 종료':'팝업 확인 모드';
+    if(!state.popupMode)closePopup();
+  });
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')closePopup();});
 
   render();
 })();
