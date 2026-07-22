@@ -248,17 +248,21 @@ ul.note li{list-style:disc}
 .minitbl{border:1px solid #E5E5E5;display:flex;flex-direction:column;width:100%}
 .minitbl .mth{height:60px;border-bottom:1px solid #333;display:flex;align-items:stretch}
 .minitbl .mth>div{display:flex;align-items:center;justify-content:center;font-size:16px;line-height:24px;color:#333}
-.minitbl .mth>div:first-child{width:100px;flex:none;border-right:1px solid #E5E5E5}
-.minitbl .mth>div:nth-child(2){flex:1;min-width:0;border-right:1px solid #E5E5E5}
-.minitbl .mth>div:last-child{flex:1;min-width:0}
+.minitbl .mth .c1{width:68px;flex:none;border-right:1px solid #E5E5E5}
+.minitbl .mth .c2{flex:1;min-width:0;border-right:1px solid #E5E5E5}
+.minitbl .mth .c3{width:68px;flex:none}
 .mtd{height:52px;display:flex;align-items:stretch}
-.mtd>div{border-bottom:1px solid #E5E5E5;display:flex;align-items:center;justify-content:center;padding:8px}
-.mtd>div:first-child{width:100px;flex:none}
-.mtd>div:nth-child(2),.mtd>div:last-child{flex:1;min-width:0}
-.mtd p{font-size:14px;line-height:20px;color:#333;text-align:center;white-space:nowrap}
-.mtd .inp{padding:8px}
-.mtd .inp input{font-size:16px;line-height:24px}
-.mtd .inp input.gray{color:#999}
+.mtd>div{border-bottom:1px solid #E5E5E5}
+.mtd .c1{width:68px;flex:none;display:flex;align-items:center;justify-content:center;padding:8px;font-size:14px;line-height:20px;color:#333;text-align:center;white-space:nowrap}
+.mtd .c2{flex:1;min-width:0;display:flex;align-items:center;gap:8px;padding:8px}
+.mtd .c3{width:68px;flex:none;display:flex;align-items:center;justify-content:center;padding:8px;font-size:14px;line-height:20px;color:#333;text-align:center;white-space:nowrap}
+.mtd .minp{width:82px;flex:none;background:#fff;border:1px solid #E5E5E5;padding:8px;display:flex;align-items:center;overflow:hidden}
+.mtd .minp input{border:none;outline:none;background:transparent;width:100%;font-family:var(--f);font-size:16px;line-height:24px;color:#333;padding:0}
+.mtd .minp input::placeholder{color:#999}
+.mtd .minp.gray input{color:#999}
+.mtd .minp.err{background:#FFECED;border-color:#FF404D}
+.mtd .mult{flex:none;font-size:16px;line-height:24px;color:#333;white-space:nowrap}
+.mtd .mreset{flex:none;width:20px;height:20px;display:block;cursor:pointer}
 .errbox{background:#FFECED;padding:12px;display:flex;gap:8px;align-items:flex-start;justify-content:center;width:100%}
 .errbox .ic24i{margin-top:0}
 .errbox p{flex:1;min-width:0;font-size:16px;line-height:24px;color:#FF404D}
@@ -434,6 +438,8 @@ ul.note li{list-style:disc}
 (function(){
   var A='assets/';
   var SVG_CHEV_UP='<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 15l7-7 7 7" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  // ic / reset (피그마 4751:27322)
+  var SVG_RESET='<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17.8975 0.0002107C18.4285 0.0151684 18.8479 0.458464 18.833 0.989469L18.7266 4.72189C18.6953 5.83613 17.7266 6.69125 16.6172 6.58322L12.9004 6.22189C12.3717 6.17038 11.9846 5.69887 12.0361 5.17013C12.0879 4.64162 12.5583 4.25438 13.0869 4.30587L15.6436 4.5549C14.2948 3.39048 12.5406 2.68582 10.6191 2.68576C6.36925 2.68576 2.92383 6.13118 2.92383 10.3811C2.92383 14.631 6.36925 18.0764 10.6191 18.0764C12.4525 18.0763 14.1343 17.436 15.4561 16.3664C15.869 16.0326 16.4745 16.0962 16.8086 16.509C17.1427 16.922 17.078 17.5274 16.665 17.8615C15.0133 19.198 12.9087 20.0002 10.6191 20.0002C5.30678 20.0002 1 15.6934 1 10.3811C1 5.0687 5.30677 0.761929 10.6191 0.761929C12.9952 0.76199 15.1707 1.6269 16.8486 3.0549L16.9082 0.934781C16.9233 0.403951 17.3666 -0.0146353 17.8975 0.0002107Z" fill="#333"/></svg>';
 
   /* ===== 데이터 (피그마 원본 값) ===== */
   var DAYS=[
@@ -466,7 +472,14 @@ ul.note li{list-style:disc}
   };
   Object.keys(SCHED).forEach(function(k){SCHED[k]=SCHED[k].concat(SCHED[k]);});
 
-  var MINI=[['근무','25.0','275,000'],['연장','25.0','137,500'],['야간','2.0','11,000'],['휴일','15.0','33,000'],['주휴','8','88,000']];
+  // 우측 월합산 테이블: 값 / 금액 / 에러(직접수정) / 배수 / 되돌리기아이콘
+  var MINI=[
+    {l:'근무',v:'999.9',a:'275,000',err:1,mult:'',reset:1},
+    {l:'연장',v:'25.0',a:'137,500',err:1,mult:'X1.5',reset:1},
+    {l:'야간',v:'2.0',a:'11,000',err:0,mult:'X1.5',reset:0},
+    {l:'휴일',v:'15.0',a:'33,000',err:0,mult:'',reset:0},
+    {l:'주휴',v:'8',a:'88,000',err:0,mult:'',reset:0}
+  ];
 
   var state={mode:'full',width:1440,folded:false,popupMode:false};
 
@@ -719,9 +732,13 @@ ul.note li{list-style:disc}
     var rows='';
     for(var i=0;i<MINI.length;i++){
       var m=MINI[i];
-      rows+='<div class="mtd"><div><p>'+m[0]+'</p></div>'+
-        '<div><div class="inp"><input class="'+(full?'':'gray')+'" value="'+(full?m[1]:'0')+'"></div></div>'+
-        '<div><p>'+(full?m[2]:'0')+'</p></div></div>';
+      var inpCls=full?(m.err?' err':''):' gray';
+      var c2='<div class="minp'+inpCls+'"><input value="'+(full?m.v:'0')+'"></div>';
+      if(full&&m.mult)c2+='<span class="mult">'+m.mult+'</span>';
+      if(full&&m.reset)c2+='<span class="mreset">'+SVG_RESET+'</span>';
+      rows+='<div class="mtd"><div class="c1">'+m.l+'</div>'+
+        '<div class="c2">'+c2+'</div>'+
+        '<div class="c3">'+(full?m.a:'0')+'</div></div>';
     }
     var accMore='<div class="acc'+(full?'':' closed')+'" data-acc>'+
       '<div class="acc-title"><p>추가 수당</p><div class="ic24i"><img src="'+A+'ic_up_gray.svg" alt=""></div></div>'+
@@ -737,7 +754,7 @@ ul.note li{list-style:disc}
         '<div class="tm-group">'+
           '<div class="tm-row"><p class="l">시급</p><div class="inpwrap"><div class="inp12"><input class="'+(full?'':'gray')+'" value="'+(full?'11,000':'0')+'"></div></div></div>'+
           '<div class="tbl-err">'+
-            '<div class="minitbl"><div class="mth"><div>항목</div><div>월합산</div><div>금액</div></div>'+rows+'</div>'+
+            '<div class="minitbl"><div class="mth"><div class="c1">항목</div><div class="c2">월합산</div><div class="c3">금액</div></div>'+rows+'</div>'+
             '<div class="errbox"><div class="ic24i" style="width:24px;height:24px;padding:2px"><img src="'+A+'ic_error_red.svg" alt=""></div><p>주휴수당은 스케줄기반으로 자동산정되었으며 실제근무와 비교가 필요합니다.</p></div>'+
           '</div>'+
         '</div>'+
