@@ -225,9 +225,13 @@ ul.note li{list-style:disc}
 
 /* ===== 우측 패널 ===== */
 .bright{width:340px;flex:none;border-left:1px solid #F2F2F2;display:flex;flex-direction:column}
-.worker-sec{border-bottom:1px solid #E5E5E5;padding:24px 20px;display:flex;flex-direction:column;gap:8px}
-.worker-sec .wi-row .l{width:100px}
-.money-card{border-bottom:1px solid #E5E5E5;padding:24px 20px;display:flex;flex-direction:column;gap:12px}
+.writestat-sec{border-bottom:1px solid #E5E5E5;padding:28px 20px;display:flex;flex-direction:column;gap:16px;align-items:flex-start}
+.writestat-sec .ws-t{display:flex;align-items:center;justify-content:space-between;height:32px;width:100%}
+.writestat-sec .ws-t p{font-size:16px;line-height:24px;font-weight:700;color:#333}
+.writestat-sec .msg{font-size:16px;line-height:24px;color:#999;white-space:nowrap}
+.writestat-sec .ws-list{display:flex;gap:8px;align-items:center;width:100%}
+.writestat-sec .ws-list .last{flex:1;min-width:0;font-size:16px;line-height:24px;color:#333}
+.money-card{border-bottom:1px solid #E5E5E5;padding:28px 20px;display:flex;flex-direction:column;gap:12px}
 .m-row{display:flex;gap:8px;align-items:center;padding-right:12px;width:300px}
 .m-row .l{width:120px;flex:none;font-size:16px;line-height:24px;font-weight:700;color:#333}
 .m-row .v{flex:1;min-width:0;font-size:16px;line-height:24px;color:#333;text-align:right}
@@ -237,7 +241,7 @@ ul.note li{list-style:disc}
 .m-ctrl .title p{font-size:16px;line-height:24px;font-weight:700;color:#333;white-space:nowrap}
 .m-input{width:100px;background:#fff;border:1px solid #E5E5E5;padding:12px;display:flex;justify-content:flex-end}
 .m-input input{border:none;outline:none;background:transparent;width:100%;text-align:right;font-family:var(--f);font-size:16px;line-height:24px;color:#999}
-.rcontents{padding:24px 20px;display:flex;flex-direction:column;gap:28px}
+.rcontents{padding:28px 20px;display:flex;flex-direction:column;gap:28px}
 .tm-group{display:flex;flex-direction:column;gap:32px}
 .tm-row{display:flex;gap:8px;align-items:center;width:100%}
 .tm-row .l{width:100px;flex:none;font-size:16px;line-height:24px;font-weight:700;color:#333}
@@ -513,17 +517,13 @@ ul.note li{list-style:disc}
     var dd=full
       ? '<div class="dropdown" data-popup="nav-leave"><div class="badge"><span>저장완료</span></div><p class="txt">김가치김가치김가치김가치김</p><div class="ic24"><img class="full" src="'+A+'ic_chevron_down.svg" alt=""></div></div>'
       : '<div class="dropdown" data-popup="nav-leave"><p class="txt">김가치</p><div class="ic24"><img class="full" src="'+A+'ic_chevron_down.svg" alt=""></div></div>';
-    var ws=full
-      ? '<div class="writestatus"><div class="ws-t"><p>작성현황</p><div class="badge"><span>저장완료</span></div></div>'+
-        '<div class="ws-list"><p class="last">마지막 2025. 11. 01</p><p class="btn-text-primary">이력보기</p></div></div>'
-      : '<div class="writestatus empty"><div class="ws-t"><p>작성현황</p></div><p class="msg">작성 이력이 없습니다.</p></div>';
     return '<div class="top">'+
       '<div class="top-left"><h2>급여계산</h2>'+
         '<div class="top-row">'+
           '<div class="dd-btn">'+dd+'<div class="btn-line" data-popup="no-contract"><div><p>근로계약서 보기</p></div></div></div>'+
           '<div class="moneytype"><p>급여유형</p><div class="seg"><div class="on" data-seg>시급</div><div data-seg>월급</div></div></div>'+
         '</div>'+
-      '</div>'+ws+
+      '</div>'+
     '</div>';
   }
 
@@ -567,6 +567,14 @@ ul.note li{list-style:disc}
             allowCol('ic_time.svg','연장수당','가산 50%',full,null,gray)+
             allowCol('ic_night.svg','야간수당','가산 50%',full,null,gray)+
             allowCol('ic_rest.svg','휴일수당','가산 50%',full,null,gray)+
+          '</div>'+
+        '</div>'+
+        '<div class="mf-card workerinfo">'+
+          '<div class="mf-title"><p>직원 정보</p></div>'+
+          '<div class="wi-contents">'+
+            '<div class="wi-row"><p class="l">이름</p><p class="v">김가치</p></div>'+
+            '<div class="wi-row"><p class="l">생년월일</p><p class="v">03년 1월 2일</p><p class="btn-text-primary" data-popup="birth">변경</p></div>'+
+            '<div class="wi-row"><p class="l">근무 시작일</p><p class="v">26년 3월 1일</p><p class="btn-text-primary" data-popup="startdate">변경</p></div>'+
           '</div>'+
         '</div>'+
       '</div>';
@@ -719,12 +727,15 @@ ul.note li{list-style:disc}
       '<div class="m-row real"><p class="l">실 지급액</p><p class="v">'+v('420,000','0')+'</p></div>'+
     '</div>';
   }
-  // 직원 정보: bottom > right 최상단 (제목 없음)
-  function workerSec(){
-    return '<div class="worker-sec">'+
-      '<div class="wi-row"><p class="l">이름</p><p class="v">김가치</p></div>'+
-      '<div class="wi-row"><p class="l">생년월일</p><p class="v">03년 1월 2일</p><p class="btn-text-primary" data-popup="birth">변경</p></div>'+
-      '<div class="wi-row"><p class="l">근무 시작일</p><p class="v">26년 3월 1일</p><p class="btn-text-primary" data-popup="startdate">변경</p></div>'+
+  // 작성현황: bottom > right 최상단
+  function writeStatusSec(full){
+    return '<div class="writestat-sec">'+
+      (full
+        ? '<div class="ws-t"><p>작성현황</p><div class="badge"><span>저장완료</span></div></div>'+
+          '<div class="ws-list"><p class="last">마지막 2025. 11. 01</p><p class="btn-text-primary">이력보기</p></div>'
+        : '<div class="ws-t"><p>작성현황</p></div>'+
+          '<p class="msg">작성 이력이 없습니다.</p>'
+      )+
     '</div>';
   }
   function rightHTML(full){
@@ -748,7 +759,7 @@ ul.note li{list-style:disc}
       '<div class="acc-title"><p>기타 공제</p><div class="ic24i"><img src="'+A+'ic_up_gray.svg" alt=""></div></div>'+
       '<div class="acc-body"><div class="btn-manage" data-popup="etc-deduct"><div><p>기타 공제 관리</p></div></div></div></div>';
     return '<div class="bright">'+
-      workerSec()+
+      writeStatusSec(full)+
       moneyCard(full)+
       '<div class="rcontents">'+
         '<div class="tm-group">'+
