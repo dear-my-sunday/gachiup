@@ -225,7 +225,9 @@ ul.note li{list-style:disc}
 
 /* ===== 우측 패널 ===== */
 .bright{width:340px;flex:none;border-left:1px solid #F2F2F2;display:flex;flex-direction:column}
-.money-card{border-bottom:1px solid #E5E5E5;padding:32px 20px;display:flex;flex-direction:column;gap:12px}
+.worker-sec{border-bottom:1px solid #E5E5E5;padding:24px 20px;display:flex;flex-direction:column;gap:8px}
+.worker-sec .wi-row .l{width:100px}
+.money-card{border-bottom:1px solid #E5E5E5;padding:24px 20px;display:flex;flex-direction:column;gap:12px}
 .m-row{display:flex;gap:8px;align-items:center;padding-right:12px;width:300px}
 .m-row .l{width:120px;flex:none;font-size:16px;line-height:24px;font-weight:700;color:#333}
 .m-row .v{flex:1;min-width:0;font-size:16px;line-height:24px;color:#333;text-align:right}
@@ -235,7 +237,7 @@ ul.note li{list-style:disc}
 .m-ctrl .title p{font-size:16px;line-height:24px;font-weight:700;color:#333;white-space:nowrap}
 .m-input{width:100px;background:#fff;border:1px solid #E5E5E5;padding:12px;display:flex;justify-content:flex-end}
 .m-input input{border:none;outline:none;background:transparent;width:100%;text-align:right;font-family:var(--f);font-size:16px;line-height:24px;color:#999}
-.rcontents{padding:48px 20px;display:flex;flex-direction:column;gap:28px}
+.rcontents{padding:24px 20px;display:flex;flex-direction:column;gap:28px}
 .tm-group{display:flex;flex-direction:column;gap:32px}
 .tm-row{display:flex;gap:8px;align-items:center;width:100%}
 .tm-row .l{width:100px;flex:none;font-size:16px;line-height:24px;font-weight:700;color:#333}
@@ -567,14 +569,6 @@ ul.note li{list-style:disc}
             allowCol('ic_rest.svg','휴일수당','가산 50%',full,null,gray)+
           '</div>'+
         '</div>'+
-        '<div class="mf-card workerinfo">'+
-          '<div class="mf-title"><p>직원 정보</p></div>'+
-          '<div class="wi-contents">'+
-            '<div class="wi-row"><p class="l">이름</p><p class="v">김가치</p></div>'+
-            '<div class="wi-row"><p class="l">생년월일</p><p class="v">03년 1월 2일</p><p class="btn-text-primary" data-popup="birth">변경</p></div>'+
-            '<div class="wi-row"><p class="l">근무 시작일</p><p class="v">26년 3월 1일</p><p class="btn-text-primary" data-popup="startdate">변경</p></div>'+
-          '</div>'+
-        '</div>'+
       '</div>';
   }
   function foldClosedHTML(full){
@@ -721,11 +715,16 @@ ul.note li{list-style:disc}
     var v=function(a,b){return full?a:b;};
     return '<div class="money-card">'+
       '<div class="m-row"><p class="l">예상 월 급여</p><p class="v">'+v('456,500','0')+'</p></div>'+
-      '<div class="m-ctrl"><div class="title"><p>급여조정금액</p><div class="icon-btn24" data-popup="adjust-info"><div class="ic16"><img src="'+A+'ic_info.svg" alt=""></div></div></div>'+
-        '<div class="m-input"><input value="0"></div></div>'+
-      '<div class="m-row"><p class="l">최종 금액</p><p class="v">'+v('420,000','0')+'</p></div>'+
       '<div class="m-row"><p class="l">재세 금액</p><p class="v">'+v('36,500','0')+'</p></div>'+
       '<div class="m-row real"><p class="l">실 지급액</p><p class="v">'+v('420,000','0')+'</p></div>'+
+    '</div>';
+  }
+  // 직원 정보: bottom > right 최상단 (제목 없음)
+  function workerSec(){
+    return '<div class="worker-sec">'+
+      '<div class="wi-row"><p class="l">이름</p><p class="v">김가치</p></div>'+
+      '<div class="wi-row"><p class="l">생년월일</p><p class="v">03년 1월 2일</p><p class="btn-text-primary" data-popup="birth">변경</p></div>'+
+      '<div class="wi-row"><p class="l">근무 시작일</p><p class="v">26년 3월 1일</p><p class="btn-text-primary" data-popup="startdate">변경</p></div>'+
     '</div>';
   }
   function rightHTML(full){
@@ -749,6 +748,7 @@ ul.note li{list-style:disc}
       '<div class="acc-title"><p>기타 공제</p><div class="ic24i"><img src="'+A+'ic_up_gray.svg" alt=""></div></div>'+
       '<div class="acc-body"><div class="btn-manage" data-popup="etc-deduct"><div><p>기타 공제 관리</p></div></div></div></div>';
     return '<div class="bright">'+
+      workerSec()+
       moneyCard(full)+
       '<div class="rcontents">'+
         '<div class="tm-group">'+
