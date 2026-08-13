@@ -68,7 +68,7 @@ html,body{background:#EEF1F4;min-height:100vh}
 .memo-label{font-weight:700;font-size:14px;line-height:22px;color:#202528}
 .memo-row{display:flex;align-items:flex-start;gap:8px;height:48px}
 .memo-input{display:flex;align-items:center;padding:12px;gap:8px;flex:1;height:48px;background:#F3F5F7;border:1px solid #E1E6EA;border-radius:12px;cursor:text}
-.memo-field{flex:1;min-width:0;appearance:none;-webkit-appearance:none;border:none !important;outline:none !important;background:transparent !important;box-shadow:none !important;border-radius:0 !important;padding:0 !important;margin:0 !important;height:24px;font-family:var(--f);font-weight:400;font-size:16px;line-height:24px;color:#202528}
+.memo-field{flex:1;min-width:0;appearance:none;-webkit-appearance:none;border:none !important;outline:none !important;background:transparent !important;box-shadow:none !important;border-radius:0 !important;padding:0 !important;margin:0 !important;height:24px;font-family:var(--f);font-weight:400;font-size:16px;line-height:24px;color:#202528;caret-color:#202528}
 .memo-field::placeholder{color:#848D95;opacity:1}
 .send-btn{display:flex;justify-content:center;align-items:center;width:48px;height:48px;flex-shrink:0;background:#E1E6EA;border-radius:12px;cursor:default;transition:background .15s}
 .send-btn.active{background:var(--primary);cursor:pointer}
@@ -151,6 +151,42 @@ html,body{background:#EEF1F4;min-height:100vh}
 .cf-btn{flex:1;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;line-height:24px;cursor:pointer}
 .cf-btn.cancel{color:#848D95;border-right:1px solid #F3F5F7}
 .cf-btn.del{color:var(--primary)}
+.timecustom{display:flex;flex-direction:column;gap:20px}
+.togglearea{display:flex;align-items:center;gap:12px;padding-bottom:12px;border-bottom:1px solid #F3F5F7}
+.ta-lbl{flex:1;min-width:0;font-weight:700;font-size:16px;line-height:24px;color:#202528}
+.custom-pop{position:absolute;inset:0;z-index:95;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.5);padding:0 16px}
+.custom-pop.show{display:flex}
+.cp-card{width:338px;background:#fff;border-radius:20px;overflow:hidden;font-family:var(--f)}
+.cp-body{display:flex;flex-direction:column;gap:20px;padding:20px;border-bottom:1px solid #F3F5F7}
+.cp-title-row{display:flex;align-items:center;gap:12px}
+.cp-title{flex:1;min-width:0;font-size:16px;font-weight:700;line-height:24px;color:#202528}
+.cp-seg{position:relative;display:flex;gap:4px;padding:4px;background:#E1E6EA;border-radius:40px;flex:none}
+.cp-seg-thumb{position:absolute;top:4px;left:4px;width:52px;height:26px;background:#fff;border-radius:40px;box-shadow:0 1px 3px rgba(0,0,0,.08);transition:transform .22s cubic-bezier(.4,0,.2,1);z-index:0}
+.cp-seg.pm .cp-seg-thumb{transform:translateX(56px)}
+.cp-seg-btn{position:relative;z-index:1;width:52px;padding:4px 12px;border-radius:40px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;line-height:18px;color:#465159;cursor:pointer;user-select:none;transition:color .2s}
+.cp-seg.am .cp-seg-am{color:#202528}
+.cp-seg.pm .cp-seg-pm{color:#202528}
+.cp-main{display:flex;gap:20px;align-items:flex-start}
+.cp-field{flex:1;min-width:0;display:flex;gap:8px;align-items:center}
+.cp-input{flex:1;min-width:0;display:flex;align-items:center;gap:8px;padding:12px;background:#F3F5F7;border:1px solid #E1E6EA;border-radius:12px}
+.cp-inp{flex:1;min-width:0;appearance:none;-webkit-appearance:none;border:none !important;outline:none !important;background:transparent !important;box-shadow:none !important;border-radius:0 !important;padding:0 !important;margin:0 !important;height:24px;font-family:var(--f);font-weight:400;font-size:16px;line-height:24px;color:#202528;caret-color:#202528}
+.cp-inp::selection,.memo-field::selection{background:#E1E6EA;color:#202528}
+.cp-unit{flex:none;font-size:14px;font-weight:400;line-height:22px;color:#202528}
+.cp-btns{display:flex}
+.cp-btn{flex:1;display:flex;align-items:center;justify-content:center;padding:12px 8px;font-size:16px;font-weight:700;line-height:24px;cursor:pointer}
+.cp-btn.cancel{color:#848D95;border-right:1px solid #F3F5F7}
+.cp-btn.ok{color:var(--primary)}
+.key.pressed{background:#BBC0C9}
+.numkb{position:absolute;left:0;bottom:0;width:402px;z-index:97;background:#D1D4DB;transform:translateY(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);font-family:-apple-system,'SF Pro Text','Helvetica Neue',var(--f);padding-bottom:2px}
+.numkb.show{transform:translateY(0)}
+.numkb-keys{display:flex;flex-direction:column;gap:11px;padding:8px 6px 0}
+.nk-row{display:flex;gap:6px}
+.nk-key{flex:1 1 0;height:46px;background:#fff;border-radius:5px;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 1px 0 rgba(0,0,0,.35);cursor:pointer;user-select:none}
+.nk-key.empty{background:transparent;box-shadow:none;cursor:default}
+.nk-key.nk-del{background:transparent;box-shadow:none;font-size:26px;color:#000}
+.nk-key.pressed{background:#BBC0C9}
+.nk-num{font-size:23px;font-weight:400;color:#000;line-height:26px}
+.nk-sub{font-size:9px;font-weight:600;letter-spacing:1.5px;color:#000;line-height:9px;margin-top:1px}
 </style>
 </head>
 <body>
@@ -190,6 +226,29 @@ html,body{background:#EEF1F4;min-height:100vh}
     var slot0, slot1;
     if(cfg.ghost){slot0='<span class="tc-val ph" data-slot>09:00</span>';slot1='<span class="tc-val ph" data-slot>18:00</span>';}
     else{slot0='<span class="tc-val" data-slot>'+(cfg.prefill?cfg.prefill[0]:'')+'</span>';slot1='<span class="tc-val" data-slot>'+(cfg.prefill?cfg.prefill[1]:'')+'</span>';}
+    var timearea='<div class="timearea"><div class="tcol">'+
+        '<div class="tcard"><div class="tc-head">'+IC.gowork+'<span class="tc-lbl">출근</span></div><div class="tc-body"><span class="gps-btn">'+IC.gps+'</span><span class="tc-val rtGowork">09:00</span></div></div>'+
+        '<div class="tcard"><div class="tc-head">'+IC.home+'<span class="tc-lbl">퇴근</span></div><div class="tc-body"><span class="gps-btn">'+IC.gps+'</span><span class="nextday">익일</span><span class="tc-val rtGohome">18:00</span></div></div>'+
+      '</div><div class="tcol">'+
+        '<div class="'+editCls+' cardGowork" data-kind="gowork" data-def="09:00"><div class="tc-head"><span class="tc-lbl edit-lbl">'+cfg.editLabel+'</span></div><div class="tc-body">'+slot0+'</div></div>'+
+        '<div class="'+editCls+' cardGohome" data-kind="gohome" data-def="18:00"><div class="tc-head"><span class="tc-lbl edit-lbl">'+cfg.editLabel+'</span></div><div class="tc-body">'+slot1+'</div></div>'+
+      '</div></div>';
+    var timeblock=cfg.customToggle?('<div class="timecustom"><div class="togglearea"><span class="ta-lbl">직접입력</span><div class="sw sw-custom"><i></i></div></div>'+timearea+'</div>'):timearea;
+    var customPopHTML=cfg.customToggle?(
+      '<div class="custom-pop"><div class="cp-card">'+
+        '<div class="cp-body">'+
+          '<div class="cp-title-row"><span class="cp-title">근무시간 입력</span>'+
+            '<div class="cp-seg am"><div class="cp-seg-thumb"></div><div class="cp-seg-btn cp-seg-am">오전</div><div class="cp-seg-btn cp-seg-pm">오후</div></div>'+
+          '</div>'+
+          '<div class="cp-main">'+
+            '<div class="cp-field"><div class="cp-input"><input class="cp-inp cp-hour" type="text" inputmode="numeric" maxlength="2" value="09" /></div><span class="cp-unit">시</span></div>'+
+            '<div class="cp-field"><div class="cp-input"><input class="cp-inp cp-min" type="text" inputmode="numeric" maxlength="2" value="00" /></div><span class="cp-unit">분</span></div>'+
+          '</div>'+
+        '</div>'+
+        '<div class="cp-btns"><div class="cp-btn cancel cp-cancel">취소</div><div class="cp-btn ok cp-ok">확인</div></div>'+
+      '</div></div>'+
+      '<div class="numkb"><div class="numkb-keys"></div><div class="kb-home"><i></i></div></div>'
+    ):'';
     return ''+
     '<div class="page"><div class="left">'+
       crumbsHTML(cfg.crumbs)+
@@ -215,13 +274,7 @@ html,body{background:#EEF1F4;min-height:100vh}
                   '<div class="md-btns"><div class="sbtn red md-del">삭제</div><div class="sbtn gray md-edit">수정</div></div></div>'+
                 cbx+
               '</div>'+
-              '<div class="timearea"><div class="tcol">'+
-                '<div class="tcard"><div class="tc-head">'+IC.gowork+'<span class="tc-lbl">출근</span></div><div class="tc-body"><span class="gps-btn">'+IC.gps+'</span><span class="tc-val rtGowork">09:00</span></div></div>'+
-                '<div class="tcard"><div class="tc-head">'+IC.home+'<span class="tc-lbl">퇴근</span></div><div class="tc-body"><span class="gps-btn">'+IC.gps+'</span><span class="nextday">익일</span><span class="tc-val rtGohome">18:00</span></div></div>'+
-              '</div><div class="tcol">'+
-                '<div class="'+editCls+' cardGowork" data-kind="gowork" data-def="09:00"><div class="tc-head"><span class="tc-lbl edit-lbl">'+cfg.editLabel+'</span></div><div class="tc-body">'+slot0+'</div></div>'+
-                '<div class="'+editCls+' cardGohome" data-kind="gohome" data-def="18:00"><div class="tc-head"><span class="tc-lbl edit-lbl">'+cfg.editLabel+'</span></div><div class="tc-body">'+slot1+'</div></div>'+
-              '</div></div>'+
+              timeblock+
             '</div>'+
           '</div>'+
           '<div class="timepicker"><div class="tp-inner"><div class="tp-band"></div><div class="wheel w-ampm"></div><div class="wheel w-num w-hour"></div><div class="tp-colon">:</div><div class="wheel w-num w-min"></div></div></div>'+
@@ -229,6 +282,7 @@ html,body{background:#EEF1F4;min-height:100vh}
         '</div>'+
         '<div class="kb"><div class="kb-acc"><div class="kb-sug">“야근”</div><div class="kb-sug q">야근했음</div><div class="kb-sug">야근</div></div><div class="kb-keys"></div><div class="kb-home"><i></i></div></div>'+
         '<div class="confirm"><div class="cf-card"><div class="cf-body"><div class="cf-title">근무기록 메모를 삭제하시겠습니까?</div><div class="cf-msg">삭제 후에도 내 메모에서 작성이력을 확인할 수 있습니다.</div></div><div class="cf-btns"><div class="cf-btn cancel cf-cancel">취소</div><div class="cf-btn del cf-del">삭제</div></div></div></div>'+
+        customPopHTML+
         '</div></div>'+
       '</div></div>'+
     '</div>';
@@ -274,6 +328,7 @@ html,body{background:#EEF1F4;min-height:100vh}
     var field=$('.memo-field');
     function showKb(){kb.classList.add('show');}
     function hideKb(){kb.classList.remove('show');}
+    function flash(el){if(!el)return;el.classList.add('pressed');setTimeout(function(){el.classList.remove('pressed');},130);}
     keys.addEventListener('mousedown',function(e){if(e.target.closest('.key'))e.preventDefault();});
     keys.addEventListener('click',function(e){
       var key=e.target.closest('.key');if(!key)return;
@@ -282,7 +337,17 @@ html,body{background:#EEF1F4;min-height:100vh}
       else if(key.classList.contains('kb-shift')||key.textContent==='123'||key.textContent==='🌐'){}
       else if(key.classList.contains('kb-space')){if(field.value.length<40)field.value+=' ';}
       else{if(field.value.length<40)field.value+=key.textContent;}
+      flash(key);
       field.dispatchEvent(new Event('input'));
+    });
+    // 실제 타이핑 시 해당 자판이 눌리는 것처럼 표시
+    field.addEventListener('keydown',function(e){
+      var k=e.key,el=null;
+      if(k===' '||k==='Spacebar')el=keys.querySelector('.kb-space');
+      else if(k==='Backspace')el=keys.querySelector('.kb-del');
+      else if(k==='Enter')el=keys.querySelector('.kb-ret');
+      else if(/^[a-zA-Z]$/.test(k)){var kk=k.toLowerCase(),all=keys.querySelectorAll('.key');for(var i=0;i<all.length;i++){if(all[i].textContent===kk){el=all[i];break;}}}
+      if(el)flash(el);
     });
     var send=$('.send-btn'),row=$('.memo-row'),done=$('.memo-done'),mdText=$('.md-text'),box=$('.memo-input'),mdEdited=$('.md-edited'),cbxRow=$('.cbx-row');
     var edited=false,editing=false;
@@ -323,16 +388,101 @@ html,body{background:#EEF1F4;min-height:100vh}
     }
     $('.cardGowork').classList.add('cardgowork');
     $('.cardGohome').classList.add('cardgohome');
-    if(!cfg.noPicker){
-      $('.cardGowork').addEventListener('click',function(){selectCard('gowork');});
-      $('.cardGohome').addEventListener('click',function(){selectCard('gohome');});
+
+    var swCustom=$('.sw-custom'),customOn=false,customPop=$('.custom-pop');
+    var cpHour,cpMin,cpSeg,cpSegAm,cpSegPm,cpAp='오전',cpSetSeg=function(){};
+    var cpNumkb,cpActive=null,cpNumHideT;
+    function cpShowNum(el){cpActive=el;clearTimeout(cpNumHideT);if(el){el.parentNode.classList.add('focused');el.dataset.fresh='1';}if(cpNumkb)cpNumkb.classList.add('show');}
+    function cpHideNum(){if(cpNumkb)cpNumkb.classList.remove('show');}
+    function pad2(n){return ('0'+n).slice(-2);}
+    if(swCustom)swCustom.addEventListener('click',function(){customOn=this.classList.toggle('on');if(customOn)resetPicker();});
+    function openCustom(kind){
+      hideKb();field.blur();
+      $('.timepicker').classList.remove('open');
+      state.selected=kind;
+      $('.cardgowork').classList.toggle('selected',kind==='gowork');
+      $('.cardgohome').classList.toggle('selected',kind==='gohome');
+      // 디폴트 값: 1) 기존 기록 존재 → 해당 시간(12h) 2) 없음 → 현재 시간
+      var slot=$('.card'+kind+' [data-slot]');
+      var cur=slot.classList.contains('ph')?'':slot.textContent.trim();
+      var rec=(kind==='gowork'?rtGw.textContent.trim():rtGh.textContent.trim());
+      var src=/^\d{1,2}:\d{2}$/.test(cur)?cur:(/^\d{1,2}:\d{2}$/.test(rec)?rec:'');
+      var v;
+      if(src){v=from24(src);}
+      else{var d=new Date();v=from24(pad2(d.getHours())+':'+pad2(d.getMinutes()));}
+      cpAp=v.ap;cpSetSeg();
+      cpHour.value=pad2(v.h);cpMin.value=v.m;
+      customPop.classList.add('show');
+      cpShowNum(cpHour);
+      requestAnimationFrame(function(){try{cpHour.focus();}catch(e){}});
     }
-    $('.cta-cancel').addEventListener('click',function(){
+    if(customPop){
+      cpHour=$('.cp-hour');cpMin=$('.cp-min');cpSeg=$('.cp-seg');cpSegAm=$('.cp-seg-am');cpSegPm=$('.cp-seg-pm');
+      // 오전/오후: 흰 알약이 부드럽게 슬라이드
+      cpSetSeg=function(){cpSeg.className='cp-seg '+(cpAp==='오전'?'am':'pm');};
+      cpSeg.addEventListener('mousedown',function(e){e.preventDefault();}); // 포커스 유지(키패드 열린 채)
+      cpSegAm.addEventListener('click',function(){cpAp='오전';cpSetSeg();});
+      cpSegPm.addEventListener('click',function(){cpAp='오후';cpSetSeg();});
+
+      // 시/분 입력 + 시뮬레이션 숫자 키패드
+      cpNumkb=$('.numkb');
+      var nkKeys=$('.numkb-keys');
+      var nkData=[['1',''],['2','ABC'],['3','DEF'],['4','GHI'],['5','JKL'],['6','MNO'],['7','PQRS'],['8','TUV'],['9','WXYZ']];
+      var nh='';
+      for(var r=0;r<3;r++){nh+='<div class="nk-row">';for(var c=0;c<3;c++){var dd=nkData[r*3+c];nh+='<div class="nk-key" data-d="'+dd[0]+'"><span class="nk-num">'+dd[0]+'</span>'+(dd[1]?'<span class="nk-sub">'+dd[1]+'</span>':'')+'</div>';}nh+='</div>';}
+      nh+='<div class="nk-row"><div class="nk-key empty"></div><div class="nk-key" data-d="0"><span class="nk-num">0</span></div><div class="nk-key nk-del">⌫</div></div>';
+      nkKeys.innerHTML=nh;
+      [cpHour,cpMin].forEach(function(el){
+        el.addEventListener('input',function(){
+          var v=this.value.replace(/[^0-9]/g,'').slice(0,2);
+          if(v.length===2){var n=parseInt(v,10);n=(this===cpHour)?Math.max(1,Math.min(12,n)):Math.min(59,n);v=pad2(n);}
+          this.value=v;
+        });
+        el.addEventListener('focus',function(){cpShowNum(this);});
+        el.addEventListener('blur',function(){
+          var n=parseInt(this.value,10);
+          if(this===cpHour){if(isNaN(n))n=12;n=Math.max(1,Math.min(12,n));}
+          else{if(isNaN(n))n=0;n=Math.max(0,Math.min(59,n));}
+          this.value=pad2(n);
+          this.parentNode.classList.remove('focused');
+          cpNumHideT=setTimeout(function(){var a=document.activeElement;if(a!==cpHour&&a!==cpMin)cpHideNum();},150);
+        });
+        el.addEventListener('keydown',function(e){var k=e.key,t=null;if(/^[0-9]$/.test(k)){if(this.dataset.fresh==='1'){this.value='';this.dataset.fresh='';}t=cpNumkb.querySelector('.nk-key[data-d="'+k+'"]');}else if(k==='Backspace'){this.dataset.fresh='';t=cpNumkb.querySelector('.nk-del');}if(t)flash(t);});
+      });
+      cpNumkb.addEventListener('mousedown',function(e){if(e.target.closest('.nk-key'))e.preventDefault();}); // 포커스 유지
+      cpNumkb.addEventListener('click',function(e){
+        var key=e.target.closest('.nk-key');if(!key||key.classList.contains('empty')||!cpActive)return;
+        if(cpActive.dataset.fresh==='1'){cpActive.value='';cpActive.dataset.fresh='';}
+        if(key.classList.contains('nk-del'))cpActive.value=cpActive.value.slice(0,-1);
+        else{var d=key.getAttribute('data-d');if(d&&cpActive.value.length<2)cpActive.value+=d;}
+        flash(key);cpActive.dispatchEvent(new Event('input'));
+      });
+
+      function cpClose(){customPop.classList.remove('show');cpHideNum();cpHour.blur();cpMin.blur();cpHour.parentNode.classList.remove('focused');cpMin.parentNode.classList.remove('focused');$('.cardgowork').classList.remove('selected');$('.cardgohome').classList.remove('selected');}
+      $('.cp-cancel').addEventListener('click',cpClose);
+      $('.cp-ok').addEventListener('click',function(){
+        var h=parseInt(cpHour.value,10),m=parseInt(cpMin.value,10);
+        if(isNaN(h))h=12;if(isNaN(m))m=0;
+        h=Math.max(1,Math.min(12,h));m=Math.max(0,Math.min(59,m));
+        var H=cpAp==='오전'?(h===12?0:h):(h===12?12:h+12);
+        var slot=$('.card'+state.selected+' [data-slot]');
+        slot.textContent=pad2(H)+':'+pad2(m);slot.classList.remove('ph');
+        submit.classList.add('active');
+        cpClose();
+      });
+    }
+
+    if(!cfg.noPicker){
+      $('.cardGowork').addEventListener('click',function(){if(customOn)openCustom('gowork');else selectCard('gowork');});
+      $('.cardGohome').addEventListener('click',function(){if(customOn)openCustom('gohome');else selectCard('gohome');});
+    }
+    function resetPicker(){
       if(cfg.noPicker)return;
       state.selected=null;$('.timepicker').classList.remove('open');
       ['gowork','gohome'].forEach(function(k){var c=$('.card'+k);c.classList.remove('selected');c.querySelector('[data-slot]').classList.add('ph');});
       refresh();submit.classList.remove('active');
-    });
+    }
+    $('.cta-cancel').addEventListener('click',resetPicker);
     setIdx(wA,0);setIdx(wH,8);setIdx(wM,0);
 
     var reason=$('.reason-val'),reqMode='edit',reasonMaxOn=false;
@@ -371,8 +521,8 @@ html,body{background:#EEF1F4;min-height:100vh}
   }
 
   var cfgs={
-    work:{crumbs:[['워크모드','홈','내 기록','근무기록']],title:'근무기록 수정 요청',delBtn:true,checkbox:false,radio:false,noPicker:false,submitActive:false,cancel:'취소',submit:'수정 요청',editLabel:'수정 요청',ghost:true,dataToggles:true,infoRows:[['근무 날짜','2024/10/17 (목)']]},
-    admedit:{crumbs:[['관리자모드','홈','직원 리스트','근무기록 수정'],['관리자모드','홈','직원 관리','근무기록','근무기록 수정']],title:'근무기록 수정',delBtn:true,checkbox:true,radio:false,noPicker:false,submitActive:false,cancel:'취소',submit:'저장',editLabel:'수정시간',ghost:true,dataToggles:true,infoRows:[['직원 명','김가치'],['근무 날짜','2024/10/17 (목)']]},
+    work:{crumbs:[['워크모드','홈','내 기록','근무기록']],title:'근무기록 수정 요청',delBtn:true,checkbox:false,radio:false,noPicker:false,submitActive:false,cancel:'취소',submit:'수정 요청',editLabel:'수정 요청',ghost:true,dataToggles:true,customToggle:true,infoRows:[['근무 날짜','2024/10/17 (목)']]},
+    admedit:{crumbs:[['관리자모드','홈','직원 리스트','근무기록 수정'],['관리자모드','홈','직원 관리','근무기록','근무기록 수정']],title:'근무기록 수정',delBtn:true,checkbox:true,radio:false,noPicker:false,submitActive:false,cancel:'취소',submit:'저장',editLabel:'수정시간',ghost:true,dataToggles:true,customToggle:true,infoRows:[['직원 명','김가치'],['근무 날짜','2024/10/17 (목)']]},
     admappr:{crumbs:[['관리자모드','홈','직원 리스트','근무기록 요청 확인'],['관리자모드','홈','직원 관리','근무기록','근무기록 요청 확인'],['관리자모드','HR 알림','근무기록 요청 확인']],title:'근무기록 수정요청',delBtn:false,checkbox:false,radio:true,noPicker:true,submitActive:true,cancel:'거절',submit:'승인',editLabel:'수정 요청',prefill:['14:25','14:25'],reasonMax:true,infoRows:[['직원 명','김가치'],['근무 날짜','2024/10/17 (목)'],['사유','출근 시간 정정 요청','reason-val']]}
   };
   var pans={work:document.getElementById('panel-work'),admedit:document.getElementById('panel-admedit'),admappr:document.getElementById('panel-admappr')};
