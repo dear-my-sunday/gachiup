@@ -158,14 +158,13 @@ html,body{background:#EEF1F4;min-height:100vh}
 .custom-pop.show{display:flex}
 .cp-card{width:338px;background:#fff;border-radius:20px;overflow:hidden;font-family:var(--f)}
 .cp-body{display:flex;flex-direction:column;gap:20px;padding:20px;border-bottom:1px solid #F3F5F7}
-.cp-title-row{display:flex;align-items:center;gap:12px}
-.cp-title{flex:1;min-width:0;font-size:16px;font-weight:700;line-height:24px;color:#202528}
-.cp-seg{position:relative;display:flex;gap:4px;padding:4px;background:#E1E6EA;border-radius:40px;flex:none}
-.cp-seg-thumb{position:absolute;top:4px;left:4px;width:52px;height:26px;background:#fff;border-radius:40px;box-shadow:0 1px 3px rgba(0,0,0,.08);transition:transform .22s cubic-bezier(.4,0,.2,1);z-index:0}
-.cp-seg.pm .cp-seg-thumb{transform:translateX(56px)}
-.cp-seg-btn{position:relative;z-index:1;width:52px;padding:4px 12px;border-radius:40px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;line-height:18px;color:#465159;cursor:pointer;user-select:none;transition:color .2s}
-.cp-seg.am .cp-seg-am{color:#202528}
-.cp-seg.pm .cp-seg-pm{color:#202528}
+.cp-ampm{display:flex;gap:20px;align-items:center;justify-content:center;width:100%;padding-bottom:12px;border-bottom:1px solid #E1E6EA}
+.cp-radio-row{display:flex;gap:8px;align-items:center;cursor:pointer;user-select:none}
+.cp-radio{width:24px;height:24px;border-radius:18px;border:2px solid #EAEDEE;background:#fff;flex:none;display:flex;align-items:center;justify-content:center;transition:border-color .15s}
+.cp-radio-row.selected .cp-radio{border-color:var(--primary)}
+.cp-radio-row.selected .cp-radio::after{content:'';width:12px;height:12px;border-radius:50%;background:var(--primary)}
+.cp-amlbl{font-size:20px;line-height:29px;font-weight:400;color:#202528;transition:color .15s}
+.cp-radio-row.selected .cp-amlbl{font-weight:700;color:var(--primary)}
 .cp-main{display:flex;gap:20px;align-items:flex-start}
 .cp-field{flex:1;min-width:0;display:flex;gap:8px;align-items:center}
 .cp-input{flex:1;min-width:0;display:flex;align-items:center;gap:8px;padding:12px;background:#F3F5F7;border:1px solid #E1E6EA;border-radius:12px}
@@ -237,8 +236,9 @@ html,body{background:#EEF1F4;min-height:100vh}
     var customPopHTML=cfg.customToggle?(
       '<div class="custom-pop"><div class="cp-card">'+
         '<div class="cp-body">'+
-          '<div class="cp-title-row"><span class="cp-title">근무시간 입력</span>'+
-            '<div class="cp-seg am"><div class="cp-seg-thumb"></div><div class="cp-seg-btn cp-seg-am">오전</div><div class="cp-seg-btn cp-seg-pm">오후</div></div>'+
+          '<div class="cp-ampm">'+
+            '<div class="cp-radio-row cp-am selected"><span class="cp-radio"></span><span class="cp-amlbl">오전</span></div>'+
+            '<div class="cp-radio-row cp-pm"><span class="cp-radio"></span><span class="cp-amlbl">오후</span></div>'+
           '</div>'+
           '<div class="cp-main">'+
             '<div class="cp-field"><div class="cp-input"><input class="cp-inp cp-hour" type="text" inputmode="numeric" maxlength="2" value="09" /></div><span class="cp-unit">시</span></div>'+
@@ -390,7 +390,7 @@ html,body{background:#EEF1F4;min-height:100vh}
     $('.cardGohome').classList.add('cardgohome');
 
     var swCustom=$('.sw-custom'),customOn=false,customPop=$('.custom-pop');
-    var cpHour,cpMin,cpSeg,cpSegAm,cpSegPm,cpAp='오전',cpSetSeg=function(){};
+    var cpHour,cpMin,cpAmRow,cpPmRow,cpAp='오전',cpSetSeg=function(){};
     var cpNumkb,cpActive=null,cpNumHideT;
     function cpShowNum(el){cpActive=el;clearTimeout(cpNumHideT);if(el){el.parentNode.classList.add('focused');el.dataset.fresh='1';}if(cpNumkb)cpNumkb.classList.add('show');}
     function cpHideNum(){if(cpNumkb)cpNumkb.classList.remove('show');}
@@ -417,12 +417,12 @@ html,body{background:#EEF1F4;min-height:100vh}
       requestAnimationFrame(function(){try{cpHour.focus();}catch(e){}});
     }
     if(customPop){
-      cpHour=$('.cp-hour');cpMin=$('.cp-min');cpSeg=$('.cp-seg');cpSegAm=$('.cp-seg-am');cpSegPm=$('.cp-seg-pm');
-      // 오전/오후: 흰 알약이 부드럽게 슬라이드
-      cpSetSeg=function(){cpSeg.className='cp-seg '+(cpAp==='오전'?'am':'pm');};
-      cpSeg.addEventListener('mousedown',function(e){e.preventDefault();}); // 포커스 유지(키패드 열린 채)
-      cpSegAm.addEventListener('click',function(){cpAp='오전';cpSetSeg();});
-      cpSegPm.addEventListener('click',function(){cpAp='오후';cpSetSeg();});
+      cpHour=$('.cp-hour');cpMin=$('.cp-min');cpAmRow=$('.cp-am');cpPmRow=$('.cp-pm');
+      // 오전/오후: 라디오(단일 선택) — 다른 걸 고르면 기존 선택 해제
+      cpSetSeg=function(){cpAmRow.classList.toggle('selected',cpAp==='오전');cpPmRow.classList.toggle('selected',cpAp==='오후');};
+      $('.cp-ampm').addEventListener('mousedown',function(e){e.preventDefault();}); // 포커스 유지(키패드 열린 채)
+      cpAmRow.addEventListener('click',function(){cpAp='오전';cpSetSeg();});
+      cpPmRow.addEventListener('click',function(){cpAp='오후';cpSetSeg();});
 
       // 시/분 입력 + 시뮬레이션 숫자 키패드
       cpNumkb=$('.numkb');
