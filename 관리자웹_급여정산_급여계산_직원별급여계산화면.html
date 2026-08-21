@@ -316,7 +316,8 @@ ul.note li{list-style:disc}
 .pop-head .sp{width:32px;height:32px;flex:none;display:flex;align-items:center;justify-content:center}
 .pop-head h3{flex:1;min-width:0;font-size:20px;line-height:28px;font-weight:700;color:#333;text-align:center}
 .pop-x{width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer}
-.pop-body{background:#fff;padding:20px;overflow-y:auto;display:flex;flex-direction:column;gap:20px}
+.pop-body{background:#fff;padding:20px;overflow-y:auto;min-height:0;display:flex;flex-direction:column;gap:20px}
+.pop.pop-tall{max-height:calc(100vh - 200px)}
 .pop-body.center{align-items:center;justify-content:center;text-align:center;gap:0}
 .pop-txt{font-size:16px;line-height:24px;color:#333;width:100%;text-align:center}
 .pop-gap{height:24px}
@@ -411,7 +412,11 @@ ul.note li{list-style:disc}
 .pf-chips{display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap}
 .pf-chip{padding:8px 12px;border:1px solid #6267E9;background:#fff;color:#6267E9;font-size:14px;line-height:20px;cursor:pointer;white-space:nowrap}
 .pf-chip.on{background:#6267E9;color:#fff;font-weight:700}
-.pf-topb{border-bottom:1px solid #E5E5E5;padding-bottom:20px;display:flex;flex-direction:column;gap:12px;width:100%}
+.pf-topb{border-bottom:1px solid #E5E5E5;padding-bottom:20px;display:flex;flex-direction:column;gap:10px;width:100%}
+.topitem{display:flex;gap:8px;align-items:center;width:100%}
+.topitem .tn{flex:1;min-width:0;font-size:16px;line-height:24px;color:#333}
+.pf-bottomlist{display:flex;flex-direction:column;gap:12px;width:100%}
+.pf-inputrow{display:flex;flex-direction:column;gap:8px;width:100%}
 .pf-item{display:flex;gap:8px;align-items:flex-start;width:100%}
 .pf-item .pf-input{flex:1}
 .pf-hint{display:flex;justify-content:space-between;align-items:center;width:100%;font-size:16px;line-height:24px;color:#999}
@@ -541,7 +546,7 @@ ul.note li{list-style:disc}
   function allowCol(icon,name,desc,on,badge,gray){
     return '<div class="mp-col'+(gray?' gray-ic':'')+'">'+
       '<div class="allow-text">'+
-        '<div class="allow-head"><div class="allow-title" data-popup="overtime">'+
+        '<div class="allow-head"><div class="allow-title" data-popup="overtime" data-poptitle="'+name+' 가산">'+
           '<div class="icbox"><div class="ic20"><img src="'+A+icon+'" alt=""></div></div>'+
           '<p>'+name+'</p><div class="ic20"><img src="'+A+'ic_right.svg" alt=""></div>'+
         '</div>'+(badge?'<div class="badge"><span>'+badge+'</span></div>':'')+'</div>'+
@@ -814,7 +819,7 @@ ul.note li{list-style:disc}
     // 클릭 위임 (폴드 콘텐츠가 innerHTML로 교체되므로 위임 방식 사용)
     page.onclick=function(e){
       var t;
-      if(state.popupMode&&(t=e.target.closest('[data-popup]'))){openPopup(t.getAttribute('data-popup'));return;}
+      if(state.popupMode&&(t=e.target.closest('[data-popup]'))){openPopup(t.getAttribute('data-popup'),t.getAttribute('data-poptitle'));return;}
       if(e.target.closest('#foldToggle')){toggleFold();return;}
       if((t=e.target.closest('[data-seg]'))){
         page.querySelectorAll('[data-seg]').forEach(function(s){s.classList.remove('on');});
@@ -912,7 +917,7 @@ ul.note li{list-style:disc}
         '<div class="pf-block"><p class="pf-lbl">주 시작 요일</p><div class="pf-radios g40"><div class="pf-radio f16" data-rgroup="wk"><span class="pradio r24 on"></span>일요일</div><div class="pf-radio f16" data-rgroup="wk"><span class="pradio r24"></span>월요일</div></div></div>'+
         '<div class="pf-block"><p class="pf-lbl">주휴일</p><div class="pf-chips">'+chips(['월','화','수','목','금','토','일'],'월')+'</div></div>'+
       '</div>'+pfoot([{t:'취소'},{t:'적용',primary:1}]);}},
-    'overtime':{label:'연장수당 가산(가산율)',html:function(){return phead('연장수당 가산',1)+
+    'overtime':{label:'연장수당 가산(가산율)',html:function(t){return phead(t||'연장수당 가산',1)+
       '<div class="pop-body"><div class="pf-block"><p class="pf-lbl">가산율</p>'+
         '<div class="pf-radios wrap">'+
           ['50%','60%','70%','80%','90%','100%','직접 입력'].map(function(v,i){return '<div class="pf-radio f16" data-rgroup="ot"><span class="pradio r24'+(i===0?' on':'')+'"></span>'+v+'</div>';}).join('')+
@@ -957,37 +962,28 @@ ul.note li{list-style:disc}
     'bonus-info':{label:'가산수당 여부 안내',html:function(){return phead('가산수당 여부')+pcenter(txt('적용 시 연장, 야간, 휴일 조건에 해당하는 근무시간에 설정한 가산율만큼 기본 시급에 추가로 지급할 수 있습니다.'))+pfoot([{t:'확인',primary:1}]);}},
     'adjust-info':{label:'급여조정 안내',html:function(){return phead('급여조정')+pcenter(txt('실 지급금액과 차이가 있는 경우 직접 조정할 수 있습니다.')+gap()+txt('+ 금액을 입력하면 지급항목에 추가되며 - 금액을 입력하면 공제항목에 추가됩니다'))+pfoot([{t:'확인',primary:1}]);}},
     /* ── 수당 · 공제 관리 ── */
-    'add-pay':{label:'추가 수당 관리',html:function(){return phead('추가 수당 관리',1)+
-      '<div class="pop-body">'+
-        '<div class="pf-topb">'+
-          '<div class="pf-item"><div class="pf-input"><input value="상여금"></div><button class="pf-delbtn">삭제</button></div>'+
-          '<button class="pf-addbtn">항목 추가하기'+PLUS+'</button>'+
-        '</div>'+
-        '<div class="pf-block">'+
-          '<div class="pf-item"><div class="pf-input"><input placeholder="수당명"></div><button class="pf-delbtn">삭제</button></div>'+
-          '<div class="pf-hint"><span></span><span>0/10</span></div>'+
-        '</div>'+
-      '</div>'+pfoot([{t:'취소'},{t:'적용',primary:1}]);}},
-    'etc-deduct':{label:'기타 공제 관리',html:function(){return phead('기타 공제 관리',1)+
-      '<div class="pop-body">'+
-        '<div class="pf-topb">'+
-          '<div class="pf-item"><div class="pf-input"><input value="선지급"></div><button class="pf-delbtn">삭제</button></div>'+
-          '<button class="pf-addbtn">항목 추가하기'+PLUS+'</button>'+
-        '</div>'+
-        '<div class="pf-block">'+
-          '<div class="pf-item"><div class="pf-input"><input placeholder="공제명"></div><button class="pf-delbtn">삭제</button></div>'+
-          '<div class="pf-hint"><span></span><span>0/10</span></div>'+
-        '</div>'+
-      '</div>'+pfoot([{t:'취소'},{t:'적용',primary:1}]);}}
+    'add-pay':{label:'추가 수당 관리',tall:1,html:function(){return listPopup('추가 수당 관리','상여금','수당명');}},
+    'etc-deduct':{label:'기타 공제 관리',tall:1,html:function(){return listPopup('기타 공제 관리','선지급','공제명');}}
   };
+  // 추가수당/기타공제 관리: [top]등록리스트 + [bottom]추가입력행 + 항목추가하기
+  function topItem(name){return '<div class="topitem"><p class="tn">'+name+'</p><button class="pf-delbtn hotspot" data-delitem>삭제</button></div>';}
+  function newInputRow(ph){return '<div class="pf-inputrow"><div class="pf-item"><div class="pf-input"><input placeholder="'+ph+'"></div><button class="pf-delbtn hotspot" data-delrow>삭제</button></div><div class="pf-hint"><span></span><span>0/10</span></div></div>';}
+  function listPopup(title,firstItem,ph){
+    return phead(title,1)+
+      '<div class="pop-body">'+
+        '<div class="pf-topb" data-toplist>'+topItem(firstItem)+'</div>'+
+        '<div class="pf-bottomlist" data-bottomlist style="display:none"></div>'+
+        '<button class="pf-addbtn hotspot" data-additem="'+ph+'">항목 추가하기'+PLUS+'</button>'+
+      '</div>'+pfoot([{t:'취소'},{t:'적용',primary:1}]);
+  }
 
   function closePopup(){var d=document.getElementById('dimLayer');if(d)d.remove();}
-  function openPopup(id){
+  function openPopup(id,arg){
     var def=POP[id];if(!def)return;
     closePopup();
     var dim=document.createElement('div');dim.className='dim';dim.id='dimLayer';
     var branch=def.dimBtn?'<div class="dim-branch"><button data-open="'+def.dimBtn.open+'">'+def.dimBtn.t+'</button></div>':'';
-    dim.innerHTML=branch+'<div class="pop">'+def.html()+'</div>';
+    dim.innerHTML=branch+'<div class="pop'+(def.tall?' pop-tall':'')+'">'+def.html(arg)+'</div>';
     document.body.appendChild(dim);
     dim.addEventListener('click',function(e){
       if(e.target===dim){closePopup();return;}
@@ -995,6 +991,8 @@ ul.note li{list-style:disc}
       if(act){handleAct(act.getAttribute('data-act'));return;}
       var op=e.target.closest('[data-open]');
       if(op){openPopup(op.getAttribute('data-open'));return;}
+      var li=e.target.closest('[data-additem],[data-delitem],[data-delrow]');
+      if(li){handleList(li);return;}
       if(e.target.closest('[data-close]')||e.target.closest('.pop-foot button')){closePopup();return;}
       popInteract(e);
     });
@@ -1012,6 +1010,28 @@ ul.note li{list-style:disc}
       var inp=document.querySelector('#dimLayer .pf-send input');
       if(inp&&inp.value.trim().length>0)closePopup();   // 텍스트 입력 → 저장 후 닫힘
       else openPopup('empty-input');                    // 미입력 → 내용 입력 안내
+    }
+  }
+  // 관리 팝업 리스트: 항목 추가하기 / 삭제
+  function handleList(el){
+    var dim=document.getElementById('dimLayer');if(!dim)return;
+    if(el.hasAttribute('data-additem')){
+      var list=dim.querySelector('[data-bottomlist]');
+      list.insertAdjacentHTML('beforeend',newInputRow(el.getAttribute('data-additem')));
+      list.style.display='';                            // [bottom] 노출
+      var body=dim.querySelector('.pop-body');
+      body.scrollTop=body.scrollHeight;                 // 스크롤 최하단 고정
+      return;
+    }
+    if(el.hasAttribute('data-delitem')){                // [top] 등록 항목 삭제
+      var top=el.closest('.pf-topb');el.closest('.topitem').remove();
+      if(!top.querySelector('.topitem'))top.style.display='none';   // 비면 [top] 비노출
+      return;
+    }
+    if(el.hasAttribute('data-delrow')){                 // [bottom] 추가 행 삭제
+      var bl=el.closest('[data-bottomlist]');el.closest('.pf-inputrow').remove();
+      if(!bl.querySelector('.pf-inputrow'))bl.style.display='none'; // 비면 [bottom] 비노출
+      return;
     }
   }
   // 팝업 내부 라디오/체크박스/칩/세금유형 전환
