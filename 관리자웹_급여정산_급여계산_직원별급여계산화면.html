@@ -126,6 +126,12 @@ ul.note li{list-style:disc}
 .mf-card.workerinfo{width:270px;flex:none;align-self:stretch;justify-content:space-between}
 .mf-title{display:flex;gap:4px;align-items:center}
 .mf-title p{font-size:14px;line-height:20px;color:#666;white-space:nowrap}
+/* info_fill 아이콘(라벨 앞) */
+.ic-info{width:20px;height:20px;flex:none;display:block}
+.ic-info img{width:100%;height:100%;display:block}
+.ic-info.i24{width:24px;height:24px}
+.mf-t{display:flex;gap:4px;align-items:center}
+.m-title{display:flex;gap:4px;align-items:center;flex:none}
 .ic16{width:16px;height:16px;flex:none;position:relative}
 .ic16 img,.ic20 img,.ic24i img{width:100%;height:100%;display:block}
 .ic20{width:20px;height:20px;flex:none}
@@ -207,8 +213,11 @@ ul.note li{list-style:disc}
 .rest-t{font-size:14px;line-height:20px;color:#333;white-space:nowrap}
 /* 근무 스케줄 헤더 바 */
 .midbar{border-bottom:1px solid #333;display:flex;align-items:stretch;position:sticky;left:0;z-index:3;background:#fff}
-.midbar>div{flex:1;min-width:0;background:#fff;padding:8px;display:flex;gap:12px;align-items:center;justify-content:center}
+.midbar>div{flex:1;min-width:0;background:#fff;padding:8px;display:flex;gap:6px;align-items:center;justify-content:center}
 .midbar .t14{font-size:14px;line-height:20px;color:#333;white-space:nowrap}
+.mid-title{display:flex;gap:4px;align-items:center}
+.mid-set{background:#fff;border:1px solid #E5E5E5;padding:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none}
+.mid-set span{font-size:12px;line-height:16px;color:#333;white-space:nowrap}
 .btn-tg{display:flex;gap:4px;align-items:center;cursor:pointer}
 .btn-tg p{font-size:14px;line-height:20px;color:#999;text-align:center;white-space:nowrap}
 .btn-tp{display:flex;gap:4px;align-items:center;cursor:pointer}
@@ -273,7 +282,7 @@ ul.note li{list-style:disc}
 .errbox .ic24i{margin-top:0}
 .errbox p{flex:1;min-width:0;font-size:16px;line-height:24px;color:#FF404D}
 .acc{display:flex;flex-direction:column;gap:12px;width:100%}
-.acc-title{display:flex;gap:4px;align-items:flex-start;width:100%;cursor:pointer}
+.acc-title{display:flex;gap:4px;align-items:center;width:100%;cursor:pointer}
 .acc-title p{flex:1;min-width:0;font-size:16px;line-height:24px;font-weight:700;color:#333}
 .acc-title .ic24i{transition:transform .2s}
 .acc.closed .acc-title .ic24i{transform:rotate(180deg)}
@@ -458,6 +467,10 @@ ul.note li{list-style:disc}
 <script>
 (function(){
   var A='assets/';
+  var INFO='<span class="ic-info"><img src="'+A+'ic_info.svg" alt=""></span>';        // info_fill 20px
+  var INFO24='<span class="ic-info i24"><img src="'+A+'ic_info.svg" alt=""></span>';   // info_fill 24px
+  // info_fill 아이콘(팝업 연결). id=팝업, big=24px
+  function info(id,big){return '<span class="ic-info'+(big?' i24':'')+' hot-pad" data-popup="'+id+'"><img src="'+A+'ic_info.svg" alt=""></span>';}
   var SVG_CHEV_UP='<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 15l7-7 7 7" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   // ic / reset (피그마 4751:27322)
   var SVG_RESET='<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17.8975 0.0002107C18.4285 0.0151684 18.8479 0.458464 18.833 0.989469L18.7266 4.72189C18.6953 5.83613 17.7266 6.69125 16.6172 6.58322L12.9004 6.22189C12.3717 6.17038 11.9846 5.69887 12.0361 5.17013C12.0879 4.64162 12.5583 4.25438 13.0869 4.30587L15.6436 4.5549C14.2948 3.39048 12.5406 2.68582 10.6191 2.68576C6.36925 2.68576 2.92383 6.13118 2.92383 10.3811C2.92383 14.631 6.36925 18.0764 10.6191 18.0764C12.4525 18.0763 14.1343 17.436 15.4561 16.3664C15.869 16.0326 16.4745 16.0962 16.8086 16.509C17.1427 16.922 17.078 17.5274 16.665 17.8615C15.0133 19.198 12.9087 20.0002 10.6191 20.0002C5.30678 20.0002 1 15.6934 1 10.3811C1 5.0687 5.30677 0.761929 10.6191 0.761929C12.9952 0.76199 15.1707 1.6269 16.8486 3.0549L16.9082 0.934781C16.9233 0.403951 17.3666 -0.0146353 17.8975 0.0002107Z" fill="#333"/></svg>';
@@ -560,9 +573,9 @@ ul.note li{list-style:disc}
     var insVal='<p class="v">'+insuranceText(full)+'</p>';
     var gray=!full;
     return '<div class="mf-top">'+
-        '<div class="mf-field"><p class="l">세금유형</p><p class="v">근로소득</p><div class="btn-set" data-popup="tax-type"><div><p>설정</p></div></div></div>'+
-        '<div class="mf-field"><p class="l">4대보험</p>'+insVal+'<div class="btn-set" data-popup="insurance"><div><p>설정</p></div></div></div>'+
-        '<div class="mf-field"><p class="l">세금</p><p class="v">공제</p><p class="sub">(국세청 간이세액표 기준 적용)</p><div class="btn-set" data-popup="tax"><div><p>설정</p></div></div></div>'+
+        '<div class="mf-field"><div class="mf-t">'+info('taxtype-info')+'<p class="l">세금유형</p></div><p class="v">근로소득</p><div class="btn-set" data-popup="tax-type"><div><p>설정</p></div></div></div>'+
+        '<div class="mf-field"><div class="mf-t">'+info('insurance-info')+'<p class="l">4대보험</p></div>'+insVal+'<div class="btn-set" data-popup="insurance"><div><p>설정</p></div></div></div>'+
+        '<div class="mf-field"><div class="mf-t">'+info('tax-info')+'<p class="l">세금</p></div><p class="v">공제</p><p class="sub">(국세청 간이세액표 기준 적용)</p><div class="btn-set" data-popup="tax"><div><p>설정</p></div></div></div>'+
       '</div>'+
       '<div class="mf-summary">'+
         '<div class="mf-card payholiday'+(gray?' gray-ic':'')+'">'+
@@ -595,12 +608,12 @@ ul.note li{list-style:disc}
       '</div>';
   }
   function foldClosedHTML(full){
-    var ins='<div class="mf-field"><p class="l">4대보험</p><p class="v">'+insuranceText(full)+'</p></div>';
+    var ins='<div class="mf-field"><div class="mf-t">'+info('insurance-info')+'<p class="l">4대보험</p></div><p class="v">'+insuranceText(full)+'</p></div>';
     function fld(l,v){return '<div class="mf-field"><p class="l">'+l+'</p><p class="v">'+v+'</p></div>';}
     return '<div class="mf-top wrap">'+
-      '<div class="mf-field"><p class="l">세금유형</p><p class="v">근로소득</p></div>'+
+      '<div class="mf-field"><div class="mf-t">'+info('taxtype-info')+'<p class="l">세금유형</p></div><p class="v">근로소득</p></div>'+
       ins+
-      '<div class="mf-field"><p class="l">세금</p><p class="v">공제</p><p class="sub">(국세청 간이세액표 기준 적용)</p></div>'+
+      '<div class="mf-field"><div class="mf-t">'+info('tax-info')+'<p class="l">세금</p></div><p class="v">공제</p><p class="sub">(국세청 간이세액표 기준 적용)</p></div>'+
       fld('주휴수당',full?'계산':'미계산')+
       fld('연장수당',full?'50%':'미적용')+
       fld('야간수당',full?'50%':'미적용')+
@@ -704,7 +717,7 @@ ul.note li{list-style:disc}
   }
   function midBar(){
     return '<div class="midbar" id="midbar">'+
-      '<div><div class="badge"><span>근무 스케줄</span></div><p class="t14">기준 계산</p></div>'+
+      '<div>'+info('sched-info',1)+'<div class="mid-title"><div class="badge"><span>근무 스케줄</span></div><p class="t14">기준 계산</p></div><div class="mid-set" data-popup="sched-set"><span>설정</span></div></div>'+
       '<div><div class="btn-tg" data-popup="reset-time"><div class="ic20"><img src="'+A+'ic_reset_gray.svg" alt=""></div><p>근무시간 전체 초기화</p></div></div>'+
       '<div><div class="btn-tp"><div class="ic20"><img src="'+A+'ic_plus_primary.svg" alt=""></div><p>스케줄 등록</p></div></div>'+
     '</div>';
@@ -738,9 +751,9 @@ ul.note li{list-style:disc}
   function moneyCard(full){
     var v=function(a,b){return full?a:b;};
     return '<div class="money-card">'+
-      '<div class="m-row"><p class="l">예상 월 급여</p><p class="v">'+v('456,500','0')+'</p></div>'+
-      '<div class="m-row"><p class="l">재세 금액</p><p class="v">'+v('36,500','0')+'</p></div>'+
-      '<div class="m-row real"><p class="l">실 지급액</p><p class="v">'+v('420,000','0')+'</p></div>'+
+      '<div class="m-row"><div class="m-title">'+info('exmonth-info')+'<p class="l">예상 월 급여</p></div><p class="v">'+v('456,500','0')+'</p></div>'+
+      '<div class="m-row"><div class="m-title">'+info('tax-amt-info')+'<p class="l">재세 금액</p></div><p class="v">'+v('36,500','0')+'</p></div>'+
+      '<div class="m-row real"><div class="m-title">'+info('real-info')+'<p class="l">실 지급액</p></div><p class="v">'+v('420,000','0')+'</p></div>'+
     '</div>';
   }
   // 작성현황: bottom > right 최상단
@@ -767,12 +780,12 @@ ul.note li{list-style:disc}
         '<div class="c3">'+(full?m.a:'0')+'</div></div>';
     }
     var accMore='<div class="acc'+(full?'':' closed')+'" data-acc>'+
-      '<div class="acc-title"><p>추가 수당</p><div class="ic24i"><img src="'+A+'ic_up_gray.svg" alt=""></div></div>'+
+      '<div class="acc-title">'+info('addpay-info')+'<p>추가 수당</p><div class="ic24i"><img src="'+A+'ic_up_gray.svg" alt=""></div></div>'+
       '<div class="acc-body"><div class="btn-manage" data-popup="add-pay"><div><p>추가 수당 관리</p></div></div>'+
         '<div class="tm-row"><p class="l reg">상여금</p><div class="inpwrap"><div class="inp12"><input class="'+(full?'':'gray')+'" value="'+(full?'11,000':'0')+'"></div></div></div>'+
       '</div></div>';
     var accEtc='<div class="acc'+(full?'':' closed')+'" data-acc>'+
-      '<div class="acc-title"><p>기타 공제</p><div class="ic24i"><img src="'+A+'ic_up_gray.svg" alt=""></div></div>'+
+      '<div class="acc-title">'+info('etc-info')+'<p>기타 공제</p><div class="ic24i"><img src="'+A+'ic_up_gray.svg" alt=""></div></div>'+
       '<div class="acc-body"><div class="btn-manage" data-popup="etc-deduct"><div><p>기타 공제 관리</p></div></div></div></div>';
     return '<div class="bright">'+
       writeStatusSec(full)+
@@ -961,6 +974,25 @@ ul.note li{list-style:disc}
     'holiday-info':{label:'주휴수당 계산/지급 안내',html:function(){return phead('주휴수당 계산/지급')+pcenter(txt('직원이 주 15시간 이상 소정 근무 시 주휴수당을 지급합니다.<br>적용 시 주휴수당을 자동으로 계산하여 월 급여에 합산되며 사용하지 않으면 계산하지 않습니다.'))+pfoot([{t:'확인',primary:1}]);}},
     'bonus-info':{label:'가산수당 여부 안내',html:function(){return phead('가산수당 여부')+pcenter(txt('적용 시 연장, 야간, 휴일 조건에 해당하는 근무시간에 설정한 가산율만큼 기본 시급에 추가로 지급할 수 있습니다.'))+pfoot([{t:'확인',primary:1}]);}},
     'adjust-info':{label:'급여조정 안내',html:function(){return phead('급여조정')+pcenter(txt('실 지급금액과 차이가 있는 경우 직접 조정할 수 있습니다.')+gap()+txt('+ 금액을 입력하면 지급항목에 추가되며 - 금액을 입력하면 공제항목에 추가됩니다'))+pfoot([{t:'확인',primary:1}]);}},
+    /* ── info_fill 안내 팝업 (급여계산 화면) ── */
+    'taxtype-info':{label:'세금유형 안내',html:function(){return phead('세금유형')+pcenter(txt('근로소득 또는 사업소득 중 적용할 세금 유형입니다. 설정에서 선택한 유형에 따라 세금 계산 방식이 달라집니다.'))+pfoot([{t:'확인',primary:1}]);}},
+    'insurance-info':{label:'4대보험 안내',html:function(){return phead('4대보험')+pcenter(txt('설정에서 선택한 국민연금, 건강보험, 장기요양보험, 고용보험의 적용 여부를 확인할 수 있습니다.'))+pfoot([{t:'확인',primary:1}]);}},
+    'tax-info':{label:'세금 안내',html:function(){return phead('세금')+pcenter(txt('급여에서 공제되는 소득세와 지방소득세입니다. 세금유형과 급여 정보를 기준으로 계산됩니다.')+gap()+txt('설정에서 공제 여부를 선택할 수 있습니다.'))+pfoot([{t:'확인',primary:1}]);}},
+    'sched-info':{label:'일일 급여 계산 기준 안내',html:function(){return phead('일일 급여 계산 기준')+pcenter(txt('일일 급여 계산에 적용할 근무 시간 기준입니다.')+gap()+txt('워크스페이스 정산 설정 또는 현재화면 에서 설정 기준을 변경할 수 있습니다.'))+pfoot([{t:'확인',primary:1}]);}},
+    'exmonth-info':{label:'예상 월 급여 안내',html:function(){return phead('예상 월 급여')+pcenter(txt('근무정보와 급여 설정을 기준으로 자동 계산된 공제 전 예상 급여입니다.'))+pfoot([{t:'확인',primary:1}]);}},
+    'tax-amt-info':{label:'제세금액 안내',html:function(){return phead('제세금액')+pcenter(txt('4대보험료와 세금 등 급여에서 공제되는 금액의 합계입니다.'))+pfoot([{t:'확인',primary:1}]);}},
+    'real-info':{label:'실 지급액 안내',html:function(){return phead('실 지급액')+pcenter(txt('급여에서 제세금액과 기타 공제를 차감한 후 실제 지급되는 금액입니다.'))+pfoot([{t:'확인',primary:1}]);}},
+    'addpay-info':{label:'추가 수당 안내',html:function(){return phead('추가 수당')+pcenter(txt('자동 계산된 급여 외에 추가로 지급할 수당을 직접 등록/관리 할 수 있습니다.'))+pfoot([{t:'확인',primary:1}]);}},
+    'etc-info':{label:'기타 공제 안내',html:function(){return phead('기타 공제')+pcenter(txt('4대보험과 세금 외에 급여에서 추가로 차감할 금액을 직접 등록/관리할 수 있습니다.'))+pfoot([{t:'확인',primary:1}]);}},
+    'sched-set':{label:'근무시간 계산 기준',html:function(){return phead('근무시간 계산 기준',1)+
+      '<div class="pop-body">'+
+        '<p class="pop-txt">일간 근무시간 계산 기준을 설정합니다.</p>'+
+        '<div class="pf-radios divide" style="justify-content:center">'+
+          '<div class="pf-radio" data-rgroup="schedbase"><span class="pradio"></span>근로소득</div>'+
+          '<div class="pf-radio" data-rgroup="schedbase"><span class="pradio"></span>사업소득 (3.3%)</div>'+
+        '</div>'+
+        '<p class="pop-txt" style="color:#666">※ 기준 변경 시 워크스페이스 전직원의 일일 근무시간 계산 기준이 일괄 변경됩니다.</p>'+
+      '</div>'+pfoot([{t:'취소'},{t:'적용',primary:1}]);}},
     /* ── 수당 · 공제 관리 ── */
     'add-pay':{label:'추가 수당 관리',tall:1,html:function(){return listPopup('추가 수당 관리','상여금','수당명');}},
     'etc-deduct':{label:'기타 공제 관리',tall:1,html:function(){return listPopup('기타 공제 관리','선지급','공제명');}}
