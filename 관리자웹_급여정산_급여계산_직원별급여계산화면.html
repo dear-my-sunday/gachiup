@@ -110,7 +110,7 @@ ul.note li{list-style:disc}
 .fold-anim{display:flex;flex-direction:column;gap:20px;transition:height .32s cubic-bezier(.4,0,.2,1)}
 .fold-anim>*{animation:foldFade .35s ease}
 @keyframes foldFade{from{opacity:0}to{opacity:1}}
-.mf-top{background:#FAFAFA;border:1px solid #F2F2F2;padding:12px;display:flex;gap:40px;align-items:center;width:100%}
+.mf-top{background:#FAFAFA;border:1px solid #F2F2F2;padding:12px;display:flex;flex-wrap:wrap;gap:12px 40px;align-items:center;width:100%}
 .mf-top.wrap{flex-wrap:wrap;gap:12px 40px}
 .mf-field{display:flex;gap:12px;align-items:center;white-space:nowrap}
 .mf-field .l{font-size:18px;line-height:26px;font-weight:600;color:#333}
@@ -158,6 +158,15 @@ ul.note li{list-style:disc}
 .fold-circle svg{transition:transform .25s}
 .fold-circle.collapsed svg{transform:rotate(180deg)}
 
+/* ===== 급여 AI 사이드바 (우측, Black/5 영역 표기) ===== */
+.aisidebar{width:320px;flex:none;border-left:1px solid #F2F2F2;background:#F2F2F2;display:flex;align-items:center;justify-content:center;padding:20px}
+.aisidebar p{font-size:16px;line-height:24px;color:#999;text-align:center}
+
+/* ===== 날짜 이동 바 (bottom>left>main>btn) ===== */
+.datemove{display:flex;gap:20px;align-items:center;height:40px;margin-bottom:32px}
+.dm-circle{width:40px;height:40px;border-radius:30px;background:#fff;border:1px solid #E5E5E5;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none}
+.dm-date{font-size:20px;line-height:28px;font-weight:700;color:#333;white-space:nowrap}
+
 /* ===== bottom: table + right ===== */
 .bottom{display:flex;align-items:stretch}
 .bleft{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start}
@@ -188,6 +197,11 @@ ul.note li{list-style:disc}
 .th-row .lblc .cell{border-bottom:none;padding:4px 8px}
 .th-row .lblc .cell p{font-weight:600}
 .daycol{width:88px;flex:none;display:flex;flex-direction:column}
+/* 27일(에러 컬럼): 전체 행 112px 로 통일 */
+.daycol.wide,.tdc.wide{width:112px}
+/* undo 없는 셀: input 폭(72px)은 유지하고 좌측 정렬(남는 공간은 비움) */
+.tdc.h52.wide{justify-content:flex-start}
+.tdc.h52.wide .inpwrap{width:72px;flex:none}
 .th-cell{background:#fff;border-right:1px solid #F2F2F2;padding:4px 8px;min-height:28px;display:flex;align-items:center;justify-content:center}
 .th-cell.d{border-bottom:1px solid #F2F2F2}
 .th-cell p{font-size:14px;line-height:20px;color:#333;white-space:nowrap}
@@ -227,9 +241,10 @@ ul.note li{list-style:disc}
 .inp input{border:none;outline:none;background:transparent;width:100%;font-family:var(--f);font-size:14px;line-height:20px;color:#333;padding:0}
 .inp input::placeholder{color:#999}
 .tdc .inpwrap{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px}
-.tdc.err-cell{gap:0}
-.err-cell .inpwrap{height:100%;justify-content:center}
-.err-cell .inp{background:#FFECED;border-color:#FF404D;flex:1;min-height:0}
+/* 에러 셀: input 폭(72px)은 그대로, undo 버튼(24px)만큼 셀 width 확장(88→112) */
+.tdc.err-cell{width:112px;flex-direction:row;align-items:center;gap:0}
+.err-cell .inpwrap{width:72px;flex:none;height:100%;justify-content:center}
+.err-cell .inp{background:#FFECED;border-color:#FF404D;flex:1;min-height:0;width:100%}
 .icon-btn24{width:24px;height:24px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none}
 
 /* ===== 우측 패널 ===== */
@@ -429,6 +444,30 @@ ul.note li{list-style:disc}
 .pf-item{display:flex;gap:8px;align-items:flex-start;width:100%}
 .pf-item .pf-input{flex:1}
 .pf-hint{display:flex;justify-content:space-between;align-items:center;width:100%;font-size:16px;line-height:24px;color:#999}
+/* 추가 수당 관리: 넓은 테이블 팝업 */
+.pop.pop-wide{width:1200px}
+.apm-tbl{border:1px solid #E5E5E5;display:flex;flex-direction:column;width:100%}
+.apm-th{display:flex;height:60px;border-bottom:1px solid #333}
+.apm-th>div{flex:1;min-width:0;display:flex;align-items:center;justify-content:center;font-size:16px;line-height:24px;color:#333}
+.apm-td{display:flex;height:52px;border-bottom:1px solid #E5E5E5}
+.apm-td:last-child{border-bottom:none}
+.apm-td>div{flex:1;min-width:0;display:flex;align-items:center;justify-content:center;padding:8px;font-size:14px;line-height:20px;color:#333;text-align:center}
+.apm-use{gap:8px}
+.apm-use .lbl{font-size:14px;line-height:20px}
+.apm-amt .box{background:#fff;border:1px solid #E5E5E5;padding:8px;display:flex;align-items:center;width:100%}
+.apm-amt input{border:none;outline:none;background:transparent;width:100%;font-family:var(--f);font-size:16px;line-height:24px;color:#333;padding:0}
+.apm-amt input::placeholder{color:#999}
+.apm-del{width:20px;height:20px;display:block;cursor:pointer;flex:none}
+.apm-addbtn{background:#EFF0FD;border:1px solid #C0C2F6;padding:12px;display:flex;gap:8px;align-items:center;justify-content:center;width:100%;cursor:pointer}
+.apm-addbtn .ic20{width:24px;height:24px}
+.apm-addbtn p{font-size:16px;line-height:24px;color:#6267E9}
+/* 수당 추가: 라벨 폼 */
+.pa-row{display:flex;gap:20px;align-items:center;width:100%}
+.pa-row.top{align-items:flex-start}
+.pa-row .pa-l{width:96px;flex:none;font-size:16px;line-height:24px;color:#333}
+.pa-row .pa-c{flex:1;min-width:0}
+.pa-row .pa-v{flex:1;min-width:0;font-size:16px;line-height:24px;color:#333}
+.pa-count{text-align:right;font-size:16px;line-height:24px;color:#999}
 </style>
 </head>
 <body>
@@ -472,6 +511,9 @@ ul.note li{list-style:disc}
   // info_fill 아이콘(팝업 연결). id=팝업, big=24px
   function info(id,big){return '<span class="ic-info'+(big?' i24':'')+' hot-pad" data-popup="'+id+'"><img src="'+A+'ic_info.svg" alt=""></span>';}
   var SVG_CHEV_UP='<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 15l7-7 7 7" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  var TRASH='<img src="'+A+'ic_delete.svg" alt="" style="width:20px;height:20px;display:block">';
+  var CHEV_L='<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  var CHEV_R='<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   // ic / reset (피그마 4751:27322)
   var SVG_RESET='<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17.8975 0.0002107C18.4285 0.0151684 18.8479 0.458464 18.833 0.989469L18.7266 4.72189C18.6953 5.83613 17.7266 6.69125 16.6172 6.58322L12.9004 6.22189C12.3717 6.17038 11.9846 5.69887 12.0361 5.17013C12.0879 4.64162 12.5583 4.25438 13.0869 4.30587L15.6436 4.5549C14.2948 3.39048 12.5406 2.68582 10.6191 2.68576C6.36925 2.68576 2.92383 6.13118 2.92383 10.3811C2.92383 14.631 6.36925 18.0764 10.6191 18.0764C12.4525 18.0763 14.1343 17.436 15.4561 16.3664C15.869 16.0326 16.4745 16.0962 16.8086 16.509C17.1427 16.922 17.078 17.5274 16.665 17.8615C15.0133 19.198 12.9087 20.0002 10.6191 20.0002C5.30678 20.0002 1 15.6934 1 10.3811C1 5.0687 5.30677 0.761929 10.6191 0.761929C12.9952 0.76199 15.1707 1.6269 16.8486 3.0549L16.9082 0.934781C16.9233 0.403951 17.3666 -0.0146353 17.8975 0.0002107Z" fill="#333"/></svg>';
 
@@ -513,6 +555,17 @@ ul.note li{list-style:disc}
     {l:'야간',v:'2.0',a:'11,000',err:0,mult:'X1.5',reset:0},
     {l:'휴일',v:'15.0',a:'33,000',err:0,mult:'',reset:0},
     {l:'주휴',v:'8',a:'88,000',err:0,mult:'',reset:0}
+  ];
+
+  // 추가 수당 관리 팝업: 항목/과세구분/비과세유형/사용여부/금액
+  var APM=[
+    {n:'상여금',tax:'과세',sub:'-',on:1,amt:'68,000'},
+    {n:'휴가보상비',tax:'과세',sub:'-',on:0,amt:''},
+    {n:'인센티브',tax:'과세',sub:'-',on:1,amt:'10,000'},
+    {n:'식대',tax:'비과세',sub:'식대',on:0,amt:'11,000'},
+    {n:'자가운전보조금',tax:'비과세',sub:'자가운전',on:1,amt:'93,000'},
+    {n:'육아수당',tax:'비과세',sub:'보육수당',on:1,amt:'78,000'},
+    {n:'직접추가수당',tax:'과세',sub:'-',on:1,amt:'78,000'}
   ];
 
   var state={mode:'full',width:1440,folded:false,popupMode:false};
@@ -572,8 +625,10 @@ ul.note li{list-style:disc}
   function foldOpenHTML(full){
     var insVal='<p class="v">'+insuranceText(full)+'</p>';
     var gray=!full;
+    var taxsail=full?'적용 (경력단절 근로자, 70%)':'미적용';
     return '<div class="mf-top">'+
         '<div class="mf-field"><div class="mf-t">'+info('taxtype-info')+'<p class="l">세금유형</p></div><p class="v">근로소득</p><div class="btn-set" data-popup="tax-type"><div><p>설정</p></div></div></div>'+
+        '<div class="mf-field"><p class="l">중소기업 취업자 감면</p><p class="v">'+taxsail+'</p><div class="btn-set" data-popup="gamyeon-set"><div><p>설정</p></div></div></div>'+
         '<div class="mf-field"><div class="mf-t">'+info('insurance-info')+'<p class="l">4대보험</p></div>'+insVal+'<div class="btn-set" data-popup="insurance"><div><p>설정</p></div></div></div>'+
         '<div class="mf-field"><div class="mf-t">'+info('tax-info')+'<p class="l">세금</p></div><p class="v">공제</p><p class="sub">(국세청 간이세액표 기준 적용)</p><div class="btn-set" data-popup="tax"><div><p>설정</p></div></div></div>'+
       '</div>'+
@@ -612,6 +667,7 @@ ul.note li{list-style:disc}
     function fld(l,v){return '<div class="mf-field"><p class="l">'+l+'</p><p class="v">'+v+'</p></div>';}
     return '<div class="mf-top wrap">'+
       '<div class="mf-field"><div class="mf-t">'+info('taxtype-info')+'<p class="l">세금유형</p></div><p class="v">근로소득</p></div>'+
+      '<div class="mf-field"><p class="l">중소기업 취업자 감면</p><p class="v">'+(full?'적용 (경력단절 근로자, 70%)':'미적용')+'</p></div>'+
       ins+
       '<div class="mf-field"><div class="mf-t">'+info('tax-info')+'<p class="l">세금</p></div><p class="v">공제</p><p class="sub">(국세청 간이세액표 기준 적용)</p></div>'+
       fld('주휴수당',full?'계산':'미계산')+
@@ -659,7 +715,7 @@ ul.note li{list-style:disc}
     var s='<div class="trow th-row">'+lblCell('<p>항목/기록</p>');
     for(var i=0;i<N;i++){
       var d=DAYS[i];
-      s+='<div class="daycol '+(d.c||'')+(d.end?' wkend':'')+'">'+
+      s+='<div class="daycol '+(d.c||'')+(d.end?' wkend':'')+(i===5?' wide':'')+'">'+
          '<div class="th-cell d"><p>'+d.d+'</p></div>'+
          '<div class="th-cell"><p>'+d.w+'</p></div></div>';
     }
@@ -668,7 +724,7 @@ ul.note li{list-style:disc}
   function histRow(full){
     var s='<div class="trow">'+lblCell('<p>가치업<br>기록</p>');
     for(var i=0;i<N;i++){
-      var h=full?HIST[i]:null,end=DAYS[i].end?' wkend':'';
+      var h=full?HIST[i]:null,end=(DAYS[i].end?' wkend':'')+(i===5?' wide':'');
       if(h){
         s+='<div class="tdc h128 tr-cell'+end+'" data-popup="rec-edit"><div class="time"><p>'+h[0]+'</p><p>'+h[1]+'</p><p class="brk">'+h[2]+'</p></div><p class="total">'+h[3]+'</p></div>';
       }else{
@@ -680,7 +736,7 @@ ul.note li{list-style:disc}
   function cmpRow(full){
     var s='<div class="trow">'+lblCell('<p>비교</p>');
     for(var i=0;i<N;i++){
-      var v=full?CMP[i]:'',end=DAYS[i].end?' wkend':'';
+      var v=full?CMP[i]:'',end=(DAYS[i].end?' wkend':'')+(i===5?' wide':'');
       var inner='';
       if(v){
         if(v.indexOf('|')>-1){var p=v.split('|');inner='<p class="cmp two">'+p[0]+'<br>'+p[1]+'</p>';}
@@ -693,7 +749,7 @@ ul.note li{list-style:disc}
   function memoRow(full){
     var s='<div class="trow">'+lblCell('<p>메모</p>');
     for(var i=0;i<N;i++){
-      var v=full?MEMO[i]:'',end=DAYS[i].end?' wkend':'';
+      var v=full?MEMO[i]:'',end=(DAYS[i].end?' wkend':'')+(i===5?' wide':'');
       var pop=v?'memo-edit':'memo';   // 텍스트 있으면 등록된 메모 수정, 아이콘만 있으면 default
       s+='<div class="tdc h36 tr-cell'+end+'" data-popup="'+pop+'"><div class="ic20"><img src="'+A+'ic_edit.svg" alt=""></div>'+(v?'<p class="memo-t">'+v+'</p>':'')+'</div>';
     }
@@ -702,7 +758,7 @@ ul.note li{list-style:disc}
   function planRow(full){
     var s='<div class="trow">'+lblCell('<p>근무표</p>');
     for(var i=0;i<N;i++){
-      var p=full?PLAN[i]:null,end=DAYS[i].end?' wkend':'';
+      var p=full?PLAN[i]:null,end=(DAYS[i].end?' wkend':'')+(i===5?' wide':'');
       s+='<div class="tdc h56'+(p?' tr-cell':'')+end+'"'+(p?' data-popup="sched-edit"':'')+'>'+(p?'<div class="sched2"><p>'+p[0]+'</p><p>'+p[1]+'</p></div>':'')+'</div>';
     }
     return s+'</div>';
@@ -710,7 +766,7 @@ ul.note li{list-style:disc}
   function restRow(full){
     var s='<div class="trow">'+lblCell('<p>휴게시간</p>');
     for(var i=0;i<N;i++){
-      var v=full?REST[i]:'',end=DAYS[i].end?' wkend':'';
+      var v=full?REST[i]:'',end=(DAYS[i].end?' wkend':'')+(i===5?' wide':'');
       s+='<div class="tdc h36'+end+'">'+(v?'<p class="rest-t">'+v+'</p>':'')+'</div>';
     }
     return s+'</div>';
@@ -726,7 +782,7 @@ ul.note li{list-style:disc}
     var s='<div class="trow">'+lblCell('<p>'+lbl+'</p>');
     var arr=SCHED[lbl];
     for(var i=0;i<N;i++){
-      var v=full?arr[i]:'',end=DAYS[i].end?' wkend':'';
+      var v=full?arr[i]:'',end=(DAYS[i].end?' wkend':'')+(i===5?' wide':'');
       if(v==='ERR'){
         s+='<div class="tdc h52 err-cell'+end+'"><div class="inpwrap"><div class="inp"><input value="5" style="font-size:16px;line-height:24px"></div></div>'+
            '<div class="icon-btn24" data-popup="reset-time"><div style="width:16px;height:16px"><img style="width:100%;height:100%;display:block" src="'+A+'ic_reset_black.svg" alt=""></div></div></div>';
@@ -735,6 +791,14 @@ ul.note li{list-style:disc}
       }
     }
     return s+'</div>';
+  }
+  // 날짜 이동 바 (bottom>left>main>btn): ‹ 9.22(일) - 9.28(토) ›
+  function dateMoveHTML(){
+    return '<div class="datemove">'+
+      '<div class="dm-circle">'+CHEV_L+'</div>'+
+      '<p class="dm-date">9.22(일) - 9.28(토)</p>'+
+      '<div class="dm-circle">'+CHEV_R+'</div>'+
+    '</div>';
   }
   function tableHTML(full){
     var topRows=thRow()+histRow(full)+cmpRow(full)+memoRow(full)+planRow(full)+restRow(full);
@@ -811,16 +875,17 @@ ul.note li{list-style:disc}
     var page=document.getElementById('page');
     page.style.width=state.width+'px';
     page.innerHTML=navHTML()+
-      '<div class="pbody">'+sidebarHTML()+
+      '<div class="pbody">'+
         '<div class="content">'+
           topHTML(full)+foldHTML(full)+
           '<div class="bottom">'+
-            '<div class="bleft"><div class="bmain" id="bmain">'+tableHTML(full)+'</div>'+
+            '<div class="bleft"><div class="bmain" id="bmain">'+dateMoveHTML()+tableHTML(full)+'</div>'+
               '<div class="btnbar"><div class="btn-lg gray"><div><p>명세서 미리보기</p></div></div><div class="btn-lg primary hot-pad" data-popup="save-done"><div><p>급여 계산 저장</p></div></div></div>'+
             '</div>'+
             rightHTML(full)+
           '</div>'+
         '</div>'+
+        '<div class="aisidebar"><p>급여 AI 영역</p></div>'+
       '</div>';
 
     // 상/하 스크롤 동기화
@@ -871,7 +936,7 @@ ul.note li{list-style:disc}
   var PLUS='<svg class="ic" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#333" stroke-width="1.8" stroke-linecap="round"/></svg>';
 
   function phead(t,close){return '<div class="pop-head"><div class="sp"></div><h3>'+t+'</h3><div class="sp">'+(close?'<span class="pop-x" data-close>'+X_IC+'</span>':'')+'</div></div>';}
-  function pfoot(bs){var h='<div class="pop-foot">';bs.forEach(function(b){var cls='pbtn '+(b.primary?'pbtn-primary':'pbtn-line')+(b.cls?' '+b.cls:'')+(b.disabled?' off':'');var attr=b.disabled?'':(b.act?' data-act="'+b.act+'"':(b.open?' data-open="'+b.open+'"':' data-close'));h+='<button class="'+cls+'"'+attr+'>'+b.t+'</button>';});return h+'</div>';}
+  function pfoot(bs){var h='<div class="pop-foot">';bs.forEach(function(b){var cls='pbtn '+(b.primary?'pbtn-primary':'pbtn-line')+(b.cls?' '+b.cls:'')+(b.disabled?' off':'');var attr=b.disabled?'':(b.stack?' data-stack="'+b.stack+'"':(b.act?' data-act="'+b.act+'"':(b.open?' data-open="'+b.open+'"':' data-close')));h+='<button class="'+cls+'"'+attr+'>'+b.t+'</button>';});return h+'</div>';}
   function pcenter(h){return '<div class="pop-body center">'+h+'</div>';}
   function txt(s){return '<p class="pop-txt">'+s+'</p>';}
   function gap(){return '<div class="pop-gap"></div>';}
@@ -993,8 +1058,23 @@ ul.note li{list-style:disc}
         '</div>'+
         '<p class="pop-txt" style="color:#666">※ 기준 변경 시 워크스페이스 전직원의 일일 근무시간 계산 기준이 일괄 변경됩니다.</p>'+
       '</div>'+pfoot([{t:'취소'},{t:'적용',primary:1}]);}},
+    /* ── 중소기업 취업자 소득세 감면 ── */
+    'gamyeon-set':{label:'중소기업 취업자 소득세 감면',html:function(){return phead('중소기업 취업자 소득세 감면',1)+
+      '<div class="pop-body">'+
+        '<p class="pop-txt">감면 대상 직원의 소득세를 감면하여 계산합니다.</p>'+
+        '<div class="pf-radios divide" style="justify-content:center">'+
+          '<div class="pf-radio f16 hotspot" data-gamyeon="적용"><span class="pradio on"></span>적용</div>'+
+          '<div class="pf-radio f16 hotspot" data-gamyeon="미적용"><span class="pradio"></span>미적용</div>'+
+        '</div>'+
+        '<div id="gamyeonExtra" class="pf-block"><p class="pf-lbl-semi">감면 유형</p>'+
+          '<div class="pf-select"><span style="display:flex;gap:8px;align-items:center"><span class="badge"><span>감면율 90%</span></span>청년</span>'+CHV24+'</div>'+
+        '</div>'+
+        '<p class="pop-txt" id="gamyeonNote" style="color:#999;text-align:left">연간 감면 한도는 200만원이며, 감면대상여부 · 감면기간· 한도 초과 여부는 자동으로 확인되지 않습니다.</p>'+
+      '</div>'+pfoot([{t:'취소'},{t:'적용',primary:1}]);}},
     /* ── 수당 · 공제 관리 ── */
-    'add-pay':{label:'추가 수당 관리',tall:1,html:function(){return listPopup('추가 수당 관리','상여금','수당명');}},
+    'add-pay':{label:'추가 수당 관리',wide:1,html:function(){return addPayManageHTML();}},
+    'pay-add':{label:'수당 추가',html:function(){return payAddHTML();}},
+    'pay-dup':{label:'이미 사용중인 비과세 유형',html:function(){return phead('알림')+pcenter(txt('이미 사용중인 비과세 유형입니다.'))+pfoot([{t:'확인',primary:1}]);}},
     'etc-deduct':{label:'기타 공제 관리',tall:1,html:function(){return listPopup('기타 공제 관리','선지급','공제명');}}
   };
   // 추가수당/기타공제 관리: [top]등록리스트 + [bottom]추가입력행 + 항목추가하기
@@ -1009,23 +1089,73 @@ ul.note li{list-style:disc}
       '</div>'+pfoot([{t:'취소'},{t:'적용',primary:1}]);
   }
 
-  function closePopup(){var d=document.getElementById('dimLayer');if(d)d.remove();}
-  function openPopup(id,arg){
+  // 추가 수당 관리 팝업 본문
+  function addPayManageHTML(){
+    var th='<div class="apm-th"><div>항목</div><div>과세 구분</div><div>비과세 유형</div><div>사용여부</div><div>금액</div><div>관리</div></div>';
+    var rows='';
+    for(var i=0;i<APM.length;i++){
+      var m=APM[i];
+      var amt=m.on
+        ? '<div class="box"><input value="'+m.amt+'"></div>'
+        : '<div class="box"><input placeholder="0"></div>';
+      rows+='<div class="apm-td">'+
+        '<div>'+m.n+'</div>'+
+        '<div>'+m.tax+'</div>'+
+        '<div>'+m.sub+'</div>'+
+        '<div class="apm-use"><span class="lbl" style="color:'+(m.on?'#333':'#999')+'">사용</span><div class="toggle'+(m.on?' on':'')+'"></div></div>'+
+        '<div class="apm-amt">'+amt+'</div>'+
+        '<div><span class="apm-del" data-delapm>'+TRASH+'</span></div>'+
+      '</div>';
+    }
+    return phead('추가 수당 관리',1)+
+      '<div class="pop-body" style="gap:12px">'+
+        '<div class="apm-tbl">'+th+rows+'</div>'+
+        '<div class="apm-addbtn" data-stack="pay-add"><div class="ic20"><img src="'+A+'ic_plus_primary.svg" alt=""></div><p>수당 추가</p></div>'+
+      '</div>'+pfoot([{t:'취소'},{t:'저장',primary:1}]);
+  }
+  // 수당 추가 팝업 본문
+  function payAddHTML(){
+    return phead('수당 추가',1)+
+      '<div class="pop-body">'+
+        '<div class="pa-row"><p class="pa-l">과세구분</p><div class="pa-c"><div class="pf-radios" style="gap:40px">'+
+          '<div class="pf-radio f16" data-paytax="과세"><span class="pradio r24"></span>과세</div>'+
+          '<div class="pf-radio f16" data-paytax="비과세"><span class="pradio r24 on"></span>비과세</div>'+
+        '</div></div></div>'+
+        '<div id="paytaxExtra" style="display:flex;flex-direction:column;gap:24px;width:100%">'+
+          '<div class="pa-row"><p class="pa-l">비과세 유형</p><div class="pa-c"><div class="pf-select">연구개발비'+CHV24+'</div></div></div>'+
+          '<div class="pa-row"><p class="pa-l">비과세 한도</p><p class="pa-v">월 20만원</p></div>'+
+        '</div>'+
+        '<div class="pa-row top"><p class="pa-l">수당명</p><div class="pa-c" style="display:flex;flex-direction:column;gap:8px">'+
+          '<div class="pf-input"><input value="연구개발비"></div>'+
+          '<p class="pa-count">5/10</p>'+
+        '</div></div>'+
+      '</div>'+pfoot([{t:'취소',cls:'hotspot hot-pad'},{t:'등록',primary:1,stack:'pay-dup',cls:'hotspot hot-pad'}]);
+  }
+
+  function removeAllDims(){document.querySelectorAll('.dim').forEach(function(d){d.remove();});}
+  function topDim(){var ds=document.querySelectorAll('.dim');return ds.length?ds[ds.length-1]:null;}
+  function closePopup(){var d=topDim();if(d)d.remove();}          // 맨 위 레이어만 닫기
+  function openPopup(id,arg){removeAllDims();spawnDim(id,arg);}   // 화면에서 열 때: 전부 닫고 새로
+  // 팝업 레이어 생성(여러 개 쌓임 → 이중/삼중 팝업)
+  function spawnDim(id,arg){
     var def=POP[id];if(!def)return;
-    closePopup();
-    var dim=document.createElement('div');dim.className='dim';dim.id='dimLayer';
+    var dim=document.createElement('div');dim.className='dim';
     var branch=def.dimBtn?'<div class="dim-branch"><button data-open="'+def.dimBtn.open+'">'+def.dimBtn.t+'</button></div>':'';
-    dim.innerHTML=branch+'<div class="pop'+(def.tall?' pop-tall':'')+'">'+def.html(arg)+'</div>';
+    dim.innerHTML=branch+'<div class="pop'+(def.tall?' pop-tall':'')+(def.wide?' pop-wide':'')+'">'+def.html(arg)+'</div>';
     document.body.appendChild(dim);
     dim.addEventListener('click',function(e){
-      if(e.target===dim){closePopup();return;}
+      if(e.target===dim){dim.remove();return;}                 // dim 배경 → 이 레이어만 닫기
       var act=e.target.closest('[data-act]');
       if(act){handleAct(act.getAttribute('data-act'));return;}
+      var st=e.target.closest('[data-stack]');
+      if(st){spawnDim(st.getAttribute('data-stack'));return;}   // 위에 쌓기(이중/삼중)
       var op=e.target.closest('[data-open]');
-      if(op){openPopup(op.getAttribute('data-open'));return;}
+      if(op){dim.remove();spawnDim(op.getAttribute('data-open'));return;}  // 전환(교체)
+      var da=e.target.closest('[data-delapm]');
+      if(da){var tr=da.closest('.apm-td');if(tr)tr.remove();return;}
       var li=e.target.closest('[data-additem],[data-delitem],[data-delrow]');
       if(li){handleList(li);return;}
-      if(e.target.closest('[data-close]')||e.target.closest('.pop-foot button')){closePopup();return;}
+      if(e.target.closest('[data-close]')||e.target.closest('.pop-foot button')){dim.remove();return;} // 이 레이어만 닫기
       popInteract(e);
     });
     // 메모 input 입력 시 전송 버튼 활성화(디자인 가이드)
@@ -1039,14 +1169,14 @@ ul.note li{list-style:disc}
   // 팝업 버튼 커스텀 동작
   function handleAct(a){
     if(a==='memosave'){
-      var inp=document.querySelector('#dimLayer .pf-send input');
+      var td=topDim();var inp=td&&td.querySelector('.pf-send input');
       if(inp&&inp.value.trim().length>0)closePopup();   // 텍스트 입력 → 저장 후 닫힘
-      else openPopup('empty-input');                    // 미입력 → 내용 입력 안내
+      else spawnDim('empty-input');                     // 미입력 → 내용 입력 안내(위에 노출)
     }
   }
   // 관리 팝업 리스트: 항목 추가하기 / 삭제
   function handleList(el){
-    var dim=document.getElementById('dimLayer');if(!dim)return;
+    var dim=topDim();if(!dim)return;
     if(el.hasAttribute('data-additem')){
       var list=dim.querySelector('[data-bottomlist]');
       list.insertAdjacentHTML('beforeend',newInputRow(el.getAttribute('data-additem')));
@@ -1068,6 +1198,15 @@ ul.note li{list-style:disc}
   }
   // 팝업 내부 라디오/체크박스/칩/세금유형 전환
   function popInteract(e){
+    // 중소기업 감면: 적용/미적용 → 하단(감면 유형·안내) 노출/미노출
+    var gm=e.target.closest('[data-gamyeon]');
+    if(gm){var grp=gm.parentElement;grp.querySelectorAll('[data-gamyeon] .pradio').forEach(function(x){x.classList.remove('on');});gm.querySelector('.pradio').classList.add('on');
+      var ap=gm.getAttribute('data-gamyeon')==='적용',ex=document.getElementById('gamyeonExtra'),nt=document.getElementById('gamyeonNote');
+      if(ex)ex.style.display=ap?'':'none';if(nt)nt.style.display=ap?'':'none';grp.classList.toggle('divide',ap);return;}
+    // 수당 추가: 과세/비과세 → 비과세 유형·한도 노출/미노출
+    var pt=e.target.closest('[data-paytax]');
+    if(pt){var pg=pt.parentElement;pg.querySelectorAll('[data-paytax] .pradio').forEach(function(x){x.classList.remove('on');});pt.querySelector('.pradio').classList.add('on');
+      var ex2=document.getElementById('paytaxExtra');if(ex2)ex2.style.display=(pt.getAttribute('data-paytax')==='비과세')?'':'none';return;}
     var r=e.target.closest('[data-rgroup]');
     if(r){var g=r.getAttribute('data-rgroup');r.parentElement.querySelectorAll('[data-rgroup="'+g+'"] .pradio').forEach(function(x){x.classList.remove('on');});r.querySelector('.pradio').classList.add('on');return;}
     var tt=e.target.closest('[data-taxtype]');
