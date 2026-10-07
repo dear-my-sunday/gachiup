@@ -29,6 +29,10 @@ html,body{background:#EEF1F4;min-height:100vh;overscroll-behavior:none}
 .opt-sel:focus{outline:none;border-color:var(--primary)}
 .dow-chips{display:flex;gap:4px}
 .dow-chip{width:30px;height:30px;border-radius:8px;border:1px solid #D5DAE0;background:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--f);font-size:12px;font-weight:700;color:#465159;cursor:pointer;user-select:none;transition:.15s}
+.dow-chip.dis{background:#F3F5F7;border-color:#E1E6EA;color:#C5CCD3;cursor:not-allowed}
+.opt-sel:disabled{background-color:#F3F5F7;border-color:#E1E6EA;color:#C5CCD3;cursor:not-allowed}
+.grp-row.dis .grp-dow{color:#C5CCD3}
+.dow-chip.wide{width:auto;padding:0 12px}
 .dow-chip.on{background:var(--primary);border-color:var(--primary);color:#fff}
 .grp-rows{display:flex;flex-direction:column;gap:6px}
 .grp-row{display:flex;align-items:center;gap:8px}
@@ -106,6 +110,8 @@ html,body{background:#EEF1F4;min-height:100vh;overscroll-behavior:none}
 .dbar-t{color:#202528}
 .dbar-b{color:#848D95}
 .dbar.lead{border-radius:0 12px 12px 0}
+.dbar.off{align-items:center;justify-content:center;gap:0;padding:4px 0;background:#FFF3EE;border-color:#FFE3D8}
+.dbar.off span{color:#FF404D;white-space:normal;text-align:center}
 
 /* floating buttons */
 .floatingarea{position:absolute;left:0;bottom:0;width:402px;z-index:20;display:flex;gap:10px;align-items:center;justify-content:center;padding:0 16px 20px 16px;pointer-events:none}
@@ -220,18 +226,19 @@ html,body{background:#EEF1F4;min-height:100vh;overscroll-behavior:none}
 
   function thday(d,isToday){var c=d.color?' '+d.color:'';return '<div class="th-day'+c+'"><span class="th-dow">'+d.dow+'</span><div class="th-daybox'+(isToday?' today':'')+'"><span class="th-dnum">'+d.num+'</span></div></div>';}
   function emp(e,i){return '<div class="emp"><div class="emp-name"><span>'+e.name+'</span>'+(e.mgr?IC.mgr:'')+'</div></div>';}
-  // 그룹 컬러 (Figma 컬러 시스템: 배경 Subtlest 10%, 텍스트 Standard 100%)
+  // 그룹 컬러 (Figma 컬러 시스템: std=Standard 100%, sub=Subtle 20%, bg=Subtlest 10%)
+  // 주 뷰: 배경 bg + 텍스트 std / 일 뷰: 배경 bg + 보더 sub
   var COLORS=[
-    {key:'blue',name:'Blue',std:'#3860FF',bg:'#EBEFFF'},
-    {key:'red',name:'Red',std:'#FF3347',bg:'#FFEBED'},
-    {key:'orange',name:'Orange',std:'#FF7214',bg:'#FFF1E8'},
-    {key:'yellow',name:'Yellow',std:'#FF9D00',bg:'#FFF5E6'},
-    {key:'green',name:'Green',std:'#00CC58',bg:'#E6FAEE'},
-    {key:'teal',name:'Teal',std:'#00C2AE',bg:'#E6F9F7'},
-    {key:'sky',name:'Sky',std:'#00AFF5',bg:'#E6F7FE'},
-    {key:'purple',name:'Purple',std:'#9D47FF',bg:'#F5EDFF'},
-    {key:'pink',name:'Pink',std:'#FF3D9E',bg:'#FFECF5'},
-    {key:'brown',name:'Brown',std:'#B26834',bg:'#F7F0EB'}
+    {key:'blue',name:'Blue',std:'#3860FF',bg:'#EBEFFF',sub:'#D7DFFF'},
+    {key:'red',name:'Red',std:'#FF3347',bg:'#FFEBED',sub:'#FFD6DA'},
+    {key:'orange',name:'Orange',std:'#FF7214',bg:'#FFF1E8',sub:'#FFE3D0'},
+    {key:'yellow',name:'Yellow',std:'#FF9D00',bg:'#FFF5E6',sub:'#FFEBCC'},
+    {key:'green',name:'Green',std:'#00CC58',bg:'#E6FAEE',sub:'#CCF5DE'},
+    {key:'teal',name:'Teal',std:'#00C2AE',bg:'#E6F9F7',sub:'#CCF3EF'},
+    {key:'sky',name:'Sky',std:'#00AFF5',bg:'#E6F7FE',sub:'#CCEFFD'},
+    {key:'purple',name:'Purple',std:'#9D47FF',bg:'#F5EDFF',sub:'#EBDAFF'},
+    {key:'pink',name:'Pink',std:'#FF3D9E',bg:'#FFECF5',sub:'#FFD8EC'},
+    {key:'brown',name:'Brown',std:'#B26834',bg:'#F7F0EB',sub:'#F0E1D6'}
   ];
   function colorOf(k){for(var i=0;i<COLORS.length;i++)if(COLORS[i].key===k)return COLORS[i];return COLORS[0];}
   // 우선순위: 휴무 > 그룹 > 기본. 그룹 지정 요일에 근무가 없으면 09:00~18:00으로 채움
@@ -272,11 +279,17 @@ html,body{background:#EEF1F4;min-height:100vh;overscroll-behavior:none}
     var body='';
     for(i=0;i<d.employees.length;i++){
       var sh=d.dayShifts[i],bar='';
-      if(sh&&sh.leadEmpty){
-        bar='<div class="dbar lead" style="left:0px;width:'+LEAD+'px"></div>';
+      // 휴무/그룹은 주 뷰와 동일한 직원별·요일별 설정을 해당 날짜 요일(today)에 적용
+      var off=state.off[mode][i][today],gk=state.grp[mode][i][today],gc=gk?colorOf(gk):null;
+      var gst=gc?'background:'+gc.bg+';border-color:'+gc.sub+';':'';
+      if(gc&&!sh)sh={s:'09:00',e:'18:00',brk:''};
+      if(off){
+        bar='<div class="dbar off" style="left:'+LEAD+'px;width:'+HW+'px"><span>휴<br>무</span></div>';
+      }else if(sh&&sh.leadEmpty){
+        bar='<div class="dbar lead" style="left:0px;width:'+LEAD+'px;'+gst+'"></div>';
       }else if(sh){
         var l=LEAD+(timeToH(sh.s)-START)*HW,w=(timeToH(sh.e)-timeToH(sh.s))*HW;
-        bar='<div class="dbar" style="left:'+l+'px;width:'+w+'px"><span class="dbar-t">'+sh.s+'~'+sh.e+'</span>'+(sh.brk?'<span class="dbar-b">'+sh.brk+'</span>':'')+'</div>';
+        bar='<div class="dbar" style="left:'+l+'px;width:'+w+'px;'+gst+'"><span class="dbar-t">'+sh.s+'~'+sh.e+'</span>'+(sh.brk?'<span class="dbar-b">'+sh.brk+'</span>':'')+'</div>';
       }
       body+='<div class="dgrid" style="width:'+W+'px">'+bar+'</div>';
     }
@@ -319,30 +332,38 @@ html,body{background:#EEF1F4;min-height:100vh;overscroll-behavior:none}
   var DOWS=['월','화','수','목','금','토','일'];
   var offEmp=document.getElementById('offEmp'),grpEmp=document.getElementById('grpEmp');
   var offDays=document.getElementById('offDays'),grpRows=document.getElementById('grpRows');
-  function chips(el,arr){el.innerHTML=DOWS.map(function(w,i){return '<div class="dow-chip'+(arr[i]?' on':'')+'" data-i="'+i+'">'+w+'</div>';}).join('');}
+  // dis[i]: 해당 요일이 반대 옵션(휴무↔그룹)에 설정되어 선택 불가
+  function chips(el,arr,dis){el.innerHTML=DOWS.map(function(w,i){return '<div class="dow-chip'+(arr[i]?' on':'')+(dis[i]?' dis':'')+'" data-i="'+i+'">'+w+'</div>';}).join('');}
   function empOptions(sel,cur){
     sel.innerHTML=DATA[state.mode].employees.map(function(e,i){return '<option value="'+i+'"'+(i===cur?' selected':'')+'>'+e.name+'</option>';}).join('');
   }
   function syncOpts(){
     empOptions(offEmp,state.offEmp);empOptions(grpEmp,state.grpEmp);
-    chips(offDays,state.off[state.mode][state.offEmp]);
-    var g=state.grp[state.mode][state.grpEmp];
+    var off=state.off[state.mode][state.offEmp],g=state.grp[state.mode][state.grpEmp];
+    // 휴무와 스케줄 그룹은 같은 직원·같은 요일에 동시 설정 불가
+    var offDis=state.grp[state.mode][state.offEmp],grpDis=state.off[state.mode][state.grpEmp];
+    // 일 뷰는 당일(today) 것만 보여주므로 요일 선택 없이 사람 + 휴무 여부 / 사람 + 컬러만 노출
+    var isDay=state.view==='day',t=state.today;
+    if(isDay)offDays.innerHTML='<div class="dow-chip wide'+(off[t]?' on':'')+(offDis[t]?' dis':'')+'" data-i="'+t+'">휴무</div>';
+    else chips(offDays,off,offDis);
     // 요일별 그룹 컬러 드롭다운 (좌측 원형 스와치로 현재 컬러 표시)
     grpRows.innerHTML=DOWS.map(function(w,i){
+      if(isDay&&i!==t)return '';
       var c=g[i]?colorOf(g[i]):null;
-      return '<div class="grp-row"><span class="grp-dow">'+w+'</span>'+
+      var dis=grpDis[i];
+      return '<div class="grp-row'+(dis?' dis':'')+'">'+(isDay?'':'<span class="grp-dow">'+w+'</span>')+
         '<i class="grp-sw'+(c?' on':'')+'"'+(c?' style="background:'+c.std+'"':'')+'></i>'+
-        '<select class="opt-sel" data-i="'+i+'"><option value="">없음</option>'+
+        '<select class="opt-sel" data-i="'+i+'"'+(dis?' disabled':'')+'><option value="">없음</option>'+
         COLORS.map(function(k){return '<option value="'+k.key+'"'+(g[i]===k.key?' selected':'')+'>'+k.name+'</option>';}).join('')+
         '</select></div>';}).join('');
   }
   offEmp.addEventListener('change',function(){state.offEmp=+offEmp.value;apply();});
   grpEmp.addEventListener('change',function(){state.grpEmp=+grpEmp.value;apply();});
-  offDays.addEventListener('click',function(e){var ch=e.target.closest('.dow-chip');if(!ch)return;var a=state.off[state.mode][state.offEmp],i=+ch.getAttribute('data-i');a[i]=a[i]?0:1;apply();});
+  offDays.addEventListener('click',function(e){var ch=e.target.closest('.dow-chip');if(!ch||ch.classList.contains('dis'))return;var a=state.off[state.mode][state.offEmp],i=+ch.getAttribute('data-i');a[i]=a[i]?0:1;apply();});
   grpRows.addEventListener('change',function(e){var sel=e.target.closest('select');if(!sel)return;state.grp[state.mode][state.grpEmp][+sel.getAttribute('data-i')]=sel.value||null;apply();});
   function apply(){
     design.innerHTML=render(state.mode,state.today,state.view);
-    ['optToday','optOff','optGrp'].forEach(function(id){document.getElementById(id).style.display=state.view==='day'?'none':'flex';});
+    document.getElementById('optToday').style.display=state.view==='day'?'none':'flex';
     syncOpts();
     document.querySelectorAll('.radio-row').forEach(function(rr){
       var g=rr.getAttribute('data-group'),v=rr.getAttribute('data-val');
