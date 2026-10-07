@@ -24,6 +24,18 @@ html,body{background:#EEF1F4;min-height:100vh;overscroll-behavior:none}
 .radio.on{border-color:var(--primary)}
 .radio.on::after{content:'';width:10px;height:10px;border-radius:50%;background:var(--primary)}
 .radio-row span{font-size:13px;font-weight:700;color:#202528}
+.opt-label{font-size:12px;font-weight:700;color:#465159}
+.opt-sel{width:236px;height:36px;padding:0 32px 0 12px;border:1px solid #D5DAE0;border-radius:8px;background:#fff url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 12 12' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2.5 4.5L6 8l3.5-3.5' stroke='%23465159' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 12px center;font-family:var(--f);font-size:13px;color:#202528;-webkit-appearance:none;appearance:none;cursor:pointer;text-overflow:ellipsis}
+.opt-sel:focus{outline:none;border-color:var(--primary)}
+.dow-chips{display:flex;gap:4px}
+.dow-chip{width:30px;height:30px;border-radius:8px;border:1px solid #D5DAE0;background:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--f);font-size:12px;font-weight:700;color:#465159;cursor:pointer;user-select:none;transition:.15s}
+.dow-chip.on{background:var(--primary);border-color:var(--primary);color:#fff}
+.grp-rows{display:flex;flex-direction:column;gap:6px}
+.grp-row{display:flex;align-items:center;gap:8px}
+.grp-dow{width:20px;flex:none;font-size:13px;font-weight:700;color:#465159;text-align:center}
+.grp-sw{width:16px;height:16px;flex:none;border-radius:50%;border:1px dashed #B0B8C1;background:#fff}
+.grp-sw.on{border:none}
+.grp-row .opt-sel{width:auto;flex:1;height:32px}
 
 /* iPhone frame */
 .iphone{background:linear-gradient(145deg,#3E3E40 0%,#1C1C1E 50%,#2E2E30 100%);border-radius:52px;padding:14px 12px 22px;position:relative;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.13),inset 0 0 0 2px rgba(0,0,0,0.6),0 28px 56px rgba(0,0,0,0.6);flex:none}
@@ -81,6 +93,7 @@ html,body{background:#EEF1F4;min-height:100vh;overscroll-behavior:none}
 .drow{display:flex;align-items:stretch}
 .dcell{width:56px;height:64px;flex:none;display:flex;flex-direction:column;gap:4px;align-items:center;justify-content:center;padding:12px;border-right:1px solid #F3F5F7;border-bottom:1px solid #F3F5F7}
 .dcell span{font-weight:400;font-size:12px;line-height:18px;color:#202528}
+.dcell.off span{color:#FF404D}
 /* 일(day) 뷰 타임라인 */
 .table.day .th-name{height:47px}
 .table.day .emp{height:60px}
@@ -115,6 +128,16 @@ html,body{background:#EEF1F4;min-height:100vh;overscroll-behavior:none}
           <div class="radio-row" data-group="today" data-val="3"><div class="radio on"></div><span>평일</span></div>
           <div class="radio-row" data-group="today" data-val="5"><div class="radio"></div><span>토요일</span></div>
           <div class="radio-row" data-group="today" data-val="6"><div class="radio"></div><span>일요일</span></div>
+        </div>
+        <div class="opt-radio" id="optOff">
+          <div class="opt-gtitle">휴무</div>
+          <select class="opt-sel" id="offEmp"></select>
+          <div class="dow-chips" id="offDays"></div>
+        </div>
+        <div class="opt-radio" id="optGrp">
+          <div class="opt-gtitle">스케줄 그룹</div>
+          <select class="opt-sel" id="grpEmp"></select>
+          <div class="grp-rows" id="grpRows"></div>
         </div>
         <div class="opt-note">주/일 탭을 선택하면 뷰 전환이 가능합니다.</div>
       </div>
@@ -197,7 +220,27 @@ html,body{background:#EEF1F4;min-height:100vh;overscroll-behavior:none}
 
   function thday(d,isToday){var c=d.color?' '+d.color:'';return '<div class="th-day'+c+'"><span class="th-dow">'+d.dow+'</span><div class="th-daybox'+(isToday?' today':'')+'"><span class="th-dnum">'+d.num+'</span></div></div>';}
   function emp(e,i){return '<div class="emp"><div class="emp-name"><span>'+e.name+'</span>'+(e.mgr?IC.mgr:'')+'</div></div>';}
-  function cell(v){return v?'<div class="dcell"><span>'+v[0]+'</span><span>'+v[1]+'</span></div>':'<div class="dcell empty"></div>';}
+  // 그룹 컬러 (Figma 컬러 시스템: 배경 Subtlest 10%, 텍스트 Standard 100%)
+  var COLORS=[
+    {key:'blue',name:'Blue',std:'#3860FF',bg:'#EBEFFF'},
+    {key:'red',name:'Red',std:'#FF3347',bg:'#FFEBED'},
+    {key:'orange',name:'Orange',std:'#FF7214',bg:'#FFF1E8'},
+    {key:'yellow',name:'Yellow',std:'#FF9D00',bg:'#FFF5E6'},
+    {key:'green',name:'Green',std:'#00CC58',bg:'#E6FAEE'},
+    {key:'teal',name:'Teal',std:'#00C2AE',bg:'#E6F9F7'},
+    {key:'sky',name:'Sky',std:'#00AFF5',bg:'#E6F7FE'},
+    {key:'purple',name:'Purple',std:'#9D47FF',bg:'#F5EDFF'},
+    {key:'pink',name:'Pink',std:'#FF3D9E',bg:'#FFECF5'},
+    {key:'brown',name:'Brown',std:'#B26834',bg:'#F7F0EB'}
+  ];
+  function colorOf(k){for(var i=0;i<COLORS.length;i++)if(COLORS[i].key===k)return COLORS[i];return COLORS[0];}
+  // 우선순위: 휴무 > 그룹 > 기본. 그룹 지정 요일에 근무가 없으면 09:00~18:00으로 채움
+  function cell(v,off,grp){
+    if(off)return '<div class="dcell off"><span>휴무</span></div>';
+    if(grp){var c=colorOf(grp),t=v||['09:00','18:00'];
+      return '<div class="dcell" style="background:'+c.bg+'"><span style="color:'+c.std+'">'+t[0]+'</span><span style="color:'+c.std+'">'+t[1]+'</span></div>';}
+    return v?'<div class="dcell"><span>'+v[0]+'</span><span>'+v[1]+'</span></div>':'<div class="dcell empty"></div>';
+  }
 
   // 근무 셀(1)을 랜덤 시간 [출근, 퇴근] 으로 1회 변환 (재렌더 시 고정)
   function pad(n){return ('0'+n).slice(-2);}
@@ -253,7 +296,7 @@ html,body{background:#EEF1F4;min-height:100vh;overscroll-behavior:none}
     var hdr='';for(var i=0;i<d.cols;i++)hdr+=thday(DAYS[i],i===today);
     var left='';for(i=0;i<d.employees.length;i++)left+=emp(d.employees[i],i);
     var rows='';
-    for(var r=0;r<d.grid.length;r++){var row='<div class="drow">';for(var c=0;c<d.cols;c++)row+=cell(d.grid[r][c]);rows+=row+'</div>';}
+    for(var r=0;r<d.grid.length;r++){var row='<div class="drow">';for(var c=0;c<d.cols;c++){var g=state.grp[mode][r];row+=cell(d.grid[r][c],state.off[mode][r][c],g[c]);}rows+=row+'</div>';}
     return chrome(view)+
     '<div class="contents">'+
       '<div class="top">'+
@@ -267,10 +310,40 @@ html,body{background:#EEF1F4;min-height:100vh;overscroll-behavior:none}
   }
 
   var design=document.getElementById('design');
-  var state={mode:'min',today:3,view:'week'};
+  var state={mode:'min',today:3,view:'week',off:{},grp:{},offEmp:0,grpEmp:0};
+  // 직원별 휴무/그룹 설정 (데이터 모드별로 보관)
+  Object.keys(DATA).forEach(function(m){
+    state.off[m]=DATA[m].employees.map(function(){return [0,0,0,0,0,0,0];});
+    state.grp[m]=DATA[m].employees.map(function(){return [null,null,null,null,null,null,null];});
+  });
+  var DOWS=['월','화','수','목','금','토','일'];
+  var offEmp=document.getElementById('offEmp'),grpEmp=document.getElementById('grpEmp');
+  var offDays=document.getElementById('offDays'),grpRows=document.getElementById('grpRows');
+  function chips(el,arr){el.innerHTML=DOWS.map(function(w,i){return '<div class="dow-chip'+(arr[i]?' on':'')+'" data-i="'+i+'">'+w+'</div>';}).join('');}
+  function empOptions(sel,cur){
+    sel.innerHTML=DATA[state.mode].employees.map(function(e,i){return '<option value="'+i+'"'+(i===cur?' selected':'')+'>'+e.name+'</option>';}).join('');
+  }
+  function syncOpts(){
+    empOptions(offEmp,state.offEmp);empOptions(grpEmp,state.grpEmp);
+    chips(offDays,state.off[state.mode][state.offEmp]);
+    var g=state.grp[state.mode][state.grpEmp];
+    // 요일별 그룹 컬러 드롭다운 (좌측 원형 스와치로 현재 컬러 표시)
+    grpRows.innerHTML=DOWS.map(function(w,i){
+      var c=g[i]?colorOf(g[i]):null;
+      return '<div class="grp-row"><span class="grp-dow">'+w+'</span>'+
+        '<i class="grp-sw'+(c?' on':'')+'"'+(c?' style="background:'+c.std+'"':'')+'></i>'+
+        '<select class="opt-sel" data-i="'+i+'"><option value="">없음</option>'+
+        COLORS.map(function(k){return '<option value="'+k.key+'"'+(g[i]===k.key?' selected':'')+'>'+k.name+'</option>';}).join('')+
+        '</select></div>';}).join('');
+  }
+  offEmp.addEventListener('change',function(){state.offEmp=+offEmp.value;apply();});
+  grpEmp.addEventListener('change',function(){state.grpEmp=+grpEmp.value;apply();});
+  offDays.addEventListener('click',function(e){var ch=e.target.closest('.dow-chip');if(!ch)return;var a=state.off[state.mode][state.offEmp],i=+ch.getAttribute('data-i');a[i]=a[i]?0:1;apply();});
+  grpRows.addEventListener('change',function(e){var sel=e.target.closest('select');if(!sel)return;state.grp[state.mode][state.grpEmp][+sel.getAttribute('data-i')]=sel.value||null;apply();});
   function apply(){
     design.innerHTML=render(state.mode,state.today,state.view);
-    document.getElementById('optToday').style.display=state.view==='day'?'none':'flex';
+    ['optToday','optOff','optGrp'].forEach(function(id){document.getElementById(id).style.display=state.view==='day'?'none':'flex';});
+    syncOpts();
     document.querySelectorAll('.radio-row').forEach(function(rr){
       var g=rr.getAttribute('data-group'),v=rr.getAttribute('data-val');
       var on=(g==='mode'&&v===state.mode)||(g==='today'&&+v===state.today);
@@ -295,7 +368,7 @@ html,body{background:#EEF1F4;min-height:100vh;overscroll-behavior:none}
   document.querySelectorAll('.radio-row').forEach(function(rr){
     rr.addEventListener('click',function(){
       var g=rr.getAttribute('data-group'),v=rr.getAttribute('data-val');
-      if(g==='mode')state.mode=v;else state.today=+v;
+      if(g==='mode'){if(state.mode!==v){state.mode=v;state.offEmp=0;state.grpEmp=0;}}else state.today=+v;
       apply();
     });
   });
