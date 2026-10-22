@@ -445,6 +445,25 @@ ul.note li{list-style:disc}
 .pf-item .pf-input{flex:1}
 .pf-hint{display:flex;justify-content:space-between;align-items:center;width:100%;font-size:16px;line-height:24px;color:#999}
 /* 추가 수당 관리: 넓은 테이블 팝업 */
+/* 급여 자동규칙 설정: 화면 노출 전용(동작 불가) */
+.arule{display:flex;flex-direction:column;gap:20px;width:100%;pointer-events:none;user-select:none}
+.arule-top{background:#F2F2F2;padding:12px;display:flex;gap:8px;align-items:center;justify-content:center;font-size:16px;line-height:24px;color:#333}
+.arule-opt{border:1px solid #E5E5E5;display:flex;flex-direction:column;align-items:center;gap:16px;padding:32px 20px 32px}
+.arule-opt h4{font-size:24px;line-height:32px;font-weight:700;color:#333;margin:0}
+.arule-tip{background:#222;color:#fff;font-size:12px;line-height:20px;font-weight:700;padding:8px 12px;border-radius:18px}
+.arule-sep{height:4px;background:#F2F2F2;margin:0 -20px}
+.arule-cols{display:flex;gap:32px;width:100%}
+.arule-col{flex:1;min-width:0;display:flex;flex-direction:column;gap:12px}
+.arule-ct{display:flex;gap:8px;align-items:center;font-size:18px;line-height:26px;font-weight:600;color:#333}
+.arule-card{border:1px solid #E5E5E5;padding:16px;display:flex;flex-direction:column;gap:16px}
+.arule-row{display:flex;justify-content:space-between;align-items:center;gap:20px;padding-bottom:16px;border-bottom:1px solid #F2F2F2}
+.arule-row b{display:block;font-size:16px;line-height:24px;color:#333}
+.arule-row span{font-size:16px;line-height:24px;color:#333}
+.arule-note{background:#F2F2F2;padding:12px;display:flex;gap:8px;align-items:center;font-size:16px;line-height:24px;color:#333}
+.arule-wrap{position:relative;width:100%}
+.arule-fade{position:fixed;left:0;right:0;bottom:0;height:200px;z-index:10;pointer-events:none;background:linear-gradient(to bottom,rgba(255,255,255,0) 0%,#fff 70%);display:flex;align-items:flex-end;justify-content:center;gap:16px;padding-bottom:12px}
+.arule-fade{padding-bottom:40px}
+.arule-fade p{margin:0;font-size:16px;line-height:24px;font-weight:700;color:#333}
 .pop.pop-wide{width:1200px}
 .apm-tbl{border:1px solid #E5E5E5;display:flex;flex-direction:column;width:100%}
 .apm-th{display:flex;height:60px;border-bottom:1px solid #333}
@@ -773,7 +792,7 @@ ul.note li{list-style:disc}
   }
   function midBar(){
     return '<div class="midbar" id="midbar">'+
-      '<div>'+info('sched-info',1)+'<div class="mid-title"><div class="badge"><span>근무 스케줄</span></div><p class="t14">기준 계산</p></div><div class="mid-set" data-popup="sched-set"><span>설정</span></div></div>'+
+      '<div>'+info('sched-info',1)+'<div class="mid-title"><div class="badge"><span>근무 스케줄</span></div><p class="t14">자동 계산</p></div><div class="mid-set" data-popup="sched-set"><span>설정</span></div></div>'+
       '<div><div class="btn-tg" data-popup="reset-time"><div class="ic20"><img src="'+A+'ic_reset_gray.svg" alt=""></div><p>근무시간 전체 초기화</p></div></div>'+
       '<div><div class="btn-tp"><div class="ic20"><img src="'+A+'ic_plus_primary.svg" alt=""></div><p>스케줄 등록</p></div></div>'+
     '</div>';
@@ -1043,21 +1062,29 @@ ul.note li{list-style:disc}
     'taxtype-info':{label:'세금유형 안내',html:function(){return phead('세금유형')+pcenter(txt('근로소득 또는 사업소득 중 적용할 세금 유형입니다. 설정에서 선택한 유형에 따라 세금 계산 방식이 달라집니다.'))+pfoot([{t:'확인',primary:1}]);}},
     'insurance-info':{label:'4대보험 안내',html:function(){return phead('4대보험')+pcenter(txt('설정에서 선택한 국민연금, 건강보험, 장기요양보험, 고용보험의 적용 여부를 확인할 수 있습니다.'))+pfoot([{t:'확인',primary:1}]);}},
     'tax-info':{label:'세금 안내',html:function(){return phead('세금')+pcenter(txt('급여에서 공제되는 소득세와 지방소득세입니다. 세금유형과 급여 정보를 기준으로 계산됩니다.')+gap()+txt('설정에서 공제 여부를 선택할 수 있습니다.'))+pfoot([{t:'확인',primary:1}]);}},
-    'sched-info':{label:'일일 급여 계산 기준 안내',html:function(){return phead('일일 급여 계산 기준')+pcenter(txt('일일 급여 계산에 적용할 근무 시간 기준입니다.')+gap()+txt('워크스페이스 정산 설정 또는 현재화면 에서 설정 기준을 변경할 수 있습니다.'))+pfoot([{t:'확인',primary:1}]);}},
+    'sched-info':{label:'근무시간 자동 계산 안내',html:function(){return phead('근무시간 자동 계산')+pcenter(txt('설정한 급여 자동규칙에 따라 일자별 근무시간을 자동으로 계산합니다.')+gap()+txt('급여 자동규칙 설정 또는 현재 화면에서 설정 기준을 변경할 수 있습니다.'))+pfoot([{t:'확인',primary:1}]);}},
     'exmonth-info':{label:'예상 월 급여 안내',html:function(){return phead('예상 월 급여')+pcenter(txt('근무정보와 급여 설정을 기준으로 자동 계산된 공제 전 예상 급여입니다.'))+pfoot([{t:'확인',primary:1}]);}},
     'tax-amt-info':{label:'제세금액 안내',html:function(){return phead('제세금액')+pcenter(txt('4대보험료와 세금 등 급여에서 공제되는 금액의 합계입니다.'))+pfoot([{t:'확인',primary:1}]);}},
     'real-info':{label:'실 지급액 안내',html:function(){return phead('실 지급액')+pcenter(txt('급여에서 제세금액과 기타 공제를 차감한 후 실제 지급되는 금액입니다.'))+pfoot([{t:'확인',primary:1}]);}},
     'addpay-info':{label:'추가 수당 안내',html:function(){return phead('추가 수당')+pcenter(txt('자동 계산된 급여 외에 추가로 지급할 수당을 직접 등록/관리 할 수 있습니다.'))+pfoot([{t:'확인',primary:1}]);}},
     'etc-info':{label:'기타 공제 안내',html:function(){return phead('기타 공제')+pcenter(txt('4대보험과 세금 외에 급여에서 추가로 차감할 금액을 직접 등록/관리할 수 있습니다.'))+pfoot([{t:'확인',primary:1}]);}},
-    'sched-set':{label:'근무시간 계산 기준',html:function(){return phead('근무시간 계산 기준',1)+
+    'sched-set':{label:'급여 자동규칙 설정',wide:1,tall:1,screen:'<div class="arule-fade"><p>세부 디자인은 피그마에서 확인해 주세요.</p><a class="pbtn pbtn-primary" href="https://www.figma.com/design/xz7LGnJAGJXYdxfxs8YU0a/%EA%B0%80%EC%B9%98%EC%97%85--%EA%B4%80%EB%A6%AC%EC%9E%90-Web?node-id=8440-57487" target="_blank" rel="noopener" style="flex:none;width:auto;padding:8px 20px;text-decoration:none;display:flex;align-items:center;justify-content:center;pointer-events:auto">피그마에서 보기</a></div>',html:function(){
+      var ic='<span class="ic-info"><img src="'+A+'ic_info.svg" alt=""></span>';
+      function col(t,tg,d,note){return '<div class="arule-col"><div class="arule-ct">'+t+ic+'</div><div class="arule-card">'+
+        '<div class="arule-row"><div><b>'+tg+'</b><span>'+d+'</span></div><div class="toggle"></div></div>'+
+        '<div class="arule-note"><span class="ic-info i24"><img src="'+A+'ic_info.svg" alt=""></span>'+note+'</div></div></div>';}
+      return phead('급여 자동규칙 설정',1)+
       '<div class="pop-body">'+
-        '<p class="pop-txt">일간 근무시간 계산 기준을 설정합니다.</p>'+
-        '<div class="pf-radios divide" style="justify-content:center">'+
-          '<div class="pf-radio" data-rgroup="schedbase"><span class="pradio"></span>근무 스케줄</div>'+
-          '<div class="pf-radio" data-rgroup="schedbase"><span class="pradio on"></span>가치업 기록</div>'+
+        '<div class="arule-wrap">'+
+        '<div class="arule">'+
+          '<div class="arule-top"><span class="ic-info i24"><img src="'+A+'ic_info.svg" alt=""></span>급여 계산에 사용할 기준과 출근•퇴근시간 보정 방식을 설정합니다.</div>'+
+          '<div class="arule-opt"><h4>급여 자동규칙 기준</h4><div class="arule-tip">선택한 기준으로 급여에 반영할 출근•퇴근시간을 계산합니다.</div>'+
+            '<div class="pf-radios g40" style="justify-content:center;margin-top:8px"><div class="pf-radio f16"><span class="pradio r24 on"></span>가치업 기록</div><div class="pf-radio f16"><span class="pradio r24"></span>근무 스케줄 +가치업 기록</div></div></div>'+
+          '<div class="arule-sep"></div>'+
+          '<div class="arule-cols">'+col('출근시간','올림 보정','올림 보정을 적용하여 출근시간을 계산합니다.','올림: 다음 단위 시각')+col('퇴근시간','내림 보정','내림 보정을 적용하여 퇴근시간을 계산합니다.','내림: 이전 단위 시각')+'</div>'+
         '</div>'+
-        '<p class="pop-txt" style="color:#666">※ 기준 변경 시 워크스페이스 전직원의 일일 근무시간 계산 기준이 일괄 변경됩니다.</p>'+
-      '</div>'+pfoot([{t:'취소'},{t:'적용',primary:1}]);}},
+        '</div>'+
+      '</div>'+pfoot([{t:'취소'},{t:'저장',primary:1}]);}},
     /* ── 중소기업 취업자 소득세 감면 ── */
     'gamyeon-set':{label:'중소기업 취업자 소득세 감면',html:function(){return phead('중소기업 취업자 소득세 감면',1)+
       '<div class="pop-body">'+
@@ -1141,7 +1168,7 @@ ul.note li{list-style:disc}
     var def=POP[id];if(!def)return;
     var dim=document.createElement('div');dim.className='dim';
     var branch=def.dimBtn?'<div class="dim-branch"><button data-open="'+def.dimBtn.open+'">'+def.dimBtn.t+'</button></div>':'';
-    dim.innerHTML=branch+'<div class="pop'+(def.tall?' pop-tall':'')+(def.wide?' pop-wide':'')+'">'+def.html(arg)+'</div>';
+    dim.innerHTML=branch+'<div class="pop'+(def.tall?' pop-tall':'')+(def.wide?' pop-wide':'')+'">'+def.html(arg)+'</div>'+(def.screen||'');
     document.body.appendChild(dim);
     dim.addEventListener('click',function(e){
       if(e.target===dim){dim.remove();return;}                 // dim 배경 → 이 레이어만 닫기
