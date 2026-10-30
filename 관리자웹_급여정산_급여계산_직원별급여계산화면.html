@@ -1057,7 +1057,7 @@ ul.note li{list-style:disc}
       '</div>'+pfoot([{t:'취소'},{t:'저장',primary:1,disabled:1}]);}},
     /* ── 정보 ⓘ ── */
     'holiday-info':{label:'주휴수당 계산/지급 안내',html:function(){return phead('주휴수당 계산/지급')+pcenter(txt('직원이 주 15시간 이상 소정 근무 시 주휴수당을 지급합니다.<br>적용 시 주휴수당을 자동으로 계산하여 월 급여에 합산되며 사용하지 않으면 계산하지 않습니다.'))+pfoot([{t:'주휴수당 계산/지급 예시 보기'},{t:'확인',primary:1}]).replace('class="pop-foot"','class="pop-foot col"');}},
-    'bonus-info':{label:'가산수당 여부 안내',html:function(){return phead('가산수당 여부')+pcenter(txt('적용 시 연장, 야간, 휴일 조건에 해당하는 근무시간에 설정한 가산율만큼 기본 시급에 추가로 지급할 수 있습니다.'))+pfoot([{t:'확인',primary:1}]);}},
+    'bonus-info':{label:'가산수당 여부 안내',html:function(){return phead('가산수당 여부')+'<div class="pop-body">'+txt('적용 시 연장, 야간, 휴일 조건에 해당하는 근무시간에 설정한 가산율만큼 기본 시급에 추가로 지급할 수 있습니다.')+'<div class="errbox"><div class="ic24i" style="width:24px;height:24px;padding:2px"><img src="'+A+'ic_error_red.svg" alt=""></div><p>5인 미만 사업장은 가산수당 지급 의무가 없습니다.</p></div></div>'+pfoot([{t:'확인',primary:1}]);}},
     'adjust-info':{label:'급여조정 안내',html:function(){return phead('급여조정')+pcenter(txt('실 지급금액과 차이가 있는 경우 직접 조정할 수 있습니다.')+gap()+txt('+ 금액을 입력하면 지급항목에 추가되며 - 금액을 입력하면 공제항목에 추가됩니다'))+pfoot([{t:'확인',primary:1}]);}},
     /* ── info_fill 안내 팝업 (급여계산 화면) ── */
     'taxtype-info':{label:'세금유형 안내',html:function(){return phead('세금유형')+pcenter(txt('근로소득 또는 사업소득 중 적용할 세금 유형입니다. 설정에서 선택한 유형에 따라 세금 계산 방식이 달라집니다.'))+pfoot([{t:'확인',primary:1}]);}},
